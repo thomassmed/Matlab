@@ -1,0 +1,123 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Exercise 3</title><meta name="generator" content="MATLAB 7.13"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-10-13"><meta name="DC.source" content="Exercise3.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Exercise 3</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Define a matrix Prices from column 2 to the end of the matrix data</a></li><li><a href="#2">3.1 Calculate the average price for each country</a></li><li><a href="#3">3.2 Plot the yearly average price for all countries</a></li><li><a href="#4">3.3 Plot the yearly average price in Europe and the Americas</a></li><li><a href="#5">Exercise 3b</a></li><li><a href="#6">Calculate the number of elements that are greater than 0.8</a></li></ul></div><h2>Define a matrix Prices from column 2 to the end of the matrix data<a name="1"></a></h2><pre class="codeinput">load <span class="string">../gasprices</span>
+data(1,2)=data(2,2); <span class="comment">% Fix the missing data in Australia</span>
+Prices=data(:,2:end);
+</pre><h2>3.1 Calculate the average price for each country<a name="2"></a></h2><pre class="codeinput">mean(Prices)
+</pre><pre class="codeoutput">
+ans =
+
+  Columns 1 through 9
+
+    2.3284    2.0868    4.4079    4.2247    4.6458    3.8205    1.7816    3.8358    4.3926
+
+  Column 10
+
+    1.5921
+
+</pre><h2>3.2 Plot the yearly average price for all countries<a name="3"></a></h2><pre class="codeinput">figure
+plot(Year,mean(Prices'))
+</pre><img vspace="5" hspace="5" src="Exercise3_01.png" alt=""> <h2>3.3 Plot the yearly average price in Europe and the Americas<a name="4"></a></h2><pre class="codeinput">ieur=[3 4 5 9];
+iam=[2 7 10];
+figure
+plot(Year,mean(Prices(:,ieur)'))
+hold <span class="string">on</span>
+plot(Year,mean(Prices(:,iam)'),<span class="string">'r'</span>)
+legend(<span class="string">'Europe'</span>,<span class="string">'America'</span>);
+</pre><img vspace="5" hspace="5" src="Exercise3_02.png" alt=""> <h2>Exercise 3b<a name="5"></a></h2><h2>Calculate the number of elements that are greater than 0.8<a name="6"></a></h2><pre class="codeinput">A=rand(1000);
+sum(A(:)&gt;.8)/numel(A)
+</pre><pre class="codeoutput">
+ans =
+
+    0.1999
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.13<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise 3
+%% Define a matrix Prices from column 2 to the end of the matrix data
+load ../gasprices
+data(1,2)=data(2,2); % Fix the missing data in Australia
+Prices=data(:,2:end);
+%% 3.1 Calculate the average price for each country
+mean(Prices)
+%% 3.2 Plot the yearly average price for all countries
+figure
+plot(Year,mean(Prices'))
+%% 3.3 Plot the yearly average price in Europe and the Americas
+ieur=[3 4 5 9];
+iam=[2 7 10];
+figure
+plot(Year,mean(Prices(:,ieur)'))
+hold on
+plot(Year,mean(Prices(:,iam)'),'r')
+legend('Europe','America');
+%% Exercise 3b
+%% Calculate the number of elements that are greater than 0.8
+A=rand(1000);
+sum(A(:)>.8)/numel(A)
+
+##### SOURCE END #####
+--></body></html>

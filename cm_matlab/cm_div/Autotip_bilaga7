@@ -1,0 +1,24 @@
+#!/bin/sh
+######################################
+# Autotip_bilaga7 v1.0
+# Autotip_XP bilaga 7 generator
+# Underprogram till Autotip_XP.m
+# Programmet har en dist fil som
+# enda inparameter.
+# Jan Karjalainen, FTB 2004
+######################################
+poldiff > /dev/null << END
+bilaga7.txt
+
+power
+$2
+power
+$1
+4
+
+
+
+
+
+
+END

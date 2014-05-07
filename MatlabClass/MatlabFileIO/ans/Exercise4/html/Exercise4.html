@@ -1,0 +1,103 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Exercise - Read binary file</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-02-18"><meta name="DC.source" content="Exercise4.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Exercise - Read binary file</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Open file</a></li><li><a href="#2">Read 5x2 matrix of 32-bit integers</a></li><li><a href="#3">Read 5x2 matrix of single precision float values</a></li><li><a href="#4">Read random double precision values</a></li><li><a href="#5">Move back to the single precision array (10 integers @ four bytes in)</a></li><li><a href="#6">Read it as a vector of size 10</a></li><li><a href="#7">Close file</a></li></ul></div><h2>Open file<a name="1"></a></h2><pre class="codeinput">fid = fopen(<span class="string">'Exercise4.dat'</span>,<span class="string">'rb'</span>);
+</pre><h2>Read 5x2 matrix of 32-bit integers<a name="2"></a></h2><pre class="codeinput">ia = fread(fid,[2,5],<span class="string">'*uint32'</span>);
+ia_sum = sum(ia);
+</pre><h2>Read 5x2 matrix of single precision float values<a name="3"></a></h2><pre class="codeinput">fa = fread(fid,[2,5],<span class="string">'*float'</span>);
+fa_sum = sum(fa);
+</pre><h2>Read random double precision values<a name="4"></a></h2><pre class="codeinput">ra = fread(fid,100,<span class="string">'*double'</span>);
+ra_avg = mean(ra);
+</pre><h2>Move back to the single precision array (10 integers @ four bytes in)<a name="5"></a></h2><pre class="codeinput">fseek(fid,40,<span class="string">'bof'</span>);
+</pre><h2>Read it as a vector of size 10<a name="6"></a></h2><pre class="codeinput">fa2 = fread(fid,10,<span class="string">'*float'</span>);
+</pre><h2>Close file<a name="7"></a></h2><pre class="codeinput">fclose(fid);
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise - Read binary file
+%% Open file
+fid = fopen('Exercise4.dat','rb');
+
+%% Read 5x2 matrix of 32-bit integers
+ia = fread(fid,[2,5],'*uint32');
+ia_sum = sum(ia);
+
+%% Read 5x2 matrix of single precision float values
+fa = fread(fid,[2,5],'*float');
+fa_sum = sum(fa);
+
+%% Read random double precision values
+ra = fread(fid,100,'*double');
+ra_avg = mean(ra);
+
+%% Move back to the single precision array (10 integers @ four bytes in)
+fseek(fid,40,'bof');
+
+%% Read it as a vector of size 10
+fa2 = fread(fid,10,'*float');
+
+%% Close file
+fclose(fid);
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,24 @@
+#!/bin/sh
+######################################
+# Autotip_bilaga5_F3 v1.0
+# Autotip_XP bilaga 5 för F3 generator
+# Underprogram till Autotip_XP.m
+# Programmet har en dist fil som
+# enda inparameter.
+# Jan Karjalainen, FTB 2004
+######################################
+poldiff > /dev/null << END
+bilaga5.txt
+
+power
+$2
+power
+$1
+4
+
+
+
+
+
+
+END

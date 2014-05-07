@@ -1,0 +1,11 @@
+function [Gc,Fn,Fnbv,GcF]=UtvarderaBode(data,f)
+   t=data(:,1);
+   u=data(:,2);
+   y=data(:,3);
+   u=detrend(u,0);
+   y=detrend(y,0);
+   Fbv=fft(u);
+   [~,imax]=max(abs(Fbv));
+   Fn=fft(y);
+   GcF=Fn(imax)/Fbv(imax);
+   [~,Gc,Fn,Fnbv]=oneptFFT([t,u,y],f);

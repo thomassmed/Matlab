@@ -1,0 +1,25 @@
+Uppgift 1
+Skapa en signal u=sin(w0*t) med w0=pi, dvs f=0.5 Hz
+Simulera mellan 0 och 10 sek med tidssteg 0.01 s
+
+Filtrera denna signal med ett första ordningens filter med tidskonstant 0.2s:
+
+G(s)= 1/(1+0.2s)
+
+1a) Räkna ut vad utsignalen borde bli genom att beräkna G(jw0)
+
+1b) Simulera utsignalen (kalla den y) mha m-filen clsim och jämför med resultatet i 1a)
+
+1c) Beräkna fft för u och y och beräkna Y(jw0)/U(jw0) (hitta den dominerande komponenten, imax, och
+    beräkna Y(imax)/U(imax)) Jämför detta tal med G(jw0)
+    Illustrera detta mha kommandot compass:
+    
+    [xmax,imax]=max(abs(U));    
+    figure
+    compass(U(imax))
+    hold on
+    compass(Y(imax),'g')
+    compass(U(imax)*G(jw0),'r')
+
+1d) Använd funktionen oneptFFT för att fixa detta istället.
+    

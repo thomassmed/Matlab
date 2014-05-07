@@ -1,0 +1,118 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>1) L&ouml;s dN/dt=-N numeriskt</title><meta name="generator" content="MATLAB 7.9"><meta name="date" content="2014-01-27"><meta name="m-file" content="ExerciseSimpleN"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>1) L&ouml;s dN/dt=-N numeriskt</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">a) genom att helt sonika anv&auml;nda den slutna analytiska l&ouml;sningen</a></li><li><a href="#2">b) Euler fram&aring;t</a></li><li><a href="#3">c) Euler bak&aring;t</a></li><li><a href="#4">&Ouml;vning 2</a></li></ul></div><h2>a) genom att helt sonika anv&auml;nda den slutna analytiska l&ouml;sningen<a name="1"></a></h2><pre class="codeinput">h=.01;
+t=0:h:5;
+N=exp(-t);
+figure
+plot(t,N)
+</pre><img vspace="5" hspace="5" src="ExerciseSimpleN_01.png" alt=""> <h2>b) Euler fram&aring;t<a name="2"></a></h2><pre class="codeinput">N1=ones(size(N));
+N1(1)=1;
+<span class="keyword">for</span> i=2:length(N1),
+    N1(i)=N1(i-1)-h*N1(i-1);
+<span class="keyword">end</span>
+hold <span class="string">on</span>
+plot(t,N1,<span class="string">'r'</span>)
+</pre><img vspace="5" hspace="5" src="ExerciseSimpleN_02.png" alt=""> <h2>c) Euler bak&aring;t<a name="3"></a></h2><pre class="codeinput">N2=ones(size(N));
+h=t(2)-t(1);
+N2(1)=1;
+<span class="keyword">for</span> i=2:length(N2),
+    N2(i)=N2(i-1)/(1+h);
+<span class="keyword">end</span>
+plot(t,N2,<span class="string">'k'</span>)
+legend(<span class="string">'Exakt'</span>,<span class="string">'Euler fram&aring;t'</span>,<span class="string">'Euler bak&aring;t'</span>)
+</pre><img vspace="5" hspace="5" src="ExerciseSimpleN_03.png" alt=""> <h2>&Ouml;vning 2<a name="4"></a></h2><p>a) Taylor(exp(-h)) = 1 - h + O(h^2) b) 1-h &auml;r ju det som redan st&aring;r h&auml;r c) Taylor(1/(1+h)) = 1 - h + O(h^2)</p><p class="footer"><br>
+      Published with MATLAB&reg; 7.9<br></p></div><!--
+##### SOURCE BEGIN #####
+%% 1) Lös dN/dt=-N numeriskt
+%% a) genom att helt sonika använda den slutna analytiska lösningen
+h=.01;
+t=0:h:5;
+N=exp(-t);
+figure
+plot(t,N)
+%% b) Euler framåt
+N1=ones(size(N));
+N1(1)=1;
+for i=2:length(N1),
+    N1(i)=N1(i-1)-h*N1(i-1);
+end
+hold on
+plot(t,N1,'r')
+%% c) Euler bakåt
+N2=ones(size(N));
+h=t(2)-t(1);
+N2(1)=1;
+for i=2:length(N2),
+    N2(i)=N2(i-1)/(1+h);
+end
+plot(t,N2,'k')
+legend('Exakt','Euler framåt','Euler bakåt')
+%% Övning 2
+% a) Taylor(exp(-h)) = 1 - h + O(h^2)
+% b) 1-h är ju det som redan står här
+% c) Taylor(1/(1+h)) = 1 - h + O(h^2)
+
+##### SOURCE END #####
+--></body></html>

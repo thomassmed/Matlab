@@ -1,0 +1,20 @@
+#!/bin/sh
+######################################
+# Autotip_bilaga9 v1.0
+# Autotip_XP bilaga 9 generator
+# Underprogram till Autotip_XP.m
+# Programmet har en dist fil som
+# enda inparameter.
+# Jan Karjalainen, FTB 2004
+######################################
+polut > /dev/null << END
+bilaga9.txt
+$1
+
+BURNUP
+2
+
+
+
+
+END

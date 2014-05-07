@@ -1,0 +1,9 @@
+function [err,lprmest]=fitstab(p,t,lprm)
+m=p(1);
+re=p(2);
+im=p(3);
+sig=p(4);
+w=p(5);
+lprmest=m+real((re+1j*im)*exp((sig+1j*w)*t));
+err=lprmest-lprm;
+err=norm(err,2);

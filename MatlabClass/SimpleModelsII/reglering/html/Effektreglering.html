@@ -1,0 +1,163 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>Effektreglering</title><meta name="generator" content="MATLAB 7.9"><meta name="date" content="2014-03-10"><meta name="m-file" content="Effektreglering"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Linj&auml;riserade modeller</a></li><li><a href="#2">Ramp som insignal</a></li><li><a href="#3">Neutronfl&ouml;de</a></li><li><a href="#4">&Aring;ngfl&ouml;de</a></li><li><a href="#7">Ramp i driftomr&aring;det</a></li><li><a href="#8">Steg som insignal</a></li><li><a href="#9">Neutronfl&ouml;de</a></li><li><a href="#10">&Aring;ngfl&ouml;de</a></li><li><a href="#13">Steg i driftomr&aring;det</a></li></ul></div><h2>Linj&auml;riserade modeller<a name="1"></a></h2><pre class="codeinput">GN=0.84*tf([9.4 1],[2 1])*tf([0.00475 1],[.2 1]);
+GF=tf([2 1],[9.4 1])*tf(1,[1 1]);
+GHP=tf(1,[0.4 1])*tf(1,[.3 1]);
+GLP=tf(1,[2.45 1])*tf(1,[.2 1]);
+</pre><h2>Ramp som insignal<a name="2"></a></h2><pre class="codeinput">t=0:0.1:60;t=t(:);
+hcramp=1.5/100*t;
+hcramp(201:end)=hcramp(201);
+plot(t,hcramp)
+</pre><img vspace="5" hspace="5" src="Effektreglering_01.png" alt=""> <h2>Neutronfl&ouml;de<a name="3"></a></h2><pre class="codeinput">Qf=lsim(GN,hcramp,t);
+hold <span class="string">on</span>
+plot(t,Qf,<span class="string">'r'</span>)
+</pre><img vspace="5" hspace="5" src="Effektreglering_02.png" alt=""> <h2>&Aring;ngfl&ouml;de<a name="4"></a></h2><pre class="codeinput">Mst=lsim(GF,Qf,t);
+plot(t,Mst,<span class="string">'k'</span>)
+</pre><img vspace="5" hspace="5" src="Effektreglering_03.png" alt=""> <pre class="codeinput">PHP=lsim(GHP,Mst,t);
+PLP=lsim(GLP,PHP,t);
+Pel=0.4*PHP+0.6*PLP;
+plot(t,Pel,<span class="string">'g'</span>)
+</pre><img vspace="5" hspace="5" src="Effektreglering_04.png" alt=""> <pre class="codeinput">legend(<span class="string">'HC-fl&ouml;de'</span>,<span class="string">'Fissionseffekt'</span>,<span class="string">'&Aring;ngfl&ouml;de'</span>,<span class="string">'Eleffekt'</span>,<span class="string">'location'</span>,<span class="string">'SE'</span>)
+title(<span class="string">'Ramp p&aring; hc-fl&ouml;de'</span>)
+</pre><img vspace="5" hspace="5" src="Effektreglering_05.png" alt=""> <h2>Ramp i driftomr&aring;det<a name="7"></a></h2><pre class="codeinput">f2dd
+plot(hcramp*10400+6000,Qf*100+80,<span class="string">'r'</span>,<span class="string">'linew'</span>,2)
+</pre><img vspace="5" hspace="5" src="Effektreglering_06.png" alt=""> <h2>Steg som insignal<a name="8"></a></h2><pre class="codeinput">t=0:0.01:20;t=t(:);
+hcsteg=0*t;
+hcsteg(101:end)=0.1;
+hcsteg=lsim(tf(1,[1 1]),hcsteg,t);
+figure
+plot(t,hcsteg)
+</pre><img vspace="5" hspace="5" src="Effektreglering_07.png" alt=""> <h2>Neutronfl&ouml;de<a name="9"></a></h2><pre class="codeinput">Qf=lsim(GN,hcsteg,t);
+hold <span class="string">on</span>
+plot(t,Qf,<span class="string">'r'</span>)
+</pre><img vspace="5" hspace="5" src="Effektreglering_08.png" alt=""> <h2>&Aring;ngfl&ouml;de<a name="10"></a></h2><pre class="codeinput">Mst=lsim(GF,Qf,t);
+plot(t,Mst,<span class="string">'k'</span>)
+</pre><img vspace="5" hspace="5" src="Effektreglering_09.png" alt=""> <pre class="codeinput">PHP=lsim(GHP,Mst,t);
+PLP=lsim(GLP,PHP,t);
+Pel=0.4*PHP+0.6*PLP;
+plot(t,Pel,<span class="string">'g'</span>)
+</pre><img vspace="5" hspace="5" src="Effektreglering_10.png" alt=""> <pre class="codeinput">legend(<span class="string">'HC-fl&ouml;de'</span>,<span class="string">'Fissionseffekt'</span>,<span class="string">'&Aring;ngfl&ouml;de'</span>,<span class="string">'Eleffekt'</span>,<span class="string">'location'</span>,<span class="string">'NE'</span>)
+title(<span class="string">'Steg i hc-fl&ouml;de'</span>)
+</pre><img vspace="5" hspace="5" src="Effektreglering_11.png" alt=""> <h2>Steg i driftomr&aring;det<a name="13"></a></h2><pre class="codeinput">f2dd
+plot(hcsteg*10400+6000,Qf*100+80,<span class="string">'r'</span>,<span class="string">'linew'</span>,2)
+</pre><img vspace="5" hspace="5" src="Effektreglering_12.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.9<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Linjäriserade modeller
+GN=0.84*tf([9.4 1],[2 1])*tf([0.00475 1],[.2 1]);
+GF=tf([2 1],[9.4 1])*tf(1,[1 1]);
+GHP=tf(1,[0.4 1])*tf(1,[.3 1]);
+GLP=tf(1,[2.45 1])*tf(1,[.2 1]);
+%% Ramp som insignal
+t=0:0.1:60;t=t(:);
+hcramp=1.5/100*t;
+hcramp(201:end)=hcramp(201);
+plot(t,hcramp)
+%% Neutronflöde
+Qf=lsim(GN,hcramp,t);
+hold on
+plot(t,Qf,'r')
+%% Ångflöde
+Mst=lsim(GF,Qf,t);
+plot(t,Mst,'k')
+%% 
+PHP=lsim(GHP,Mst,t);
+PLP=lsim(GLP,PHP,t);
+Pel=0.4*PHP+0.6*PLP;
+plot(t,Pel,'g')
+%%
+legend('HC-flöde','Fissionseffekt','Ångflöde','Eleffekt','location','SE')
+title('Ramp på hc-flöde')
+%% Ramp i driftområdet
+f2dd
+plot(hcramp*10400+6000,Qf*100+80,'r','linew',2)
+%% Steg som insignal
+t=0:0.01:20;t=t(:);
+hcsteg=0*t;
+hcsteg(101:end)=0.1;
+hcsteg=lsim(tf(1,[1 1]),hcsteg,t);
+figure
+plot(t,hcsteg)
+%% Neutronflöde
+Qf=lsim(GN,hcsteg,t);
+hold on
+plot(t,Qf,'r')
+%% Ångflöde
+Mst=lsim(GF,Qf,t);
+plot(t,Mst,'k')
+%% 
+PHP=lsim(GHP,Mst,t);
+PLP=lsim(GLP,PHP,t);
+Pel=0.4*PHP+0.6*PLP;
+plot(t,Pel,'g')
+%%
+legend('HC-flöde','Fissionseffekt','Ångflöde','Eleffekt','location','NE')
+title('Steg i hc-flöde')
+%% Steg i driftområdet
+f2dd
+plot(hcsteg*10400+6000,Qf*100+80,'r','linew',2)
+
+##### SOURCE END #####
+--></body></html>

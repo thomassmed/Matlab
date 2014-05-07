@@ -1,0 +1,13 @@
+function y=eq_Energy_core(alfa,tl,Wg,Wl,qprimw,q3l,tsat,P,A,hz,chflow,tlp)
+kmax=size(alfa,1);
+y=zeros(size(alfa));
+ett=ones(size(alfa(1,:)));
+romum=eq_romum(alfa,P,tl,tsat);k=2:kmax;
+romum_in=eq_romum(0,P,tlp,tsat);
+y(k,:)=eq_E(alfa(k,:),romum(k,:),Wl(k,:),Wg(k,:),tl(k,:),P,tsat,A(k,:)*hz/100,A(k,:))-...
+    eq_E(alfa(k-1,:),romum(k-1,:),Wl(k-1,:),Wg(k-1,:),tl(k-1,:),P,tsat,A(k-1,:)*hz/100,A(k-1,:))-...
+    (qprimw(k,:)+ q3l(k,:).*(1-alfa(k,:)).*A(k,:))*hz/100;
+y(1,:)=eq_E(alfa(1,:),romum(1,:),Wl(1,:),Wg(1,:),tl(1,:),P,tsat,A(1,:)*hz/100,A(1,:))-...
+       eq_E(0*ett,ett*romum_in,chflow,0*ett,tlp*ett,P,tsat,A(1,:)*hz/100,A(1,:))-...
+       (qprimw(1,:)+ q3l(1,:).*(1-alfa(1,:)).*A(1,:))*hz/100;
+y=y/1e5; % Scaling for numerical purposes

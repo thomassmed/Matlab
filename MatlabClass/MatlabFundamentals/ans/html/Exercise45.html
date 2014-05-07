@@ -1,0 +1,110 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Exercise45</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2010-11-16"><meta name="DC.source" content="Exercise45.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Read in gasprices</a></li><li><a href="#2">Get the columnheaders</a></li><li><a href="#3">Put the variables in reasonable names</a></li><li><a href="#4">Take a look at the last evstr:</a></li><li><a href="#5">Explore what  variables we have in workspace</a></li></ul></div><h2>Read in gasprices<a name="1"></a></h2><pre class="codeinput">[data,textdata]=xlsread(<span class="string">'../gasprices.xls'</span>);
+</pre><h2>Get the columnheaders<a name="2"></a></h2><pre class="codeinput">colheaders=textdata(end,:);
+</pre><h2>Put the variables in reasonable names<a name="3"></a></h2><pre class="codeinput"><span class="keyword">for</span> i=1:length(colheaders),
+    evstr=[genvarname(colheaders{i}),<span class="string">'=data(:,i);'</span>];
+    eval(evstr);
+<span class="keyword">end</span>
+</pre><h2>Take a look at the last evstr:<a name="4"></a></h2><pre class="codeinput">disp(evstr)
+</pre><pre class="codeoutput">USA=data(:,i);
+</pre><h2>Explore what  variables we have in workspace<a name="5"></a></h2><pre class="codeinput">whos
+</pre><pre class="codeoutput">  Name             Size            Bytes  Class     Attributes
+
+  Australia       19x1               152  double              
+  Canada          19x1               152  double              
+  France          19x1               152  double              
+  Germany         19x1               152  double              
+  Italy           19x1               152  double              
+  Japan           19x1               152  double              
+  Mexico          19x1               152  double              
+  SouthKorea      19x1               152  double              
+  UK              19x1               152  double              
+  USA             19x1               152  double              
+  Year            19x1               152  double              
+  colheaders       1x11             1360  cell                
+  data            19x11             1672  double              
+  evstr            1x14               28  char                
+  i                1x1                 8  double              
+  textdata         5x11             6606  cell                
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Read in gasprices
+[data,textdata]=xlsread('../gasprices.xls');
+%% Get the columnheaders
+colheaders=textdata(end,:);
+%% Put the variables in reasonable names
+for i=1:length(colheaders),
+    evstr=[genvarname(colheaders{i}),'=data(:,i);'];
+    eval(evstr);
+end
+%% Take a look at the last evstr:
+disp(evstr)
+%% Explore what  variables we have in workspace
+whos
+##### SOURCE END #####
+--></body></html>

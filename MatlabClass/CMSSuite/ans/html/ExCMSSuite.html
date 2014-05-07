@@ -1,0 +1,684 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Exercise CMSSuite</title><meta name="generator" content="MATLAB 7.13"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2012-03-26"><meta name="DC.source" content="ExCMSSuite.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Exercise CMSSuite</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Get metadata from sim-dep.sum</a></li><li><a href="#2">Read in FLC 2D MAP from sim-dep.sum</a></li><li><a href="#3">1) Convert FLC in state point 7 to a map</a></li><li><a href="#4">2a) Find flcmax</a></li><li><a href="#5">2b)</a></li><li><a href="#6">As a preparation for task 3-5, read in 'FUE.LAB' to a cell array fuelab:</a></li><li><a href="#7">3) Plot flcmax as a function of exposure for fuel of type 28A7</a></li><li><a href="#8">4) Plot flcmax as a function of exposure for fuel of type 28A8</a></li><li><a href="#9">5) Plot flcmax as a function of exposure for fuel of either type 28A7 or 28A8 by</a></li><li><a href="#10">a) Combining the result of 4 and 5</a></li><li><a href="#11">b) By using '28A' as pattern in strncmp</a></li><li><a href="#12">6 Annotate the plots</a></li><li><a href="#13">b) Programmatically</a></li><li><a href="#14">7) find the number of bundles above 0.85 in each state point and plot with the bar-command</a></li><li><a href="#15">8) Make a 'flugskitsplot' of all flcs vs individual bundle exp at all dep steps</a></li><li><a href="#16">Prepare for exercises 9 and 10:</a></li><li><a href="#17">9) Plot each node</a></li><li><a href="#18">10) Calculate the fraction to limit in state pt 9 if the limits are given by:</a></li><li><a href="#19">Compare with the 'reference'</a></li><li><a href="#20">11) Find all the segments on the restart file</a></li><li><a href="#21">12) Find all segments in the present core</a></li><li><a href="#22">Preparation for exercise 13-15</a></li><li><a href="#23">13) Create a core map of channel numbers</a></li><li><a href="#24">14) Find the channel numbers for all bundles in the SE quarter of the core</a></li><li><a href="#25">15) Try ij2mminj on iaSE and jaSE</a></li><li><a href="#26">Expand a quarter core dist to a full dist</a></li></ul></div><h2>Get metadata from sim-dep.sum<a name="1"></a></h2><pre class="codeinput">suminfo=ReadSum(<span class="string">'../sim-dep.sum'</span>);
+</pre><h2>Read in FLC 2D MAP from sim-dep.sum<a name="2"></a></h2><pre class="codeinput">FLC=ReadSum(suminfo,<span class="string">'FLC 2D MAP'</span>);
+</pre><h2>1) Convert FLC in state point 7 to a map<a name="3"></a></h2><pre class="codeinput">flcmap=vec2cor(FLC{7},suminfo.core.mminj)
+</pre><pre class="codeoutput">
+flcmap =
+
+  Columns 1 through 12
+
+         0         0         0         0         0         0         0         0         0         0    0.1640    0.2020
+         0         0         0         0         0         0         0         0         0    0.2330    0.2860    0.3540
+         0         0         0         0         0         0    0.1800    0.2440    0.3160    0.3630    0.4320    0.5590
+         0         0         0         0         0    0.2210    0.2970    0.4130    0.4790    0.5160    0.6520    0.6620
+         0         0         0         0    0.2320    0.3240    0.4430    0.6490    0.7050    0.7290    0.7450    0.7000
+         0         0         0    0.2270    0.3270    0.4760    0.6130    0.7700    0.8140    0.7820    0.6880    0.7630
+         0         0    0.1790    0.3020    0.4540    0.6540    0.7970    0.8420    0.8460    0.6870    0.8460    0.6900
+         0         0    0.2520    0.4080    0.6370    0.7630    0.8430    0.7280    0.7640    0.7960    0.7280    0.8690
+         0         0    0.3170    0.4890    0.5940    0.8230    0.7730    0.7790    0.5860    0.5850    0.7600    0.7600
+         0    0.2430    0.3820    0.5660    0.7680    0.8270    0.8520    0.8290    0.5920    0.5900    0.7580    0.8570
+    0.1710    0.3000    0.4610    0.7170    0.8120    0.8430    0.7980    0.7820    0.7930    0.7160    0.8320    0.6780
+    0.2060    0.3700    0.5890    0.7070    0.7790    0.8230    0.7540    0.9050    0.8490    0.8720    0.6620    0.7940
+    0.2300    0.3930    0.6090    0.6840    0.6540    0.6740    0.6880    0.8370    0.7480    0.7460    0.7920    0.6380
+    0.2310    0.3930    0.6010    0.6790    0.6470    0.6810    0.6980    0.9000    0.7570    0.7530    0.7130    0.7430
+    0.2100    0.3720    0.5790    0.6970    0.7710    0.6830    0.8750    0.7760    0.8600    0.8380    0.8540    0.6320
+    0.1680    0.2950    0.4560    0.7060    0.7680    0.8670    0.7310    0.8960    0.8470    0.8290    0.7220    0.8600
+         0    0.2360    0.3770    0.5560    0.7820    0.8310    0.8550    0.7960    0.6050    0.6040    0.7880    0.8510
+         0         0    0.3170    0.4980    0.7090    0.8430    0.7560    0.8180    0.5870    0.5940    0.8420    0.8980
+         0         0    0.2530    0.4150    0.5780    0.7830    0.8600    0.7370    0.7840    0.8220    0.8310    0.7430
+         0         0    0.1870    0.3120    0.4580    0.6800    0.7780    0.8630    0.7680    0.8860    0.7260    0.8470
+         0         0         0    0.2350    0.3560    0.5990    0.7290    0.7900    0.8420    0.8230    0.7300    0.7050
+         0         0         0         0    0.2540    0.3540    0.4710    0.6570    0.6490    0.7670    0.7500    0.7320
+         0         0         0         0         0    0.2260    0.3170    0.4290    0.4960    0.6060    0.6610    0.6790
+         0         0         0         0         0         0    0.1910    0.2600    0.3240    0.3740    0.4470    0.5860
+         0         0         0         0         0         0         0         0         0    0.2400    0.2990    0.3650
+         0         0         0         0         0         0         0         0         0         0    0.1620    0.2030
+
+  Columns 13 through 24
+
+    0.2260    0.2270    0.2030    0.1620         0         0         0         0         0         0         0         0
+    0.3790    0.3720    0.3650    0.2990    0.2400         0         0         0         0         0         0         0
+    0.5640    0.6060    0.5860    0.4470    0.3740    0.3240    0.2600    0.1910         0         0         0         0
+    0.6520    0.6580    0.6790    0.6610    0.6060    0.4960    0.4290    0.3170    0.2260         0         0         0
+    0.6310    0.6340    0.7320    0.7500    0.7670    0.6490    0.6570    0.4710    0.3540    0.2540         0         0
+    0.6690    0.6610    0.7050    0.7300    0.8230    0.8420    0.7900    0.7290    0.5990    0.3560    0.2350         0
+    0.6970    0.7230    0.8480    0.7260    0.8860    0.7680    0.8630    0.7780    0.6800    0.4580    0.3120    0.1870
+    0.8290    0.8780    0.7430    0.8310    0.8220    0.7840    0.7370    0.8600    0.7830    0.5780    0.4150    0.2530
+    0.7430    0.7310    0.8980    0.8420    0.5940    0.5870    0.8180    0.7570    0.8430    0.7090    0.4980    0.3170
+    0.7270    0.7330    0.8510    0.7870    0.6040    0.6050    0.7960    0.8560    0.8310    0.7820    0.5560    0.3760
+    0.8310    0.7220    0.8600    0.7220    0.8290    0.8470    0.8960    0.7310    0.8670    0.7680    0.7060    0.4560
+    0.6270    0.7150    0.6320    0.8540    0.8380    0.8600    0.7770    0.8750    0.6830    0.7710    0.6970    0.5790
+    0.5450    0.5440    0.7430    0.7130    0.7530    0.7570    0.9000    0.6980    0.6810    0.6470    0.6790    0.6010
+    0.5440    0.5450    0.6380    0.7930    0.7460    0.7480    0.8370    0.6890    0.6740    0.6540    0.6840    0.6080
+    0.7150    0.6270    0.7950    0.6620    0.8720    0.8490    0.9050    0.7540    0.8230    0.7790    0.7070    0.5890
+    0.7220    0.8310    0.6780    0.8320    0.7160    0.7930    0.7820    0.7980    0.8430    0.8120    0.7170    0.4610
+    0.7330    0.7270    0.8570    0.7580    0.5900    0.5920    0.8290    0.8520    0.8270    0.7680    0.5650    0.3820
+    0.7310    0.7440    0.7600    0.7610    0.5850    0.5860    0.7790    0.7730    0.8230    0.5940    0.4890    0.3170
+    0.8780    0.8290    0.8690    0.7280    0.7960    0.7640    0.7280    0.8430    0.7630    0.6370    0.4080    0.2520
+    0.7230    0.6970    0.6900    0.8460    0.6870    0.8460    0.8420    0.7970    0.6540    0.4540    0.3030    0.1790
+    0.6610    0.6690    0.7630    0.6880    0.7810    0.8140    0.7700    0.6130    0.4760    0.3270    0.2270         0
+    0.6340    0.6310    0.7000    0.7450    0.7290    0.7050    0.6490    0.4430    0.3240    0.2320         0         0
+    0.6580    0.6520    0.6620    0.6520    0.5160    0.4790    0.4130    0.2970    0.2210         0         0         0
+    0.6060    0.5640    0.5590    0.4320    0.3630    0.3160    0.2440    0.1800         0         0         0         0
+    0.3720    0.3790    0.3530    0.2860    0.2330         0         0         0         0         0         0         0
+    0.2270    0.2260    0.2020    0.1640         0         0         0         0         0         0         0         0
+
+  Columns 25 through 26
+
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+    0.2360         0
+    0.2940    0.1680
+    0.3720    0.2100
+    0.3930    0.2310
+    0.3940    0.2300
+    0.3700    0.2060
+    0.3000    0.1710
+    0.2430         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+         0         0
+
+</pre><h2>2a) Find flcmax<a name="4"></a></h2><pre class="codeinput">flmax=nan(length(FLC),1);
+<span class="keyword">for</span> i=1:length(FLC),
+    flmax(i)=max(FLC{i});
+<span class="keyword">end</span>
+figure
+plot(flmax)
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_01.png" alt=""> <h2>2b)<a name="5"></a></h2><pre class="codeinput">figure
+plot(suminfo.xpo,flmax)
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_02.png" alt=""> <h2>As a preparation for task 3-5, read in 'FUE.LAB' to a cell array fuelab:<a name="6"></a></h2><pre class="codeinput">fuelab=ReadSum(suminfo,<span class="string">'FUE.LAB'</span>);
+</pre><h2>3) Plot flcmax as a function of exposure for fuel of type 28A7<a name="7"></a></h2><pre class="codeinput">i28a7=strcmp(<span class="string">'28A7'</span>,fuelab);
+flmax28a7=nan(length(FLC),1);
+<span class="keyword">for</span> i=1:length(FLC),
+    flmax28a7(i)=max(FLC{i}(i28a7));
+<span class="keyword">end</span>
+figure
+plot(suminfo.xpo,flmax28a7);
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_03.png" alt=""> <h2>4) Plot flcmax as a function of exposure for fuel of type 28A8<a name="8"></a></h2><pre class="codeinput">i28a8=strcmp(<span class="string">'28A8'</span>,fuelab);
+flmax28a8=nan(length(FLC),1);
+<span class="keyword">for</span> i=1:length(FLC),
+    flmax28a8(i)=max(FLC{i}(i28a8));
+<span class="keyword">end</span>
+figure
+plot(suminfo.xpo,flmax28a8);
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_04.png" alt=""> <h2>5) Plot flcmax as a function of exposure for fuel of either type 28A7 or 28A8 by<a name="9"></a></h2><h2>a) Combining the result of 4 and 5<a name="10"></a></h2><pre class="codeinput">flmax28a=max(flmax28a8,flmax28a7);
+figure
+plot(suminfo.xpo,flmax28a);
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_05.png" alt=""> <h2>b) By using '28A' as pattern in strncmp<a name="11"></a></h2><pre class="codeinput">i28a=strncmp(<span class="string">'28A'</span>,fuelab,3);
+flmax28a2=nan(length(FLC),1);
+<span class="keyword">for</span> i=1:length(FLC),
+    flmax28a2(i)=max(FLC{i}(i28a));
+<span class="keyword">end</span>
+figure
+plot(suminfo.xpo,flmax28a2);
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_06.png" alt=""> <h2>6 Annotate the plots<a name="12"></a></h2><h2>b) Programmatically<a name="13"></a></h2><pre class="codeinput">xlabel(<span class="string">'Exposure (EFPH)'</span>);
+ylabel(<span class="string">'Fraction of limit for CPR'</span>);
+title(<span class="string">'Fraction of limit for CPR for bundle type 28A7 and 28A8'</span>)
+grid
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_07.png" alt=""> <h2>7) find the number of bundles above 0.85 in each state point and plot with the bar-command<a name="14"></a></h2><pre class="codeinput">ngt0pt85=nan(length(FLC),1);
+<span class="keyword">for</span> i=1:length(FLC),
+    ngt0pt85(i)=sum(FLC{i}&gt;0.85);
+<span class="keyword">end</span>
+figure
+bar(suminfo.xpo,ngt0pt85)
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_08.png" alt=""> <h2>8) Make a 'flugskitsplot' of all flcs vs individual bundle exp at all dep steps<a name="15"></a></h2><pre class="codeinput">EXP2=ReadSum(suminfo,<span class="string">'EXP 2D MAP'</span>);
+figure
+hold <span class="string">all</span>
+<span class="comment">% hold on</span>
+grid
+xlabel(<span class="string">'Bundle Exposure (MWd/kgU)'</span>);
+ylabel(<span class="string">'Fraction of limit CPR'</span>)
+title(<span class="string">'All bundles for the entire cycle'</span>);
+<span class="keyword">for</span> i=1:length(FLC),
+    plot(EXP2{i},FLC{i},<span class="string">'x'</span>)
+    figure(gcf)
+<span class="comment">%     pause</span>
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_09.png" alt=""> <h2>Prepare for exercises 9 and 10:<a name="16"></a></h2><pre class="codeinput">cmsinfo=read_cms(<span class="string">'../sim-dep.cms'</span>);
+lhg3=read_cms_dist(cmsinfo,<span class="string">'3LHG'</span>);
+exp3=read_cms_dist(cmsinfo,<span class="string">'3EXP'</span>);
+</pre><h2>9) Plot each node<a name="17"></a></h2><pre class="codeinput">figure
+hold <span class="string">all</span>
+<span class="keyword">for</span> i=1:length(lhg3),
+    plot(exp3{i}(:),lhg3{i}(:),<span class="string">'x'</span>);
+<span class="comment">%     pause</span>
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_10.png" alt=""> <h2>10) Calculate the fraction to limit in state pt 9 if the limits are given by:<a name="18"></a></h2><pre class="codeinput">xpo=[00.0  16.0  38.0  59.0  70.0];
+lhg=[417.6 417.6 367.7 265.0 171.4];
+figure
+plot(xpo,lhg)
+lims=interp1(xpo,lhg,exp3{9});
+flp3_9=lhg3{9}./lims;
+cmsplot <span class="string">../sim-dep.cms</span> <span class="string">flp3_9</span>
+set_cmsplot_prop <span class="string">operator</span> <span class="string">max</span>
+set_cmsplot_prop <span class="string">rescale</span> <span class="string">auto</span>
+cmsplot_now
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_11.png" alt=""> <img vspace="5" hspace="5" src="ExCMSSuite_12.png" alt=""> <h2>Compare with the 'reference'<a name="19"></a></h2><pre class="codeinput">flp3=read_cms_dist(cmsinfo,<span class="string">'3FLP'</span>);
+cmsplot <span class="string">../sim-dep.cms</span> <span class="string">flp3{9}</span>
+set_cmsplot_prop <span class="string">operator</span> <span class="string">max</span>
+set_cmsplot_prop <span class="string">rescale</span> <span class="string">auto</span>
+cmsplot_now
+</pre><img vspace="5" hspace="5" src="ExCMSSuite_13.png" alt=""> <h2>11) Find all the segments on the restart file<a name="20"></a></h2><pre class="codeinput">resinfo=ReadRes(<span class="string">'../dist-boc.res'</span>);
+Lib = ReadRes(resinfo,<span class="string">'Library'</span>);
+Segs=cellstr(Lib.Segment);
+unique(Segs)
+</pre><pre class="codeoutput">
+ans = 
+
+    '8x8-2e4-295-1-000-00'
+    '8x8-2e4-295-1-315-06'
+    '8x8-2e4-295-1-315-08'
+    '8x8-2e4-295-1-315-10'
+    '8x8-e1-275-1-000-00'
+    '8x8-e1-275-1-200-08'
+    '8x8-e1-275-1-200-10'
+    '8x8-e3-281-1-255-06'
+    '8x8-e3-281-1-255-08'
+    '8x8-e3-281-1-255-10'
+    '8x8-e4-290-1-000-00'
+    '8x8-e4-290-1-255-06'
+    '8x8-e4-290-1-255-08'
+    '8x8-e4-290-1-255-10'
+    '8x8-e5-290-1-000-00'
+    '8x8-e5-290-1-255-06'
+    '8x8-e5-290-1-255-08'
+    '8x8-e5-290-1-255-10'
+    '8x8-e6-295-1-000-00'
+    '8x8-e6-295-1-255-06'
+    '8x8-e6-295-1-255-08'
+    '8x8-e6-295-1-255-10'
+    '8x8-ini-193-1-315-08'
+    '8x8-ini-193-1-315-10'
+    '8x8-ini-194-1-000-00'
+    '8x8-kwu-282-2-300-10'
+    '9x9-e15-345-1-30-7'
+    '9x9-e15-345-1-30-7+1'
+    '9x9-e15-345-1-370-9'
+    '9x9-e16-345-1-30-7+1'
+    '9x9-e16a-071-1-000-0'
+    '9x9-e16a-345-1-30-7'
+    '9x9-e16b-345-1-370-9'
+    '9x9-e7-300-1-000-0'
+    '9x9-e7-300-1-280-5'
+    '9x9-e7-300-1-280-6'
+    '9x9-e8-071-1-000-0'
+    '9x9-e8-330-1-300-6'
+    '9x9-e8-330-1-300-6+1'
+    '9x9-e9-330-1-350-7'
+    '9x9-e9-330-1-350-7+1'
+    'UNASSIGNED'
+    'apl-demo-345-8-400-9'
+    'apl-e18-332-8-350-8'
+    'apl-e18-332-8-350-9'
+    'apl-e20-346-8-350-8'
+    'apl-e20-346-8-400-9'
+    'apl-e22-346-8-400-8'
+    'apl-e24-345-8-400-8'
+    'apl-e25-381-8-400-10'
+    'atr-demo-345-8-400-9'
+    'atr-demo-346-0-400-9'
+    'atr-e18-332-0-350-9'
+    'atr-e18-332-8-350-8'
+    'atr-e18-332-8-350-9'
+    'atr-e18-333-0-350-8'
+    'atr-e20-071-0-000-0'
+    'atr-e20-071-8-000-0'
+    'atr-e20-346-0-350-10'
+    'atr-e20-346-0-400-9'
+    'atr-e20-346-8-350-8'
+    'atr-e20-346-8-400-9'
+    'atr-e22-346-0-400-10'
+    'atr-e22-346-0-400-11'
+    'atr-e22-346-8-400-8'
+    'atr-e24-071-0-000-0'
+    'atr-e24-071-8-000-0'
+    'atr-e24-345-0-400-10'
+    'atr-e24-345-8-400-8'
+    'atr-e25-381-0-400-12'
+    'atr-e25-381-8-400-10'
+    'axm-lua-071-N-000-00'
+    'axm-lua-071-V-000-T1'
+    'axm-lua-071-V-000-T2'
+    'axm-lua-123-B-200-1'
+    'axm-lua-442-P-500-12'
+    'axm-lua-442-V-500-12'
+    'axm-lua-445-D-477-13'
+    'bottomref'
+    'g14-e27-369-P-400-9'
+    'g14-e27-369-V-400-9'
+    'g14-e27-372-D-382-11'
+    'g14-e27-372-D-400-9'
+    'g14-e28-402-P-400-10'
+    'g14-e28-402-V-400-10'
+    'g14-e28-406-D-400-10'
+    'g14-e28-406-D-400-12'
+    'g14-e30-375-P-400-9'
+    'g14-e30-375-V-400-9'
+    'g14-e30-377-D-400-11'
+    'g14-e30-377-D-400-9'
+    'g14-e30-406-P-400-10'
+    'g14-e30-406-V-400-10'
+    'g14-e30-411-D-400-10'
+    'g14-e30-411-D-400-12'
+    'g14-e31-375-D-364-11'
+    'g14-e31-375-D-400-11'
+    'g14-e31-377-P-364-11'
+    'g14-e31-377-V-364-11'
+    'g14-e31-404-P-367-12'
+    'g14-e31-404-V-367-12'
+    'g14-e31-409-D-367-12'
+    'g14-e31-409-D-400-12'
+    'g14-lua-071-N-000-00'
+    'g14-lua-071-V-000-00'
+    'g14-lua-398-P-400-11'
+    'g14-lua-398-V-400-11'
+    'g14-lua-405-D-400-11'
+    'g1432a-372-00-400-12'
+    'g1432a-374-14-400-11'
+    'g1432a-374-pl-400-11'
+    'g1432a2372-00-400-11'
+    'radialref'
+    'topref'
+
+</pre><h2>12) Find all segments in the present core<a name="21"></a></h2><pre class="codeinput">Segs(unique(Lib.Core_Seg{1}))
+</pre><pre class="codeoutput">
+ans = 
+
+    'g14-lua-071-N-000-00'
+    'g14-lua-071-V-000-00'
+    'g14-e27-372-D-382-11'
+    'g14-e27-372-D-400-9'
+    'g14-e27-369-P-400-9'
+    'g14-e27-369-V-400-9'
+    'g14-e28-406-D-400-12'
+    'g14-e28-406-D-400-10'
+    'g14-e28-402-P-400-10'
+    'g14-e28-402-V-400-10'
+    'g14-e30-377-D-400-11'
+    'g14-e30-377-D-400-9'
+    'g14-e30-375-P-400-9'
+    'g14-e30-375-V-400-9'
+    'g14-e30-411-D-400-12'
+    'g14-e30-411-D-400-10'
+    'g14-e30-406-P-400-10'
+    'g14-e30-406-V-400-10'
+    'g14-e31-375-D-400-11'
+    'g14-e31-375-D-364-11'
+    'g14-e31-377-P-364-11'
+    'g14-e31-377-V-364-11'
+    'g14-e31-409-D-400-12'
+    'g14-e31-409-D-367-12'
+    'g14-e31-404-P-367-12'
+    'g14-e31-404-V-367-12'
+    'axm-lua-071-N-000-00'
+    'axm-lua-123-B-200-1'
+    'axm-lua-445-D-477-13'
+    'axm-lua-442-P-500-12'
+    'axm-lua-442-V-500-12'
+    'axm-lua-071-V-000-T1'
+    'g1432a-372-00-400-12'
+    'g1432a2372-00-400-11'
+    'g1432a-374-pl-400-11'
+    'g1432a-374-14-400-11'
+
+</pre><h2>Preparation for exercise 13-15<a name="22"></a></h2><pre class="codeinput">mminj=resinfo.core.mminj;  <span class="comment">% Note that this info could be picked up from</span>
+kan=resinfo.core.kan;      <span class="comment">% suminfo or cmsinfo as well</span>
+</pre><h2>13) Create a core map of channel numbers<a name="23"></a></h2><pre class="codeinput">coremap=vec2cor(1:kan,mminj)
+</pre><pre class="codeoutput">
+coremap =
+
+  Columns 1 through 20
+
+     0     0     0     0     0     0     0     0     0     0     1     2     3     4     5     6     0     0     0     0
+     0     0     0     0     0     0     0     0     0     7     8     9    10    11    12    13    14     0     0     0
+     0     0     0     0     0     0    15    16    17    18    19    20    21    22    23    24    25    26    27    28
+     0     0     0     0     0    29    30    31    32    33    34    35    36    37    38    39    40    41    42    43
+     0     0     0     0    45    46    47    48    49    50    51    52    53    54    55    56    57    58    59    60
+     0     0     0    63    64    65    66    67    68    69    70    71    72    73    74    75    76    77    78    79
+     0     0    83    84    85    86    87    88    89    90    91    92    93    94    95    96    97    98    99   100
+     0     0   105   106   107   108   109   110   111   112   113   114   115   116   117   118   119   120   121   122
+     0     0   127   128   129   130   131   132   133   134   135   136   137   138   139   140   141   142   143   144
+     0   149   150   151   152   153   154   155   156   157   158   159   160   161   162   163   164   165   166   167
+   173   174   175   176   177   178   179   180   181   182   183   184   185   186   187   188   189   190   191   192
+   199   200   201   202   203   204   205   206   207   208   209   210   211   212   213   214   215   216   217   218
+   225   226   227   228   229   230   231   232   233   234   235   236   237   238   239   240   241   242   243   244
+   251   252   253   254   255   256   257   258   259   260   261   262   263   264   265   266   267   268   269   270
+   277   278   279   280   281   282   283   284   285   286   287   288   289   290   291   292   293   294   295   296
+   303   304   305   306   307   308   309   310   311   312   313   314   315   316   317   318   319   320   321   322
+     0   329   330   331   332   333   334   335   336   337   338   339   340   341   342   343   344   345   346   347
+     0     0   353   354   355   356   357   358   359   360   361   362   363   364   365   366   367   368   369   370
+     0     0   375   376   377   378   379   380   381   382   383   384   385   386   387   388   389   390   391   392
+     0     0   397   398   399   400   401   402   403   404   405   406   407   408   409   410   411   412   413   414
+     0     0     0   419   420   421   422   423   424   425   426   427   428   429   430   431   432   433   434   435
+     0     0     0     0   439   440   441   442   443   444   445   446   447   448   449   450   451   452   453   454
+     0     0     0     0     0   457   458   459   460   461   462   463   464   465   466   467   468   469   470   471
+     0     0     0     0     0     0   473   474   475   476   477   478   479   480   481   482   483   484   485   486
+     0     0     0     0     0     0     0     0     0   487   488   489   490   491   492   493   494     0     0     0
+     0     0     0     0     0     0     0     0     0     0   495   496   497   498   499   500     0     0     0     0
+
+  Columns 21 through 26
+
+     0     0     0     0     0     0
+     0     0     0     0     0     0
+     0     0     0     0     0     0
+    44     0     0     0     0     0
+    61    62     0     0     0     0
+    80    81    82     0     0     0
+   101   102   103   104     0     0
+   123   124   125   126     0     0
+   145   146   147   148     0     0
+   168   169   170   171   172     0
+   193   194   195   196   197   198
+   219   220   221   222   223   224
+   245   246   247   248   249   250
+   271   272   273   274   275   276
+   297   298   299   300   301   302
+   323   324   325   326   327   328
+   348   349   350   351   352     0
+   371   372   373   374     0     0
+   393   394   395   396     0     0
+   415   416   417   418     0     0
+   436   437   438     0     0     0
+   455   456     0     0     0     0
+   472     0     0     0     0     0
+     0     0     0     0     0     0
+     0     0     0     0     0     0
+     0     0     0     0     0     0
+
+</pre><h2>14) Find the channel numbers for all bundles in the SE quarter of the core<a name="24"></a></h2><pre class="codeinput">[ia,ja]=mminj2ij(mminj);
+SE=ia&gt;13&amp;ja&gt;13;
+iaSE=ia(SE);jaSE=ja(SE);
+knumSE=cpos2knum(iaSE,jaSE,mminj);
+</pre><h2>15) Try ij2mminj on iaSE and jaSE<a name="25"></a></h2><pre class="codeinput">[mminj,sym,knum]=ij2mminj(iaSE,jaSE);
+sym
+size(knum)
+</pre><pre class="codeoutput">
+sym =
+
+SE
+
+
+ans =
+
+   125     4
+
+</pre><h2>Expand a quarter core dist to a full dist<a name="26"></a></h2><pre class="codeinput">qc=1:125; <span class="comment">% Create a dummy quarter core distribution</span>
+FullCore=sym_full(qc,knum);
+vec2cor(FullCore,mminj)
+</pre><pre class="codeoutput">
+ans =
+
+  Columns 1 through 20
+
+     0     0     0     0     0     0     0     0     0     0   125   124   123    13    26    39     0     0     0     0
+     0     0     0     0     0     0     0     0     0   122   121   120   119    12    25    38    51     0     0     0
+     0     0     0     0     0     0   118   117   116   115   114   113   112    11    24    37    50    62    73    84
+     0     0     0     0     0   111   110   109   108   107   106   105   104    10    23    36    49    61    72    83
+     0     0     0     0   103   102   101   100    99    98    97    96    95     9    22    35    48    60    71    82
+     0     0     0    94    93    92    91    90    89    88    87    86    85     8    21    34    47    59    70    81
+     0     0    84    83    82    81    80    79    78    77    76    75    74     7    20    33    46    58    69    80
+     0     0    73    72    71    70    69    68    67    66    65    64    63     6    19    32    45    57    68    79
+     0     0    62    61    60    59    58    57    56    55    54    53    52     5    18    31    44    56    67    78
+     0    51    50    49    48    47    46    45    44    43    42    41    40     4    17    30    43    55    66    77
+    39    38    37    36    35    34    33    32    31    30    29    28    27     3    16    29    42    54    65    76
+    26    25    24    23    22    21    20    19    18    17    16    15    14     2    15    28    41    53    64    75
+    13    12    11    10     9     8     7     6     5     4     3     2     1     1    14    27    40    52    63    74
+   123   119   112   104    95    85    74    63    52    40    27    14     1     1     2     3     4     5     6     7
+   124   120   113   105    96    86    75    64    53    41    28    15     2    14    15    16    17    18    19    20
+   125   121   114   106    97    87    76    65    54    42    29    16     3    27    28    29    30    31    32    33
+     0   122   115   107    98    88    77    66    55    43    30    17     4    40    41    42    43    44    45    46
+     0     0   116   108    99    89    78    67    56    44    31    18     5    52    53    54    55    56    57    58
+     0     0   117   109   100    90    79    68    57    45    32    19     6    63    64    65    66    67    68    69
+     0     0   118   110   101    91    80    69    58    46    33    20     7    74    75    76    77    78    79    80
+     0     0     0   111   102    92    81    70    59    47    34    21     8    85    86    87    88    89    90    91
+     0     0     0     0   103    93    82    71    60    48    35    22     9    95    96    97    98    99   100   101
+     0     0     0     0     0    94    83    72    61    49    36    23    10   104   105   106   107   108   109   110
+     0     0     0     0     0     0    84    73    62    50    37    24    11   112   113   114   115   116   117   118
+     0     0     0     0     0     0     0     0     0    51    38    25    12   119   120   121   122     0     0     0
+     0     0     0     0     0     0     0     0     0     0    39    26    13   123   124   125     0     0     0     0
+
+  Columns 21 through 26
+
+     0     0     0     0     0     0
+     0     0     0     0     0     0
+     0     0     0     0     0     0
+    94     0     0     0     0     0
+    93   103     0     0     0     0
+    92   102   111     0     0     0
+    91   101   110   118     0     0
+    90   100   109   117     0     0
+    89    99   108   116     0     0
+    88    98   107   115   122     0
+    87    97   106   114   121   125
+    86    96   105   113   120   124
+    85    95   104   112   119   123
+     8     9    10    11    12    13
+    21    22    23    24    25    26
+    34    35    36    37    38    39
+    47    48    49    50    51     0
+    59    60    61    62     0     0
+    70    71    72    73     0     0
+    81    82    83    84     0     0
+    92    93    94     0     0     0
+   102   103     0     0     0     0
+   111     0     0     0     0     0
+     0     0     0     0     0     0
+     0     0     0     0     0     0
+     0     0     0     0     0     0
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.13<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise CMSSuite
+%% Get metadata from sim-dep.sum
+suminfo=ReadSum('../sim-dep.sum');
+%% Read in FLC 2D MAP from sim-dep.sum
+FLC=ReadSum(suminfo,'FLC 2D MAP');
+%% 1) Convert FLC in state point 7 to a map
+flcmap=vec2cor(FLC{7},suminfo.core.mminj)
+%% 2a) Find flcmax
+flmax=nan(length(FLC),1);
+for i=1:length(FLC),
+    flmax(i)=max(FLC{i});
+end
+figure
+plot(flmax)
+%% 2b)
+figure
+plot(suminfo.xpo,flmax)
+%% As a preparation for task 3-5, read in 'FUE.LAB' to a cell array fuelab:
+fuelab=ReadSum(suminfo,'FUE.LAB');
+%% 3) Plot flcmax as a function of exposure for fuel of type 28A7
+i28a7=strcmp('28A7',fuelab);
+flmax28a7=nan(length(FLC),1);
+for i=1:length(FLC),
+    flmax28a7(i)=max(FLC{i}(i28a7));
+end
+figure
+plot(suminfo.xpo,flmax28a7);
+%% 4) Plot flcmax as a function of exposure for fuel of type 28A8
+i28a8=strcmp('28A8',fuelab);
+flmax28a8=nan(length(FLC),1);
+for i=1:length(FLC),
+    flmax28a8(i)=max(FLC{i}(i28a8));
+end
+figure
+plot(suminfo.xpo,flmax28a8);
+%% 5) Plot flcmax as a function of exposure for fuel of either type 28A7 or 28A8 by
+%% a) Combining the result of 4 and 5
+flmax28a=max(flmax28a8,flmax28a7);
+figure
+plot(suminfo.xpo,flmax28a);
+%% b) By using '28A' as pattern in strncmp
+i28a=strncmp('28A',fuelab,3);
+flmax28a2=nan(length(FLC),1);
+for i=1:length(FLC),
+    flmax28a2(i)=max(FLC{i}(i28a));
+end
+figure
+plot(suminfo.xpo,flmax28a2);
+%% 6 Annotate the plots
+%% b) Programmatically
+xlabel('Exposure (EFPH)');
+ylabel('Fraction of limit for CPR');
+title('Fraction of limit for CPR for bundle type 28A7 and 28A8')
+grid
+%% 7) find the number of bundles above 0.85 in each state point and plot with the bar-command
+ngt0pt85=nan(length(FLC),1);
+for i=1:length(FLC),
+    ngt0pt85(i)=sum(FLC{i}>0.85);
+end
+figure
+bar(suminfo.xpo,ngt0pt85)
+%% 8) Make a 'flugskitsplot' of all flcs vs individual bundle exp at all dep steps
+EXP2=ReadSum(suminfo,'EXP 2D MAP');
+figure
+hold all
+% hold on
+grid
+xlabel('Bundle Exposure (MWd/kgU)');
+ylabel('Fraction of limit CPR')
+title('All bundles for the entire cycle');
+for i=1:length(FLC),
+    plot(EXP2{i},FLC{i},'x')
+    figure(gcf)
+%     pause
+end
+%% Prepare for exercises 9 and 10:
+cmsinfo=read_cms('../sim-dep.cms');
+lhg3=read_cms_dist(cmsinfo,'3LHG');
+exp3=read_cms_dist(cmsinfo,'3EXP');
+%% 9) Plot each node
+figure
+hold all
+for i=1:length(lhg3),
+    plot(exp3{i}(:),lhg3{i}(:),'x');
+%     pause
+end
+%% 10) Calculate the fraction to limit in state pt 9 if the limits are given by: 
+xpo=[00.0  16.0  38.0  59.0  70.0];
+lhg=[417.6 417.6 367.7 265.0 171.4];
+figure
+plot(xpo,lhg)
+lims=interp1(xpo,lhg,exp3{9});
+flp3_9=lhg3{9}./lims;
+cmsplot ../sim-dep.cms flp3_9
+set_cmsplot_prop operator max
+set_cmsplot_prop rescale auto
+cmsplot_now
+%% Compare with the 'reference'
+flp3=read_cms_dist(cmsinfo,'3FLP');
+cmsplot ../sim-dep.cms flp3{9}
+set_cmsplot_prop operator max
+set_cmsplot_prop rescale auto
+cmsplot_now
+%% 11) Find all the segments on the restart file 
+resinfo=ReadRes('../dist-boc.res');
+Lib = ReadRes(resinfo,'Library');
+Segs=cellstr(Lib.Segment);
+unique(Segs)
+%% 12) Find all segments in the present core
+Segs(unique(Lib.Core_Seg{1}))
+%% Preparation for exercise 13-15
+mminj=resinfo.core.mminj;  % Note that this info could be picked up from
+kan=resinfo.core.kan;      % suminfo or cmsinfo as well
+%% 13) Create a core map of channel numbers
+coremap=vec2cor(1:kan,mminj)
+%% 14) Find the channel numbers for all bundles in the SE quarter of the core
+[ia,ja]=mminj2ij(mminj);
+SE=ia>13&ja>13;
+iaSE=ia(SE);jaSE=ja(SE);
+knumSE=cpos2knum(iaSE,jaSE,mminj);
+%% 15) Try ij2mminj on iaSE and jaSE
+[mminj,sym,knum]=ij2mminj(iaSE,jaSE);
+sym
+size(knum)
+%% Expand a quarter core dist to a full dist
+qc=1:125; % Create a dummy quarter core distribution
+FullCore=sym_full(qc,knum);
+vec2cor(FullCore,mminj)
+
+
+
+
+
+
+##### SOURCE END #####
+--></body></html>

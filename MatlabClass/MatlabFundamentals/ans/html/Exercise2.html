@@ -1,0 +1,137 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Exercise 2</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2010-11-16"><meta name="DC.source" content="Exercise2.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Exercise 2</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">2.1 Plot the Gasprices in Mexico (blue) and Germany (red) vs year.</a></li><li><a href="#2">Include a legend.</a></li><li><a href="#3">2.2 Plot the prices in Germany vs Mexico (scatter plot) and make a linear fit</a></li><li><a href="#4">2.3 Guess the price in Germany if the price in Mexico is 3</a></li><li><a href="#5">2.4 Same guess with a quadratic fit</a></li><li><a href="#6">2.5 Gasprices from the command line</a></li><li><a href="#7">a) Create a vector Year, and a matrix Prices from the data matrix</a></li><li><a href="#8">b) Plot Prices vs Year</a></li><li><a href="#9">c) Include a legend</a></li></ul></div><h2>2.1 Plot the Gasprices in Mexico (blue) and Germany (red) vs year.<a name="1"></a></h2><pre class="codeinput">load <span class="string">../gasprices</span>
+hold <span class="string">off</span>
+plot(Year, Mexico)
+hold <span class="string">on</span>
+plot(Year,Germany,<span class="string">'r'</span>)
+xlabel(<span class="string">'Year'</span>)
+ylabel(<span class="string">'Gasprice (USD/Gallon)'</span>)
+</pre><img vspace="5" hspace="5" src="Exercise2_01.png" alt=""> <h2>Include a legend.<a name="2"></a></h2><pre class="codeinput">legend(<span class="string">'Mexico'</span>,<span class="string">'Germany'</span>)
+</pre><img vspace="5" hspace="5" src="Exercise2_02.png" alt=""> <h2>2.2 Plot the prices in Germany vs Mexico (scatter plot) and make a linear fit<a name="3"></a></h2><pre class="codeinput">figure
+plot(Mexico,Germany,<span class="string">'x'</span>)
+p=polyfit(Mexico,Germany,1);
+hold <span class="string">on</span>
+mxp=1:3;
+plot(mxp,polyval(p,mxp));
+</pre><img vspace="5" hspace="5" src="Exercise2_03.png" alt=""> <h2>2.3 Guess the price in Germany if the price in Mexico is 3<a name="4"></a></h2><pre class="codeinput">polyval(p,3)
+</pre><pre class="codeoutput">
+ans =
+
+    6.9360
+
+</pre><h2>2.4 Same guess with a quadratic fit<a name="5"></a></h2><pre class="codeinput">p2=polyfit(Mexico,Germany,2);
+polyval(p2,3)
+</pre><pre class="codeoutput">
+ans =
+
+   11.5560
+
+</pre><h2>2.5 Gasprices from the command line<a name="6"></a></h2><h2>a) Create a vector Year, and a matrix Prices from the data matrix<a name="7"></a></h2><pre class="codeinput">Year=data(:,1);
+Prices=data(:,2:end);
+</pre><h2>b) Plot Prices vs Year<a name="8"></a></h2><pre class="codeinput">figure
+plot(Year,Prices)
+</pre><img vspace="5" hspace="5" src="Exercise2_04.png" alt=""> <h2>c) Include a legend<a name="9"></a></h2><pre class="codeinput">legend(colheaders(2:end))
+figure(gcf)
+</pre><img vspace="5" hspace="5" src="Exercise2_05.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise 2
+%% 2.1 Plot the Gasprices in Mexico (blue) and Germany (red) vs year.
+load ../gasprices
+hold off
+plot(Year, Mexico)
+hold on
+plot(Year,Germany,'r')
+xlabel('Year')
+ylabel('Gasprice (USD/Gallon)')
+%% Include a legend.
+legend('Mexico','Germany')
+%% 2.2 Plot the prices in Germany vs Mexico (scatter plot) and make a linear fit
+figure
+plot(Mexico,Germany,'x')
+p=polyfit(Mexico,Germany,1);
+hold on
+mxp=1:3;
+plot(mxp,polyval(p,mxp));
+%% 2.3 Guess the price in Germany if the price in Mexico is 3 
+polyval(p,3)
+%% 2.4 Same guess with a quadratic fit
+p2=polyfit(Mexico,Germany,2);
+polyval(p2,3)
+%% 2.5 Gasprices from the command line
+%% a) Create a vector Year, and a matrix Prices from the data matrix 
+Year=data(:,1);
+Prices=data(:,2:end);
+%% b) Plot Prices vs Year
+figure
+plot(Year,Prices)
+%% c) Include a legend
+legend(colheaders(2:end))
+figure(gcf)
+
+
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,169 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ExFuncHandles</title><meta name="generator" content="MATLAB 7.13"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-10-12"><meta name="DC.source" content="ExFuncHandles.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Exercise Function handles 1</a></li><li><a href="#2">Write a Newton-Raphson to solve for temperature if the enthalpy is 1200 kJ/kg.</a></li><li><a href="#3">Use fzero to solve for the Temperature</a></li><li><a href="#4">Play around with options to explore what is going on inside:</a></li></ul></div><h2>Exercise Function handles 1<a name="1"></a></h2><p>Use the function h_v to plot the enthalpy as a function of temperature in the interval 250 to 286 C for 70 Bars (7e6 Pa). Note that h_v require Pascal and K as input, 0 C = 273.15 K!</p><pre class="codeinput">p=7e6;
+T=250:.01:285;
+plot(T,h_v(T+273.15,p));
+xlabel(<span class="string">'Temp (^oC)'</span>)
+ylabel(<span class="string">'Entalpi (kJ/kg)'</span>)
+title(<span class="string">'Entalpi som funktion av temperatur vid 70 Bar'</span>);
+grid
+</pre><img vspace="5" hspace="5" src="ExFuncHandles_01.png" alt=""> <h2>Write a Newton-Raphson to solve for temperature if the enthalpy is 1200 kJ/kg.<a name="2"></a></h2><pre class="codeinput">f=@(T) h_v(T,7e6)-1200;
+p=7e6;h=0.01;
+x=250+273.13;
+<span class="keyword">for</span> i=1:10,
+    f0=f(x)
+    <span class="keyword">if</span> abs(f0)&lt;1e-6, <span class="keyword">break</span>;<span class="keyword">end</span>
+    dfdx=(f(x+h)-f0)/h;
+    dx=-f0/dfdx;
+    x=x+dx;
+<span class="keyword">end</span>
+fprintf(1,<span class="string">'Temperatur vid 1200 kj/kg: %6.2f \n'</span>,x-273.15);
+</pre><pre class="codeoutput">
+f0 =
+
+ -114.3431
+
+
+f0 =
+
+    3.5341
+
+
+f0 =
+
+    0.0042
+
+
+f0 =
+
+  7.6203e-008
+
+Temperatur vid 1200 kj/kg: 272.99 
+</pre><h2>Use fzero to solve for the Temperature<a name="3"></a></h2><pre class="codeinput">y=fzero(f,250+273.15)
+</pre><pre class="codeoutput">
+y =
+
+  546.1355
+
+</pre><h2>Play around with options to explore what is going on inside:<a name="4"></a></h2><pre class="codeinput">opt=optimset(@fzero);
+opt.Display=<span class="string">'iter'</span>;
+fzero(f,250+273.15,opt);
+</pre><pre class="codeoutput"> 
+Search for an interval around 523.15 containing a sign change:
+ Func-count    a          f(a)             b          f(b)        Procedure
+    1          523.15      -114.247        523.15      -114.247   initial interval
+    3         508.353      -184.591       537.947      -41.5405   search
+    5         502.224      -213.174       544.076      -10.5494   search
+    7         493.556      -253.127       552.744         34.37   search
+ 
+Search for a zero in the interval [493.556, 552.744]:
+ Func-count    x          f(x)             Procedure
+    7         552.744         34.37        initial
+    8         545.668      -2.40096        interpolation
+    9          546.13    -0.0280827        interpolation
+   10         546.135 -7.25793e-007        interpolation
+   11         546.135 -2.68301e-011        interpolation
+   12         546.135 -2.68301e-011        interpolation
+   13         546.135  3.58796e-010        interpolation
+   14         546.135  3.57886e-010        interpolation
+   15         546.135 -1.53477e-010        bisection
+   16         546.135  3.57886e-010        interpolation
+   17         546.135 -4.08136e-010        interpolation
+   18         546.135 -4.08136e-010        interpolation
+ 
+Zero found in the interval [493.556, 552.744]
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.13<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise Function handles 1
+% Use the function h_v to plot the enthalpy as a function of temperature in the interval 250 to
+% 286 C for 70 Bars (7e6 Pa). Note that h_v require Pascal and K as input, 0 C = 273.15 K!
+p=7e6;
+T=250:.01:285;
+plot(T,h_v(T+273.15,p));
+xlabel('Temp (^oC)')
+ylabel('Entalpi (kJ/kg)')
+title('Entalpi som funktion av temperatur vid 70 Bar');
+grid
+%% Write a Newton-Raphson to solve for temperature if the enthalpy is 1200 kJ/kg.
+f=@(T) h_v(T,7e6)-1200;
+p=7e6;h=0.01;
+x=250+273.13;
+for i=1:10,
+    f0=f(x)
+    if abs(f0)<1e-6, break;end
+    dfdx=(f(x+h)-f0)/h;
+    dx=-f0/dfdx;
+    x=x+dx;
+end
+fprintf(1,'Temperatur vid 1200 kj/kg: %6.2f \n',x-273.15);
+%% Use fzero to solve for the Temperature
+y=fzero(f,250+273.15)
+%% Play around with options to explore what is going on inside:
+opt=optimset(@fzero);
+opt.Display='iter';
+fzero(f,250+273.15,opt);
+##### SOURCE END #####
+--></body></html>

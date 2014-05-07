@@ -1,0 +1,34 @@
+
+
+1. Use the m-file pointk.m to write a Euler forward integration for the case when
+the excess reactivity is 80 pcm.
+Hint: first find the steady-state solution at time 0 (dy/dt=0), and then write a loop based on Euler forward:
+
+y(i+1)=y(i)+dt*f(t,y)
+
+given that the differential equation system is given by
+
+dy/dt=f(t,y)
+
+Use dt=1ms and simulate for 10 seconds
+
+
+You may or may not need the following hint(s):
+      a) Copy and paste al and b from the file pointk.m to command line so a and b are defined
+      b) Define the initial condition y0=[1;b./al]
+      c) Check that pointk(y0)=0
+      d) Uncomment % raa=0.00080; in pointk.m
+      e) define the t-vector  t=0:dt:10;
+      f) Preallocate Y=zeros(7,length(t));
+      g) Initialize Y(:,1)=y0;
+      h) write your loop for i=2:length(t), ...
+
+If nothing happens you probably forgot step g (or d).
+
+2.Write a function Euler('pointk') that computes Euler forward for the point kinetic model
+
+3. Use the function pointkin (in your path) and ode45 to solve the same equation system with 80 pcm excess reatvity 
+but now delayed by 2 seconds. Define a function raa=raa_fcn(t) which returns 0 if t<2 and 0.00080 if t>=2.
+Also allow for the possibility to vary al and b (beta).
+
+ 

@@ -1,0 +1,43 @@
+%% Load the data
+[lprm2a,lprm4a,aprm1a,aprmma,qa,fla]=load_lprm('a');
+[lprm2b,lprm4b,aprm1b,aprmmb,qb,flb]=load_lprm('b');
+[lprm2c,lprm4c,aprm1c,aprmmc,qc,flc]=load_lprm('c');
+[lprm2d,lprm4d,aprm1d,aprmmd,qd,fld]=load_lprm('d');
+[lprm2e,lprm4e,aprm1e,aprmme,qe,fle]=load_lprm('e');
+[lprm2f,lprm4f,aprm1f,aprmmf,qf,flf]=load_lprm('f');
+[lprm2g,lprm4g,aprm1g,aprmmg,qg,flg]=load_lprm('g');
+[lprm2h,lprm4h,aprm1h,aprmmh,qh,flh]=load_lprm('h');
+[lprm2i,lprm4i,aprm1i,aprmmi,qi,fli]=load_lprm('i');
+%% These are - for some mysteriuos reason - negative!
+lprm4d(:,13)=-lprm4d(:,13);
+lprm4e(:,13)=-lprm4e(:,13);
+lprm4f(:,13)=-lprm4f(:,13);
+lprm4g(:,13)=-lprm4g(:,13);
+lprm4h(:,13)=-lprm4h(:,13);
+lprm4i(:,13)=-lprm4i(:,13);
+%%
+fftlprm4a=fft(detrend(lprm4a),2048);
+fftlprm4b=fft(detrend(lprm4b),2048);
+fftlprm4c=fft(detrend(lprm4c),2048);
+fftlprm4d=fft(detrend(lprm4d),2048);
+fftlprm4e=fft(detrend(lprm4e),2048);
+fftlprm4f=fft(detrend(lprm4f),2048);
+fftlprm4g=fft(detrend(lprm4g),2048);
+fftlprm4h=fft(detrend(lprm4h),2048);
+fftlprm4i=fft(detrend(lprm4i),2048);
+%%
+fftlprm2a=fft(detrend(lprm2a),2048);
+fftlprm2b=fft(detrend(lprm2b),2048);
+fftlprm2c=fft(detrend(lprm2c),2048);
+fftlprm2d=fft(detrend(lprm2d),2048);
+fftlprm2e=fft(detrend(lprm2e),2048);
+fftlprm2f=fft(detrend(lprm2f),2048);
+fftlprm2g=fft(detrend(lprm2g),2048);
+fftlprm2h=fft(detrend(lprm2h),2048);
+fftlprm2i=fft(detrend(lprm2i),2048);
+%%
+load /cms/ringhals/v020304/r1_cy14_03.mat fue_new
+detloc=fue_new.detloc;
+Ts=0.08;
+%%
+fftaprmd=fft(detrend(aprmmd),2048);

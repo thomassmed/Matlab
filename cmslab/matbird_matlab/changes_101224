@@ -1,0 +1,21 @@
+new
+
+cp java_calcbow.m /home/cmslab/matbird
+cp java_reset_tmol.m /home/cmslab/matbird/
+
+
+
+changed
+
+cp cax.m /home/cmslab/matbird
+cp c_cax.m /home/cmslab/matbird
+cp java_calcbtfaxenv.m /home/cmslab/matbird
+cp java_calcbtfax.m /home/cmslab/matbird
+cp java_calc_rod.m /home/cmslab/matbird
+cp java_get_matlab_data.m /home/cmslab/matbird
+cp java_get_plotdata.m /home/cmslab/matbird
+cp java_init.m /home/cmslab/matbird
+cp java_start_casmo.m /home/cmslab/matbird
+cp paint_casmo.m /home/cmslab/matbird
+
+

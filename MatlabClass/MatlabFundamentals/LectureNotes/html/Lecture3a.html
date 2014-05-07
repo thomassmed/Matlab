@@ -1,0 +1,222 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Lecture3a</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-02-22"><meta name="DC.source" content="Lecture3a.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">load the data</a></li><li><a href="#2">Define colheaders</a></li><li><a href="#3">save into gasprices.mat</a></li><li><a href="#4">Define variables for prices in Germany and Mexico and a vector with the years</a></li><li><a href="#5">Compute simple statistics</a></li><li><a href="#6">Average price/country</a></li><li><a href="#7">Median</a></li><li><a href="#8">Max</a></li><li><a href="#9">Max and grab the the index</a></li><li><a href="#10">Min</a></li><li><a href="#11">Of course the same goes for min</a></li><li><a href="#12">Standard deviation</a></li><li><a href="#13">Or rms</a></li><li><a href="#14">Compute the average price in France and Germany</a></li><li><a href="#15">Sometimes, you want to remove the average value</a></li></ul></div><h2>load the data<a name="1"></a></h2><pre class="codeinput">[data,textdata]=xlsread(<span class="string">'../gasprices.xls'</span>);
+</pre><h2>Define colheaders<a name="2"></a></h2><pre class="codeinput">colheaders=textdata(end,:);
+</pre><h2>save into gasprices.mat<a name="3"></a></h2><pre class="codeinput">save <span class="string">gasprices</span>
+</pre><h2>Define variables for prices in Germany and Mexico and a vector with the years<a name="4"></a></h2><pre class="codeinput">Germany=data(:,5);
+Mexico=data(:,8);
+Year=data(:,1);
+Prices=data(:,2:end);
+</pre><h2>Compute simple statistics<a name="5"></a></h2><pre class="codeinput">mean(Germany)
+</pre><pre class="codeoutput">
+ans =
+
+    4.2247
+
+</pre><h2>Average price/country<a name="6"></a></h2><pre class="codeinput">mean(Prices)
+</pre><pre class="codeoutput">
+ans =
+
+       NaN    2.0868    4.4079    4.2247    4.6458    3.8205    1.7816    3.8358    4.3926    1.5921
+
+</pre><h2>Median<a name="7"></a></h2><pre class="codeinput">median(Germany)
+</pre><pre class="codeoutput">
+ans =
+
+    3.5300
+
+</pre><h2>Max<a name="8"></a></h2><pre class="codeinput">max(Germany)
+</pre><pre class="codeoutput">
+ans =
+
+    7.7500
+
+</pre><h2>Max and grab the the index<a name="9"></a></h2><pre class="codeinput">[MaxGer,Maxindex]=max(Germany)
+</pre><pre class="codeoutput">
+MaxGer =
+
+    7.7500
+
+
+Maxindex =
+
+    19
+
+</pre><h2>Min<a name="10"></a></h2><pre class="codeinput">min(Germany)
+</pre><pre class="codeoutput">
+ans =
+
+    2.6500
+
+</pre><h2>Of course the same goes for min<a name="11"></a></h2><pre class="codeinput">[MinGer,Minindex]=min(Germany)
+</pre><pre class="codeoutput">
+MinGer =
+
+    2.6500
+
+
+Minindex =
+
+     1
+
+</pre><h2>Standard deviation<a name="12"></a></h2><pre class="codeinput">std(Germany)
+</pre><pre class="codeoutput">
+ans =
+
+    1.4257
+
+</pre><h2>Or rms<a name="13"></a></h2><pre class="codeinput">std(Germany,1)
+</pre><pre class="codeoutput">
+ans =
+
+    1.3877
+
+</pre><h2>Compute the average price in France and Germany<a name="14"></a></h2><pre class="codeinput">France=data(:,4);
+FraGer=0.5*France+0.5*Germany;
+plot(Year,France)
+hold <span class="string">all</span>
+plot(Year,Germany)
+plot(Year,FraGer)
+legend(<span class="string">'France'</span>,<span class="string">'Germany'</span>,<span class="string">'Av price Fra &amp; Ger'</span>)
+</pre><img vspace="5" hspace="5" src="Lecture3a_01.png" alt=""> <h2>Sometimes, you want to remove the average value<a name="15"></a></h2><pre class="codeinput">Gervar=Germany-mean(Germany)
+Gerdetrend=detrend(Germany,1);
+figure
+plot(Year,Gervar);
+hold <span class="string">all</span>
+plot(Year,Gerdetrend,<span class="string">'r'</span>)
+</pre><pre class="codeoutput">
+Gervar =
+
+   -1.5747
+   -1.3247
+   -0.9547
+   -1.1547
+   -0.7047
+   -0.2647
+   -0.2847
+   -0.6947
+   -0.8847
+   -0.8047
+   -0.7747
+   -0.8247
+   -0.5547
+    0.3653
+    1.0153
+    1.4353
+    1.8053
+    2.6553
+    3.5253
+
+</pre><img vspace="5" hspace="5" src="Lecture3a_02.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+%% load the data
+[data,textdata]=xlsread('../gasprices.xls');
+%% Define colheaders
+colheaders=textdata(end,:);
+%% save into gasprices.mat
+save gasprices
+%% Define variables for prices in Germany and Mexico and a vector with the years 
+Germany=data(:,5);
+Mexico=data(:,8);
+Year=data(:,1);
+Prices=data(:,2:end);
+%% Compute simple statistics
+mean(Germany)
+%% Average price/country
+mean(Prices)
+%% Median
+median(Germany)
+%% Max
+max(Germany)
+%% Max and grab the the index
+[MaxGer,Maxindex]=max(Germany)
+%% Min
+min(Germany)
+%% Of course the same goes for min
+[MinGer,Minindex]=min(Germany)
+%% Standard deviation
+std(Germany)
+%% Or rms
+std(Germany,1)
+%% Compute the average price in France and Germany
+France=data(:,4);
+FraGer=0.5*France+0.5*Germany;
+plot(Year,France)
+hold all
+plot(Year,Germany)
+plot(Year,FraGer)
+legend('France','Germany','Av price Fra & Ger')
+%% Sometimes, you want to remove the average value
+Gervar=Germany-mean(Germany)
+Gerdetrend=detrend(Germany,1);
+figure
+plot(Year,Gervar);
+hold all
+plot(Year,Gerdetrend,'r')
+
+
+##### SOURCE END #####
+--></body></html>

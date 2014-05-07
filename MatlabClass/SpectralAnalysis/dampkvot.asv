@@ -1,0 +1,34 @@
+%% Ladda data
+load zdata
+plot(t,z)
+Ts=t(2)-t(1);
+%% Titta på spektrum
+zd=detrend(z);
+[Pz,fz]=spectrum(zd,[],[],[],25);
+%% Testa en annan variant
+Hs=spectrum.cov(30);
+psd(Hs,zd,'Fs',25)
+shg
+hold on
+%% Beräkna dämpkvot med drident
+[dk,fd,drs,ord,th]=drident(z,Ts);
+%% Beräkna dämpkvot på ett annat sätt:
+ar=arcov(zd,30);
+zp0=roots(ar);
+zpfreq=angle(zp0)*25/2/pi;
+zp=zp0(zpfreq>0.3&zpfreq<0.7)
+%% Gå till s-planet
+s=log(zp)/Ts
+%%
+f=imag(s)/2/pi
+T=1/f
+dk=exp(real(s)*T)
+%% Först jämför vi med den valda
+fvec=0.1:0.01:2;fvec=fvec';
+w=2*pi*fvec;
+P5=squeeze(freqresp(th{5},w));
+plot(fvec,10*log10(abs(squeeze(P5)))+2.919,'r');
+%% Sedan med ordning [7 7]
+[P4,f4]=spectrum(th{4});
+plot(f4/2/pi,10*log10(abs(squeeze(P4)))+2.919,'g');
+

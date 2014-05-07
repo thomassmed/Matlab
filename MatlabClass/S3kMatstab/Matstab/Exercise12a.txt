@@ -1,0 +1,11 @@
+1. Run matstab on c13-2.inp include Harmonics
+   >> matstab c13-2.inp Harmonics 2
+
+   Note the dr and frequency for the global mode and the regional modes
+
+2. Select shallow control rods (a group of four) to insert and change the rod pattern in c13-2.inp and see what you get.
+
+
+3. Split the group in 2 and try with the NW-SE pair and the NE-SW pair, and observe the impact.
+   Does it make sense?
+

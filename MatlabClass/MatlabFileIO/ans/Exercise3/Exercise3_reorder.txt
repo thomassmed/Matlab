@@ -1,0 +1,13 @@
+Rank Sex Age   Name
+  1  M   23.1  Kalle
+  2  M   41.5  Pelle
+  3  F   19.3  Stina
+  4  M   26.7  Niklas
+  5  M   34.4  Olle
+  6  F   32.8  Eva
+  7  M   52.0  Klas
+  8  F   39.6  Anna
+  9  F   31.2  Lisa
+ 10  M   14.1  Peter
+ 11  M   55.9  Stefan
+ 12  M   49.2  Mats

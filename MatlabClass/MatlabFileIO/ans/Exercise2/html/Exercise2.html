@@ -1,0 +1,105 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Exercise 2 - Read data using textscan</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-02-18"><meta name="DC.source" content="Exercise2.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Exercise 2 - Read data using textscan</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Open file</a></li><li><a href="#2">Read the four headers</a></li><li><a href="#3">Read the data</a></li><li><a href="#4">Close the file</a></li><li><a href="#5">2.1 How many females competed?</a></li><li><a href="#6">2.2a Average age of contenders</a></li><li><a href="#7">2.2b Average age of male contenders</a></li><li><a href="#8">2.2c Average age of female contenders</a></li><li><a href="#9">2.2d How many men are between 30 and 50 years old?</a></li></ul></div><h2>Open file<a name="1"></a></h2><pre class="codeinput">fid = fopen(<span class="string">'Exercise2.txt'</span>,<span class="string">'r'</span>);
+</pre><h2>Read the four headers<a name="2"></a></h2><pre class="codeinput">header = textscan(fid,<span class="string">'%s'</span>,4);
+</pre><h2>Read the data<a name="3"></a></h2><pre class="codeinput">data = textscan(fid,<span class="string">'%s%u%f%s'</span>);
+</pre><h2>Close the file<a name="4"></a></h2><pre class="codeinput">fclose(fid);
+</pre><h2>2.1 How many females competed?<a name="5"></a></h2><pre class="codeinput">nfemales = numel(find(strcmp(<span class="string">'F'</span>,data{4})));
+</pre><h2>2.2a Average age of contenders<a name="6"></a></h2><pre class="codeinput">avg_age = mean(data{3});
+</pre><h2>2.2b Average age of male contenders<a name="7"></a></h2><pre class="codeinput">avg_age_male = mean(data{3}(strcmp(<span class="string">'M'</span>,data{4})));
+</pre><h2>2.2c Average age of female contenders<a name="8"></a></h2><pre class="codeinput">avg_age_female = mean(data{3}(strcmp(<span class="string">'F'</span>,data{4})));
+</pre><h2>2.2d How many men are between 30 and 50 years old?<a name="9"></a></h2><pre class="codeinput">nmen30_50 = numel(data{3}(data{3} &gt;= 30 &amp; data{3} &lt;= 50 &amp; strcmp(<span class="string">'M'</span>,data{4})));
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise 2 - Read data using textscan
+%% Open file
+fid = fopen('Exercise2.txt','r');
+
+%% Read the four headers
+header = textscan(fid,'%s',4);
+
+%% Read the data
+data = textscan(fid,'%s%u%f%s');
+
+%% Close the file
+fclose(fid);
+
+%% 2.1 How many females competed?
+nfemales = numel(find(strcmp('F',data{4})));
+
+%% 2.2a Average age of contenders
+avg_age = mean(data{3});
+
+%% 2.2b Average age of male contenders
+avg_age_male = mean(data{3}(strcmp('M',data{4})));
+
+%% 2.2c Average age of female contenders
+avg_age_female = mean(data{3}(strcmp('F',data{4})));
+
+%% 2.2d How many men are between 30 and 50 years old?
+nmen30_50 = numel(data{3}(data{3} >= 30 & data{3} <= 50 & strcmp('M',data{4})));
+##### SOURCE END #####
+--></body></html>

@@ -1,0 +1,28 @@
+PROCEDURE INIT
+!
+! -- Initialized Hermes Data Base --
+!
+  LINK CALL
+!  CD /KGGB/C20/SERIES/OnlDist/C00001/S3OUT
+!  PU BOC /KGGB/C20/BOC/S3OUT
+  PU INIT
+RETURN
+
+PROCEDURE SINIT
+!
+! -- Start PP2 in Server Mode --
+!
+  WAIT 10
+  DO INIT
+  HEADER OFF
+  SYS PGLENG=-1
+  PROMPT 'IzP> ',CR
+  SERVER VLEV 1
+  SERVER INIT IP=127.0.0.1 PORT=5000
+RETURN
+
+!
+! -- Read Server Library --
+!
+%READ serlib.pp2
+! %READ matlab.pp2

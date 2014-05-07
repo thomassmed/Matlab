@@ -1,0 +1,88 @@
+function varargout = ovn1(h)
+% OVN1  Beräkna övning 1 i dynamikseminarieserien
+%
+% Beräknar Euler framåt, bakåt samt exakt lösning för differentialekvationen
+% OVN1(H) ger figur för steglängd H
+%
+% [t,N,Nf,Nb] = OVN1(H)
+%
+%   t är tidsvektorn som använts
+%   N är den exakta lösningens vektor
+%   Nf är lösningen med Euler framåt
+%   Nb är lösningen med Euler bakåt
+
+persistent hdls
+
+%Tidssteg
+
+t = 0:h:5;
+
+if(nargout == 1)
+   error(nargoutchk(2,3,nargout));
+else
+    error(nargoutchk(0,4,nargout));
+end
+
+%Beräkningsavsnitt 
+
+% Exakt
+
+N1 = ones(size(t));
+N1 = exp(-t);
+
+% Euler framåt
+
+N2 = ones(size(t));
+
+for i = 2:length(t)
+    N2(i) = (1-h).*N2(i-1);
+end
+
+
+% Euler bakåt
+
+N3 = ones(size(t));
+
+for i = 2:length(t)
+    N3(i) = N3(i-1)/(1+h);
+end
+
+
+% Utdatabehandling
+
+if (nargout == 0)
+%Rensa tidigare grafer
+    for i = 1:length(hdls)
+        try
+            close(hdls(i));
+        catch me
+        end
+    end
+    hdls = [];
+    
+% Skapa plottar
+    hdls(1+length(hdls)) = figure;
+    plot(t,N1,t,N2,t,N3);
+    legend('Exakt','Euler framåt','Euler bakåt');
+    xlabel('Tid [s]')
+    ylabel('Värde')
+    grid on
+    
+    %hdls(1+length(hdls)) = figure;
+    %plot(t,diff([N1;N2]/h),t,diff([N2;N3])/h);
+    
+end
+
+if(nargout > 1)
+    varargout{1} = t;
+    varargout{2} = N1;
+end
+
+if(nargout > 2)
+    varargout{3} = N2;
+end
+
+if(nargout > 3)
+    varargout{4} = N3;
+end
+

@@ -1,0 +1,237 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>LectureSimpleModelsI</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-02-22"><meta name="DC.source" content="LectureSimpleModelsI.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Introduction</a></li><li><a href="#4">How to solve Ax=b?</a></li><li><a href="#5">Check it out:</a></li><li><a href="#6">This is the same as</a></li><li><a href="#7">lu:</a></li><li><a href="#8">And solve</a></li><li><a href="#9">Now turn to eigenvalues</a></li><li><a href="#12">Compare with</a></li><li><a href="#13">So what do you think about:</a></li><li><a href="#14">Now consider</a></li><li><a href="#15">and</a></li><li><a href="#16">run eigsvddemo</a></li><li><a href="#17">Present MassSpring.pptx</a></li><li><a href="#18">ExSimpleModelsI</a></li><li><a href="#19">Present inverse iteration with shift</a></li><li><a href="#20">ExInverseIter</a></li></ul></div><h2>Introduction<a name="1"></a></h2><pre class="codeinput">A=[1    3
+   4   2]/4
+</pre><pre class="codeoutput">
+A =
+
+    0.2500    0.7500
+    1.0000    0.5000
+
+</pre><pre class="codeinput">A*[1;0]
+</pre><pre class="codeoutput">
+ans =
+
+    0.2500
+    1.0000
+
+</pre><pre class="codeinput">A*[0;1]
+</pre><pre class="codeoutput">
+ans =
+
+    0.7500
+    0.5000
+
+</pre><h2>How to solve Ax=b?<a name="4"></a></h2><pre class="codeinput">b=[1;1]
+x=A\b
+</pre><pre class="codeoutput">
+b =
+
+     1
+     1
+
+
+x =
+
+    0.4000
+    1.2000
+
+</pre><h2>Check it out:<a name="5"></a></h2><pre class="codeinput">A*x
+</pre><pre class="codeoutput">
+ans =
+
+    1.0000
+    1.0000
+
+</pre><h2>This is the same as<a name="6"></a></h2><pre class="codeinput">inv(A)*b
+<span class="comment">% This is just for learning. NEVER use inv in a serious application! Use \ or lu-decomposition</span>
+</pre><pre class="codeoutput">
+ans =
+
+    0.4000
+    1.2000
+
+</pre><h2>lu:<a name="7"></a></h2><pre class="codeinput">[l,u]=lu(A)
+</pre><pre class="codeoutput">
+l =
+
+    0.2500    1.0000
+    1.0000         0
+
+
+u =
+
+    1.0000    0.5000
+         0    0.6250
+
+</pre><h2>And solve<a name="8"></a></h2><pre class="codeinput">u\(l\b)
+</pre><pre class="codeoutput">
+ans =
+
+    0.4000
+    1.2000
+
+</pre><h2>Now turn to eigenvalues<a name="9"></a></h2><pre class="codeinput">eig(A)
+</pre><pre class="codeoutput">
+ans =
+
+   -0.5000
+    1.2500
+
+</pre><pre class="codeinput">[v,d]=eig(A)
+</pre><pre class="codeoutput">
+v =
+
+   -0.7071   -0.6000
+    0.7071   -0.8000
+
+
+d =
+
+   -0.5000         0
+         0    1.2500
+
+</pre><pre class="codeinput">A*v(:,1)
+</pre><pre class="codeoutput">
+ans =
+
+    0.3536
+   -0.3536
+
+</pre><h2>Compare with<a name="12"></a></h2><pre class="codeinput">-0.5*v(:,1)
+</pre><pre class="codeoutput">
+ans =
+
+    0.3536
+   -0.3536
+
+</pre><h2>So what do you think about:<a name="13"></a></h2><pre class="codeinput">A*v(:,2)
+</pre><pre class="codeoutput">
+ans =
+
+   -0.7500
+   -1.0000
+
+</pre><h2>Now consider<a name="14"></a></h2><pre class="codeinput">A*v
+</pre><pre class="codeoutput">
+ans =
+
+    0.3536   -0.7500
+   -0.3536   -1.0000
+
+</pre><h2>and<a name="15"></a></h2><pre class="codeinput">v*d
+</pre><pre class="codeoutput">
+ans =
+
+    0.3536   -0.7500
+   -0.3536   -1.0000
+
+</pre><h2>run eigsvddemo<a name="16"></a></h2><h2>Present MassSpring.pptx<a name="17"></a></h2><h2>ExSimpleModelsI<a name="18"></a></h2><h2>Present inverse iteration with shift<a name="19"></a></h2><h2>ExInverseIter<a name="20"></a></h2><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Introduction
+A=[1    3
+   4   2]/4
+%% 
+A*[1;0]
+%%
+A*[0;1]
+%% How to solve Ax=b?
+b=[1;1]
+x=A\b
+%% Check it out:
+A*x 
+%% This is the same as
+inv(A)*b
+% This is just for learning. NEVER use inv in a serious application! Use \ or lu-decomposition
+%% lu:
+[l,u]=lu(A)
+%% And solve
+u\(l\b)
+%% Now turn to eigenvalues
+eig(A)
+%%
+[v,d]=eig(A)
+%%
+A*v(:,1)
+%% Compare with
+-0.5*v(:,1)
+%% So what do you think about:
+A*v(:,2)
+%% Now consider
+A*v
+%% and
+v*d
+%% run eigsvddemo
+%% Present MassSpring.pptx
+%% ExSimpleModelsI
+%% Present inverse iteration with shift
+%% ExInverseIter
+
+
+
+
+##### SOURCE END #####
+--></body></html>

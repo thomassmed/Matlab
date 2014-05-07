@@ -1,0 +1,12 @@
+Uppgift Kontinuerligt till diskret
+
+Sampla systemet G(s)=1/(1+0.2s)
+med samplingstid Ts=0.01
+
+så att du får fram koefficienterna a och b i differensekvationen
+
+y(k)=a*y(k-1)+b*u(k-1)
+
+Använd m-filen firstorder och simulera systemet med samma insignal som i Uppgift 1,
+dvs u=sin(w0*t), w0=pi
+

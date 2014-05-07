@@ -1,0 +1,119 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Exercise 5 - Read HDF5 file</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-02-18"><meta name="DC.source" content="Exercise5.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Exercise 5 - Read HDF5 file</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Get info of file</a></li><li><a href="#2">5.1 - How many groups exist under the root group</a></li><li><a href="#3">5.2 - What are the names of these groups?</a></li><li><a href="#4">5.3a - What is the average age of the contestants?</a></li><li><a href="#5">5.3b - What is the unit of the ages?</a></li><li><a href="#6">5.4a - What descriptions are stored with the competitions?</a></li><li><a href="#7">5.4b - What unit were the results measured in?</a></li><li><a href="#8">5.4c - What was the best result in each of the competitions?</a></li></ul></div><h2>Get info of file<a name="1"></a></h2><pre class="codeinput">fileinfo = hdf5info(<span class="string">'Exercise5.h5'</span>);
+</pre><h2>5.1 - How many groups exist under the root group<a name="2"></a></h2><pre class="codeinput">ngroups = numel(fileinfo.GroupHierarchy.Groups);
+</pre><h2>5.2 - What are the names of these groups?<a name="3"></a></h2><pre class="codeinput">gnames=[];
+<span class="keyword">for</span> i=1:ngroups
+    gnames = [gnames,fileinfo.GroupHierarchy.Groups(i).Name];
+<span class="keyword">end</span>
+</pre><h2>5.3a - What is the average age of the contestants?<a name="4"></a></h2><pre class="codeinput">ages = hdf5read(fileinfo.GroupHierarchy.Groups(1).Datasets(1));
+avg_age = mean(ages(:));
+</pre><h2>5.3b - What is the unit of the ages?<a name="5"></a></h2><pre class="codeinput">age_unit = fileinfo.GroupHierarchy.Groups(1).Datasets(1).Attributes(1).Value.Data;
+</pre><h2>5.4a - What descriptions are stored with the competitions?<a name="6"></a></h2><pre class="codeinput">cdesc1 = fileinfo.GroupHierarchy.Groups(2).Datasets(1).Attributes(1).Value.Data;
+cdesc2 = fileinfo.GroupHierarchy.Groups(2).Datasets(2).Attributes(1).Value.Data;
+</pre><h2>5.4b - What unit were the results measured in?<a name="7"></a></h2><pre class="codeinput">cunit1 = fileinfo.GroupHierarchy.Groups(2).Datasets(1).Attributes(2).Value.Data;
+cunit2 = fileinfo.GroupHierarchy.Groups(2).Datasets(2).Attributes(2).Value.Data;
+</pre><h2>5.4c - What was the best result in each of the competitions?<a name="8"></a></h2><pre class="codeinput">results1 = hdf5read(fileinfo.GroupHierarchy.Groups(2).Datasets(1));
+min_time = min(results1(:));
+results2 = hdf5read(fileinfo.GroupHierarchy.Groups(2).Datasets(2));
+max_jump = max(results2(:));
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise 5 - Read HDF5 file
+%% Get info of file
+fileinfo = hdf5info('Exercise5.h5');
+
+%% 5.1 - How many groups exist under the root group
+ngroups = numel(fileinfo.GroupHierarchy.Groups);
+
+%% 5.2 - What are the names of these groups?
+gnames=[];
+for i=1:ngroups
+    gnames = [gnames,fileinfo.GroupHierarchy.Groups(i).Name];
+end
+
+%% 5.3a - What is the average age of the contestants?
+ages = hdf5read(fileinfo.GroupHierarchy.Groups(1).Datasets(1));
+avg_age = mean(ages(:));
+
+%% 5.3b - What is the unit of the ages?
+age_unit = fileinfo.GroupHierarchy.Groups(1).Datasets(1).Attributes(1).Value.Data;
+
+%% 5.4a - What descriptions are stored with the competitions?
+cdesc1 = fileinfo.GroupHierarchy.Groups(2).Datasets(1).Attributes(1).Value.Data;
+cdesc2 = fileinfo.GroupHierarchy.Groups(2).Datasets(2).Attributes(1).Value.Data;
+
+%% 5.4b - What unit were the results measured in?
+cunit1 = fileinfo.GroupHierarchy.Groups(2).Datasets(1).Attributes(2).Value.Data;
+cunit2 = fileinfo.GroupHierarchy.Groups(2).Datasets(2).Attributes(2).Value.Data;
+
+%% 5.4c - What was the best result in each of the competitions?
+results1 = hdf5read(fileinfo.GroupHierarchy.Groups(2).Datasets(1));
+min_time = min(results1(:));
+results2 = hdf5read(fileinfo.GroupHierarchy.Groups(2).Datasets(2));
+max_jump = max(results2(:));
+##### SOURCE END #####
+--></body></html>

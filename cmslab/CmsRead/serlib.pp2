@@ -1,0 +1,81 @@
+PROCEDURE GET_SQDIS
+!
+! -- Get channel average value of a nodal distribution --
+! -- in square matrix format                           --
+!
+! P1 : Name of distribution
+!
+! Example: get channel average exposure
+!
+!          DO GET_SQDIS 3EXP
+!
+LOCAL DIST
+SET DIST=$P1
+!
+  ARRAY DELETE CHDIS
+  PU EXIDX BU2SQ idx            ! square matrix index
+  PU MKARR $(DIST) OUT=CHDIS
+  ARRAY INDAPP CHDIS idx SQDIS  ! convert to square matrix
+  OUTFIL pp2out.txt
+  ARRAY TABLE SQDIS
+OUTFIL
+!
+RETURN
+
+
+PROCEDURE GET_VAR2
+!
+! -- Get a data base scalar parameter --
+!
+! P1 : Name of parameter
+!
+! Example:  get relative thermal power
+!
+!           DO GET_VAR2 HY_QREL
+!
+LOCAL VAR
+SET VAR=$P1
+!
+  PU SVAR $(VAR) QUIET
+  OUTFIL pp2out.txt
+  ECHO $(XVAR_V)
+  OUTFIL
+!
+RETURN
+
+PROCEDURE GET_DIST
+SET DIST=$P1
+ARRAY DELETE OUTDIST
+PU MKARR $(DIST) OUT=OUTDIST DUM
+OUTFIL pp2out.txt
+ARRAY TABLE OUTDIST
+OUTFIL
+RETURN
+
+
+PROCEDURE GET_HARRAY
+SET ARRN=$P1
+ARRAY DELETE AOUT
+ARRAY INIT  HEAD/$(ARRN) AOUT
+OUTFIL pp2out.txt
+ARRAY TABLE AOUT
+OUTFIL
+RETURN
+
+
+PROCEDURE GET_DIST_LIST
+!
+! List all numeric 3D and 2D distributions
+!
+ DIR * BARE OUT=ADIR
+ OUTFIL pp2out.txt
+ FOREACH DIS IN ADIR
+   IFENTRY |$(DIS)/SUBHED LOOP CYCLE
+   ARRAY INIT $(DIS)/SUBHED SUBHED
+   SET DTYPE=$(SUBHED[1])
+   IFN DTYPE=1 ECHO $(DIS)  ! 3D real fuel
+   IFN DTYPE=10 ECHO $(DIS) ! 2D real fuel
+ ENDFOR
+ OUTFIL
+RETURN
+

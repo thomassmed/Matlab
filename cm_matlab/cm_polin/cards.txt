@@ -1,0 +1,136 @@
+ACCPAR                                                            
+ALBEDO  = ABOT,ATOP,ASID,ACORUT,ACORIN,A11OCT,A21OCT,BORCOE,DNSCOE
+ALHMAX  = SEGTYP,BURNUP,FLOW,POWER,TABLE                          
+ALHMOD+                                                           
+AOFUNC                                                            
+AOTRGT                                                            
+ASMBLY  = ASYTYP,GEOTYP,OPFFAC,TPFMUL,TPSMUL,THROT,INLET,OUTLET,BPHOLE,BOX,FRFAC,CRUD,CRUD2,GAMMA,BYPASS,QASSY,PINTYP,GAPTYP,PLENUM,SEGMEN,FLAREA,HYDDIA,NFPIN1,NFPIN2,NNFPIN,DFPIN1,DFPIN2,DNFPIN,WATCHA
+ASYDEF  
+ASYROT+ 
+ASYTYP+
+ASYWEI+ 
+BA      
+BANKS   
+BNKMAP+ 
+BORAT   
+BORON   
+BOWING  
+BURNUP  
+CASENO  
+CDTMOD  
+CELLDA  
+CONCOE  
+CONITE  
+CONROD+ 
+CPRLIM  = ASYTYP,SET,USE,STATES,CYCBUR,CYBUBP,FLOW,RFLOW,FLOWBP,RFLWBP,LIMIT   
+CPRMIN  = ASYTYP,FLOW,POWER,CYCBUR,TABLE   
+CPRMI2  = ASYTYP,FLOW,CYCBUR,NPUMPS,TABLE  
+CPRMOD+                                    
+CRCOMP                                     
+CRDKDZ                                     
+CREXT                                      
+CRMULT                                     
+CRSEQA                                     
+CRSEQB                                     
+CRTYP +                                    
+CSPPD                                      
+DETADJ                                     
+DETLEV                                     
+DETPOS+                                    
+DETTYP+                                    
+DIBAND                                     
+DIVISN                                     
+DNBMIN                                     
+DOPTEM  = SEGTYP,LHGR,BURNUP,TABLE         
+DPSTLI                                     
+DRYCOR                                     
+DRYPPF                                     
+EIGENV                                     
+END                                        
+ENRICH                                     
+EXCORE  = CALIB,RADWEI,AXWEI               
+FLOMEA                                     
+FLOPOS                                     
+FLOW                                       
+FQMAX                                      
+FUCOMP                                     
+GENPOW                                     
+HFEED                                      
+HFEEDQ                                     
+HLOWP                                      
+HYDCOF  = SCBLEV,VOIMUL,VOISCP,VOIA69,HTRDIT                                     
+HYDRO   = VOIDOP,REACTO,INLET,LOWP,UPPLE,SEPA,UPSIMP,DOWNC1,DOWNC2,MCPUMP,BYPASS 
+IDENT                                                                            
+INIT                                                                             
+INSLIM                                                                           
+INTERP                                                                           
+ITERA                                                                            
+KEBIAS                                                                           
+KQBIAS                                                                           
+KTRGT                                                                            
+LATTIC  = GEOTYP,PPITCH,GAPS,PINXCO,PINYCO,PINXNA,PINYNA                         
+LHLIM1  = SEGTYP,PINMAP,PINTYP,PINBUR,NODBUR,LIMIT,PINTYP,PINBUR,NODBUR,LIMIT
+LHMAX1  = SEGTYP,BURNUP,FLOW,POWER,TABLE                                         
+LHMAX2  = SEGTYP,BURNUP,FLOW,POWER,TABLE                                         
+LHMAX3  = SEGTYP,BURNUP,FLOW,POWER,TABLE                                         
+LHRMOD+                                                                          
+LOCK                                                                             
+LPRM                                                                             
+MANGRP                                                                           
+MASFIL                                                                           
+MODGAM  = DETAVG,FILM,TILT,TIPVOI,RFACT                                          
+MODNEU  = DETAVG,FILM,TILT,TIPVOI,RFACT                                          
+MODOPT                                                                           
+OPTION                                                                           
+ORIFIC+                                                                          
+OVRLAP                                                                           
+PCI                                                                              
+PCICOO                                                                           
+PCILIM  = ASYTYP,CONDIT,LIMITS,BURNUP,THRESH                                     
+PERADD                                                                           
+PINED                                                                            
+PMPCUR                                                                           
+POWER                                                                            
+PRESS                                                                            
+PRIFIL                                                                           
+PRINT                                                                            
+PRMU34                                                                           
+PSPEED                                                                           
+PUMPS                                                                            
+QASSY                                                       
+RANGE                                                       
+RECALL                                                      
+REFLEC                                            
+REFTYP  = RBOT,RTOP,RSID,ROCT                     
+RODWRT                                            
+SAVE                                              
+SDMASY                                            
+SDMPAR                                            
+SHFMAX  = SEGTYP,BURNUP,TABLE                     
+SIZE    = REATYP,DIMENS,HEIGHT,CRCOFF,MINJ,MAXJ   
+SOUFIL                                            
+SPACER                                            
+SUBCOO                                            
+SUMFIL                                            
+SYMME                                             
+TCALIB                                            
+TFEED                                             
+THROTL                                            
+TIME                                              
+TINLDI+                                           
+TINLQ                                             
+TIPLEV                                            
+TIPTYP                                            
+TITLE                                             
+TLOWP                                             
+TSCAN                                             
+TSPAN                                             
+VENDOR                                            
+WLEVEL                                            
+XCOORD                                            
+XCU                                               
+XETRAN                                            
+XYORD                                             
+XYSEP                                             
+YCOORD                                            
+ZMESH

@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<deployment-project>
+  <configuration target="target.java.package" target-name="Java Package" name="matlab" location="/home/matbird/matlab" file="/home/matbird/matlab/matlab.prj" build-checksum="3483107120">
+    <param.project.name>/home/matbird/matlab/matlab.prj</param.project.name>
+    <param.target.type>Java Package</param.target.type>
+    <param.appname>matlab</param.appname>
+    <param.intermediate>${PROJECT_ROOT}/matlab/src</param.intermediate>
+    <param.output>${PROJECT_ROOT}/matlab/distrib</param.output>
+    <param.embed.ctf>true</param.embed.ctf>
+    <param.tbx_on_path>
+      <item>all</item>
+    </param.tbx_on_path>
+    <param.warnings>
+      <warning.fullpath>on</warning.fullpath>
+      <warning.duplicate>on</warning.duplicate>
+      <warning.option.ignored>on</warning.option.ignored>
+      <warning.libname>on</warning.libname>
+      <warning.demo>on</warning.demo>
+    </param.warnings>
+    <param.share.mcr>true</param.share.mcr>
+    <unset>
+      <param.project.name />
+      <param.target.type />
+      <param.appname />
+      <param.intermediate />
+      <param.output />
+      <param.embed.ctf />
+      <param.tbx_on_path />
+      <param.warnings />
+    </unset>
+    <fileset.classes>
+      <entity.package name="">
+        <entity.class name="mdata">
+          <file>${PROJECT_ROOT}/java_addrod.m</file>
+          <file>${PROJECT_ROOT}/java_adjust_btfp.m</file>
+          <file>${PROJECT_ROOT}/java_adjust_btfp_btf.m</file>
+          <file>${PROJECT_ROOT}/java_adjust_tmol.m</file>
+          <file>${PROJECT_ROOT}/java_autba.m</file>
+          <file>${PROJECT_ROOT}/java_axial_spinner_callback.m</file>
+          <file>${PROJECT_ROOT}/java_ba_spinner_callback.m</file>
+          <file>${PROJECT_ROOT}/java_bigcalc.m</file>
+          <file>${PROJECT_ROOT}/java_calc_maxbtf_tab.m</file>
+          <file>${PROJECT_ROOT}/java_calc_maxfint_tab.m</file>
+          <file>${PROJECT_ROOT}/java_calc_mean_u235.m</file>
+          <file>${PROJECT_ROOT}/java_calc_rod.m</file>
+          <file>${PROJECT_ROOT}/java_calc_tmol_limit.m</file>
+          <file>${PROJECT_ROOT}/java_calcbow.m</file>
+          <file>${PROJECT_ROOT}/java_calcbtf.m</file>
+          <file>${PROJECT_ROOT}/java_calcbtfax.m</file>
+          <file>${PROJECT_ROOT}/java_calcbtfaxenv.m</file>
+          <file>${PROJECT_ROOT}/java_calcexp.m</file>
+          <file>${PROJECT_ROOT}/java_change_caifile.m</file>
+          <file>${PROJECT_ROOT}/java_change_caxfile.m</file>
+          <file>${PROJECT_ROOT}/java_check_maxbtf.m</file>
+          <file>${PROJECT_ROOT}/java_check_maxfint.m</file>
+          <file>${PROJECT_ROOT}/java_check_min_u235.m</file>
+          <file>${PROJECT_ROOT}/java_crd_spinner_callback.m</file>
+          <file>${PROJECT_ROOT}/java_decrease_enr.m</file>
+          <file>${PROJECT_ROOT}/java_decrease_tmol.m</file>
+          <file>${PROJECT_ROOT}/java_decrease_u235.m</file>
+          <file>${PROJECT_ROOT}/java_decrease_u235_barod.m</file>
+          <file>${PROJECT_ROOT}/java_delrod.m</file>
+          <file>${PROJECT_ROOT}/java_enr_combinations.m</file>
+          <file>${PROJECT_ROOT}/java_enr_opt.m</file>
+          <file>${PROJECT_ROOT}/java_get_matlab_data.m</file>
+          <file>${PROJECT_ROOT}/java_get_plotdata.m</file>
+          <file>${PROJECT_ROOT}/java_get_radial_opt.m</file>
+          <file>${PROJECT_ROOT}/java_increase_enr.m</file>
+          <file>${PROJECT_ROOT}/java_increase_tmol.m</file>
+          <file>${PROJECT_ROOT}/java_increase_u235.m</file>
+          <file>${PROJECT_ROOT}/java_init.m</file>
+          <file>${PROJECT_ROOT}/java_max_corner_fint.m</file>
+          <file>${PROJECT_ROOT}/java_max_corner_tmol.m</file>
+          <file>${PROJECT_ROOT}/java_read_caxfile.m</file>
+          <file>${PROJECT_ROOT}/java_reset_btfp.m</file>
+          <file>${PROJECT_ROOT}/java_reset_tmol.m</file>
+          <file>${PROJECT_ROOT}/java_selrods.m</file>
+          <file>${PROJECT_ROOT}/java_set_max_burnup.m</file>
+          <file>${PROJECT_ROOT}/java_sortrods.m</file>
+          <file>${PROJECT_ROOT}/java_start_casmo.m</file>
+          <file>${PROJECT_ROOT}/java_test.m</file>
+          <file>${PROJECT_ROOT}/java_u235_spinner_callback.m</file>
+          <file>${PROJECT_ROOT}/java_writebtffile.m</file>
+          <file>${PROJECT_ROOT}/java_writecaifile.m</file>
+        </entity.class>
+      </entity.package>
+    </fileset.classes>
+    <fileset.resources />
+    <fileset.package>
+      <file special-file="file.mcr" reference-mode="direct">${MATLAB_ROOT}/toolbox/compiler/deploy/glnxa64/MCRInstaller.zip</file>
+    </fileset.package>
+    <build-deliverables>
+      <file name="matlab.jar" location="${PROJECT_ROOT}/matlab/distrib" optional="false">/home/matbird/matlab/matlab/distrib/matlab.jar</file>
+      <file name="readme.txt" location="${PROJECT_ROOT}/matlab/distrib" optional="true">/home/matbird/matlab/matlab/distrib/readme.txt</file>
+      <file name="doc" location="${PROJECT_ROOT}/matlab/distrib" optional="false">/home/matbird/matlab/matlab/distrib/doc</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>/home/kjell/matlab</root>
+      <path>
+        <directory>/home/kjell/matlab</directory>
+        <directory>/home/matbird/matlab</directory>
+        <directory>/home/cmscore</directory>
+        <directory>/home/cmslab/CmsPlot</directory>
+        <directory>/home/cmslab/CmsRead</directory>
+        <directory>/home/cmslab/CmsTools</directory>
+        <directory>/home/nucbox</directory>
+        <directory>/home/nucbox/cms_matstab</directory>
+        <directory>/home/nucbox/cms_matstab/.svn</directory>
+        <directory>/home/nucbox/cms_matstab/.svn/prop-base</directory>
+        <directory>/home/nucbox/cms_matstab/.svn/props</directory>
+        <directory>/home/nucbox/cms_matstab/.svn/text-base</directory>
+        <directory>/home/nucbox/cms_matstab/.svn/tmp</directory>
+        <directory>/home/nucbox/cms_matstab/.svn/tmp/prop-base</directory>
+        <directory>/home/nucbox/cms_matstab/.svn/tmp/props</directory>
+        <directory>/home/nucbox/cms_matstab/.svn/tmp/text-base</directory>
+        <directory>/home/nucbox/cms_matstab/matstab_tools</directory>
+        <directory>/home/nucbox/cms_matstab/model_fuel</directory>
+        <directory>/home/nucbox/cms_matstab/model_neu</directory>
+        <directory>/home/nucbox/cms_matstab/model_th</directory>
+        <directory>/home/nucbox/cms_plot</directory>
+        <directory>/home/nucbox/cms_read</directory>
+        <directory>/home/nucbox/cms_tools</directory>
+        <directory>/home/nucbox/func</directory>
+        <directory>/home/nucbox/hdf5tools</directory>
+        <directory>/home/nucbox/mssocket</directory>
+        <directory>/home/nucbox/polca_tools</directory>
+        <directory>/home/nucbox/pp2_demo</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/.svn</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/.svn/prop-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/.svn/props</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/.svn/text-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/.svn/tmp</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/.svn/tmp/prop-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/.svn/tmp/props</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/.svn/tmp/text-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/kggb</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/kggb/.svn</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/kggb/.svn/prop-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/kggb/.svn/props</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/kggb/.svn/text-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/kggb/.svn/tmp</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/kggb/.svn/tmp/prop-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/kggb/.svn/tmp/props</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/kggb/.svn/tmp/text-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/mssocket</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/mssocket/.svn</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/mssocket/.svn/prop-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/mssocket/.svn/props</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/mssocket/.svn/text-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/mssocket/.svn/tmp</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/mssocket/.svn/tmp/prop-base</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/mssocket/.svn/tmp/props</directory>
+        <directory>/home/nucbox/pp2_demo/demo3_mpp2/mssocket/.svn/tmp/text-base</directory>
+        <directory>/home/nucbox/termo</directory>
+        <directory>/home/nucbox/work</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/demos</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/graph2d</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/graph3d</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/graphics</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/plottools</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/scribe</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/specgraph</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/uitools</directory>
+        <directory>${MATLAB_ROOT}/toolbox/local</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/general</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/ops</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/lang</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/elmat</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/randfun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/elfun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/specfun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/matfun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/datafun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/polyfun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/funfun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/sparfun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/strfun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/iofun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/timefun</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/datatypes</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/verctrl</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/codetools</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/helptools</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/hds</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/guide</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/datamanager</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/simulink</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/instrument</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/rptgen</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/testmeaslib/general</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/comparisons</directory>
+        <directory>${MATLAB_ROOT}/toolbox/compiler</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/controllib/general</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/audiovideo</directory>
+        <directory>${MATLAB_ROOT}/toolbox/compiler/compilerdemos</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/imagesci</directory>
+        <directory>${MATLAB_ROOT}/toolbox/matlab/timeseries</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/controllib/graphics</directory>
+        <directory>${MATLAB_ROOT}/toolbox/javabuilder/javabuilderdemos</directory>
+        <directory>${MATLAB_ROOT}/toolbox/javabuilder/javabuilder</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/testmeaslib/graphics</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/asynciolib</directory>
+        <directory>${MATLAB_ROOT}/toolbox/shared/eml/eml</directory>
+      </path>
+    </matlab>
+    <platform>
+      <unix>true</unix>
+      <mac>false</mac>
+      <windows>false</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>true</linux>
+      <solaris>false</solaris>
+      <osver>2.6.35-30-generic</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>glnxa64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
+

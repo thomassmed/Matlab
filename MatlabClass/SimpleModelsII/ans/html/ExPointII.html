@@ -1,0 +1,192 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>ExPointII</title><meta name="generator" content="MATLAB 7.13"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-11-17"><meta name="DC.source" content="ExPointII.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#1">Exercise 1 Use the m-file pointk.m and ode15s to simulate the response when the excess reactivity is 80 pcm.</a></li><li><a href="#2">2 Define the A-matrix for raa=80 pcm and calculate the eigenvalues.</a></li><li><a href="#3">3 In the same plot as you have plotted y(:,1), plot the response corresponding to the positive eigenvalue</a></li><li><a href="#4">4 Use the function dub2raa to plot the doubling time vs reactivity for T2=10 to T2=100</a></li><li><a href="#5">5 Use the function inv_kinetics to calculate the reactivity and precursors from n</a></li><li><a href="#6">a) From the simulated signal in ex 1 with default values in inv_kinetics</a></li><li><a href="#7">b) From the simulated signal in ex 1 with actual values</a></li><li><a href="#8">c) compare conc with y(:,2);</a></li></ul></div><h2>Exercise 1 Use the m-file pointk.m and ode15s to simulate the response when the excess reactivity is 80 pcm.<a name="1"></a></h2><pre class="codeinput">al=log(2)/8;
+beta=0.00600;
+L=1.6825e-5;
+y0=[1;beta/al/L];
+[t,y]=ode15s(@pointk,[0 60],y0);
+figure
+plot(t,y(:,1))
+grid
+</pre><img vspace="5" hspace="5" src="ExPointII_01.png" alt=""> <h2>2 Define the A-matrix for raa=80 pcm and calculate the eigenvalues.<a name="2"></a></h2><pre class="codeinput">raa=0.00080;
+A=[(raa-beta)/L al
+    beta/L  -al];
+ee=eig(A)
+T=1/ee(2);
+T2=log(2)/ee(2)
+</pre><pre class="codeoutput">
+ee =
+
+ -309.1639
+    0.0133
+
+
+T2 =
+
+   52.0168
+
+</pre><h2>3 In the same plot as you have plotted y(:,1), plot the response corresponding to the positive eigenvalue<a name="3"></a></h2><pre class="codeinput">y1=exp(t/T);
+hold <span class="string">on</span>
+plot(t,y1,<span class="string">'g'</span>);
+<span class="comment">% Correct with a new initial value on y0:</span>
+y1_corr=1.15*exp(t/T);
+plot(t,y1_corr,<span class="string">'r'</span>);
+legend(<span class="string">'Point kinetics'</span>,<span class="string">'y=e^t^/^T'</span>,<span class="string">'y=1.15*e^t^/^T'</span>,<span class="string">'location'</span>,<span class="string">'nw'</span>)
+shg
+</pre><img vspace="5" hspace="5" src="ExPointII_02.png" alt=""> <h2>4 Use the function dub2raa to plot the doubling time vs reactivity for T2=10 to T2=100<a name="4"></a></h2><pre class="codeinput">T2=10:100;
+raa=dub2raa(T2);
+figure
+plot(raa,T2)
+grid
+ylabel(<span class="string">'Doubling time (s)'</span>);
+xlabel(<span class="string">'Excess reactivity (pcm)'</span>);
+title(<span class="string">'Doubling time as function of reactivity'</span>);
+shg
+</pre><img vspace="5" hspace="5" src="ExPointII_03.png" alt=""> <h2>5 Use the function inv_kinetics to calculate the reactivity and precursors from n<a name="5"></a></h2><h2>a) From the simulated signal in ex 1 with default values in inv_kinetics<a name="6"></a></h2><pre class="codeinput">[t1,rho,conc]=inv_kinetics(t,y(:,1));
+figure
+plot(t1,rho*1e5)
+grid
+xlabel(<span class="string">'time (s)'</span>);
+ylabel(<span class="string">'rho (pcm)'</span>);
+title(<span class="string">'Reconstructed reactivity'</span>);
+shg
+</pre><img vspace="5" hspace="5" src="ExPointII_04.png" alt=""> <h2>b) From the simulated signal in ex 1 with actual values<a name="7"></a></h2><pre class="codeinput">[t1,rho1,conc1]=inv_kinetics(t,y(:,1),beta,al);
+figure
+plot(t1,rho1*1e5)
+grid
+xlabel(<span class="string">'time (s)'</span>);
+ylabel(<span class="string">'rho (pcm)'</span>);
+title(<span class="string">'Reconstructed reactivity'</span>);
+shg
+</pre><img vspace="5" hspace="5" src="ExPointII_05.png" alt=""> <h2>c) compare conc with y(:,2);<a name="8"></a></h2><pre class="codeinput">figure
+plot(t,y(:,2));
+hold <span class="string">on</span>
+plot(t1,conc1,<span class="string">'r'</span>);
+legend(<span class="string">'Delayed group from point kinetics'</span>,<span class="string">'Reconstructed delayed group'</span>);
+</pre><img vspace="5" hspace="5" src="ExPointII_06.png" alt=""> <p class="footer"><br>
+      Published with MATLAB&reg; 7.13<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise 1 Use the m-file pointk.m and ode15s to simulate the response when the excess reactivity is 80 pcm.
+al=log(2)/8;
+beta=0.00600;
+L=1.6825e-5;
+y0=[1;beta/al/L];
+[t,y]=ode15s(@pointk,[0 60],y0);
+figure
+plot(t,y(:,1))
+grid
+%% 2 Define the A-matrix for raa=80 pcm and calculate the eigenvalues.
+raa=0.00080;
+A=[(raa-beta)/L al 
+    beta/L  -al];
+ee=eig(A)
+T=1/ee(2);
+T2=log(2)/ee(2)
+%% 3 In the same plot as you have plotted y(:,1), plot the response corresponding to the positive eigenvalue
+y1=exp(t/T);
+hold on
+plot(t,y1,'g');
+% Correct with a new initial value on y0:
+y1_corr=1.15*exp(t/T);
+plot(t,y1_corr,'r');
+legend('Point kinetics','y=e^t^/^T','y=1.15*e^t^/^T','location','nw')
+shg
+%% 4 Use the function dub2raa to plot the doubling time vs reactivity for T2=10 to T2=100
+T2=10:100;
+raa=dub2raa(T2);
+figure
+plot(raa,T2)
+grid
+ylabel('Doubling time (s)');
+xlabel('Excess reactivity (pcm)');
+title('Doubling time as function of reactivity');
+shg
+%% 5 Use the function inv_kinetics to calculate the reactivity and precursors from n
+%% a) From the simulated signal in ex 1 with default values in inv_kinetics
+[t1,rho,conc]=inv_kinetics(t,y(:,1));
+figure
+plot(t1,rho*1e5)
+grid
+xlabel('time (s)');
+ylabel('rho (pcm)');
+title('Reconstructed reactivity');
+shg
+%% b) From the simulated signal in ex 1 with actual values
+[t1,rho1,conc1]=inv_kinetics(t,y(:,1),beta,al);
+figure
+plot(t1,rho1*1e5)
+grid
+xlabel('time (s)');
+ylabel('rho (pcm)');
+title('Reconstructed reactivity');
+shg
+%% c) compare conc with y(:,2);
+figure
+plot(t,y(:,2));
+hold on
+plot(t1,conc1,'r');
+legend('Delayed group from point kinetics','Reconstructed delayed group');
+##### SOURCE END #####
+--></body></html>

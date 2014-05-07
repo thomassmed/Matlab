@@ -1,0 +1,188 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Exercise 2 - Big Mac Nutritional Data</title><meta name="generator" content="MATLAB 7.11"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2011-02-23"><meta name="DC.source" content="Exercise2.m"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><h1>Exercise 2 - Big Mac Nutritional Data</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">2.1 Import data</a></li><li><a href="#2">2.2a Aggregate variables to create a 1-by-8 cell array</a></li><li><a href="#3">2.2b Aggregate variables to create a 27-by-8 cell array</a></li><li><a href="#4">2.3a Aggregate variables to create a 1-by-1 structure array</a></li><li><a href="#5">2.3b Aggregate variables to create a 27-by-1 structure array</a></li><li><a href="#6">2.4 Modify units of sodium in c1, s1</a></li><li><a href="#7">2.5 Use c1, c2, s1, s2 to answer questions</a></li></ul></div><h2>2.1 Import data<a name="1"></a></h2><pre class="codeinput">load <span class="string">Exercise2.mat</span>;
+</pre><h2>2.2a Aggregate variables to create a 1-by-8 cell array<a name="2"></a></h2><p>c1 is a 1-by-8 cell array, each cell of which contains a 27-by-1 entity</p><pre class="codeinput">c1 = {country,energy,carbohydrates,protein,fat,fiber,sodium,serving_size};
+</pre><h2>2.2b Aggregate variables to create a 27-by-8 cell array<a name="3"></a></h2><p>c2 is a 27-by-8 cell array, each cell of which contains a scalar entity</p><pre class="codeinput">c2 = [country, num2cell(energy), num2cell(carbohydrates), num2cell(protein), <span class="keyword">...</span>
+      num2cell(fat), num2cell(fiber), num2cell(sodium), num2cell(serving_size)];
+</pre><h2>2.3a Aggregate variables to create a 1-by-1 structure array<a name="4"></a></h2><p>s1 is a 1-by-1 structure with eight fields that each contains a 27-by-1 entity</p><pre class="codeinput">s1.country = country;
+s1.energy = energy;
+s1.carbohydrates = carbohydrates;
+s1.protein = protein;
+s1.fat = fat;
+s1.fiber = fiber;
+s1.sodium = sodium;
+s1.servingsize = serving_size;
+</pre><h2>2.3b Aggregate variables to create a 27-by-1 structure array<a name="5"></a></h2><p>s2 is a 27-by-1 structure; each record contains eight fields with a single entity</p><pre class="codeinput">s2 = struct(<span class="string">'country'</span>, country, <span class="string">'energy'</span>, num2cell(energy), <span class="string">'carbohydrates'</span>, <span class="keyword">...</span>
+            num2cell(carbohydrates), <span class="string">'protein'</span>, num2cell(protein), <span class="string">'fat'</span>, <span class="keyword">...</span>
+            num2cell(fat), <span class="string">'fiber'</span>, num2cell(fiber), <span class="string">'sodium'</span>, num2cell(sodium), <span class="keyword">...</span>
+            <span class="string">'servingsize'</span>, num2cell(serving_size));
+</pre><h2>2.4 Modify units of sodium in c1, s1<a name="6"></a></h2><p>Convert sodium values from milligrams to grams</p><pre class="codeinput">c1{7} = c1{7} / 1000;
+s1.sodium = s1.sodium / 1000;
+</pre><h2>2.5 Use c1, c2, s1, s2 to answer questions<a name="7"></a></h2><pre class="codeinput"><span class="comment">% Which country's burger has the most fat?</span>
+c1{1}(c1{5} == max(c1{5}))
+c2([c2{:,5}] == max([c2{:,5}]))
+s1.country(s1.fat == max(s1.fat))
+s2([s2.fat] == max([s2.fat])).country
+
+<span class="comment">% Which country's burger has the least sodium?</span>
+c1{1}(c1{7} == min(c1{7}))
+c2([c2{:,7}] == min([c2{:,7}]))
+s1.country(s1.sodium == min(s1.sodium))
+s2([s2.sodium] == min([s2.sodium])).country
+</pre><pre class="codeoutput">
+ans = 
+
+    'Mexico'
+
+
+ans = 
+
+    'Mexico'
+
+
+ans = 
+
+    'Mexico'
+
+
+ans =
+
+Mexico
+
+
+ans = 
+
+    'Malaysia'
+
+
+ans = 
+
+    'Malaysia'
+
+
+ans = 
+
+    'Malaysia'
+
+
+ans =
+
+Malaysia
+
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.11<br></p></div><!--
+##### SOURCE BEGIN #####
+%% Exercise 2 - Big Mac Nutritional Data
+
+%% 2.1 Import data
+load Exercise2.mat;
+
+%% 2.2a Aggregate variables to create a 1-by-8 cell array
+% c1 is a 1-by-8 cell array, each cell of which contains a 27-by-1 entity
+c1 = {country,energy,carbohydrates,protein,fat,fiber,sodium,serving_size};
+
+%% 2.2b Aggregate variables to create a 27-by-8 cell array
+% c2 is a 27-by-8 cell array, each cell of which contains a scalar entity
+c2 = [country, num2cell(energy), num2cell(carbohydrates), num2cell(protein), ...
+      num2cell(fat), num2cell(fiber), num2cell(sodium), num2cell(serving_size)];
+
+%% 2.3a Aggregate variables to create a 1-by-1 structure array
+% s1 is a 1-by-1 structure with eight fields that each contains a 27-by-1 entity
+s1.country = country;
+s1.energy = energy;
+s1.carbohydrates = carbohydrates;
+s1.protein = protein;
+s1.fat = fat;
+s1.fiber = fiber;
+s1.sodium = sodium;
+s1.servingsize = serving_size;
+
+%% 2.3b Aggregate variables to create a 27-by-1 structure array
+% s2 is a 27-by-1 structure; each record contains eight fields with a single entity
+s2 = struct('country', country, 'energy', num2cell(energy), 'carbohydrates', ...
+            num2cell(carbohydrates), 'protein', num2cell(protein), 'fat', ...
+            num2cell(fat), 'fiber', num2cell(fiber), 'sodium', num2cell(sodium), ...
+            'servingsize', num2cell(serving_size));
+
+%% 2.4 Modify units of sodium in c1, s1
+% Convert sodium values from milligrams to grams
+c1{7} = c1{7} / 1000;
+s1.sodium = s1.sodium / 1000;
+
+%% 2.5 Use c1, c2, s1, s2 to answer questions
+
+% Which country's burger has the most fat?
+c1{1}(c1{5} == max(c1{5}))
+c2([c2{:,5}] == max([c2{:,5}]))
+s1.country(s1.fat == max(s1.fat))
+s2([s2.fat] == max([s2.fat])).country
+
+% Which country's burger has the least sodium?
+c1{1}(c1{7} == min(c1{7}))
+c2([c2{:,7}] == min([c2{:,7}]))
+s1.country(s1.sodium == min(s1.sodium))
+s2([s2.sodium] == min([s2.sodium])).country
+##### SOURCE END #####
+--></body></html>

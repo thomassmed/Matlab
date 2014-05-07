@@ -1,0 +1,39 @@
+%@(#)   setlabels.m 1.1	 05/07/13     10:29:39
+%
+%
+function setlabels
+xt=(2:2:30);
+set(gca,'xtick',xt);
+set(gca,'ytick',xt);
+Xt=['15'
+    '20'
+    '25'
+    '30'
+    '35'
+    '40'
+    '45'
+    '50'
+    '55'
+    '60'
+    '65'
+    '70'
+    '75'
+    '80'
+    '85'];
+Yt=['X'
+    'V'
+    'U'
+    'T'
+    'S'
+    'R'
+    'P'
+    'O'
+    'M'
+    'L'
+    'K'
+    'I'
+    'H'
+    'G'
+    'F'];
+set(gca,'XTicklabel',Xt);
+set(gca,'YTicklabel',Yt);

@@ -1,0 +1,13 @@
+Uppgift Vitt brus
+Generera vitt brus, och filtrera med ett första ordningens filter
+insingal u, utsignal y, tidskonstant T=1, G(s)=1/(1+sT)=1/(1+s)
+
+
+2a) Jämför spektrum för in- och utsignal med några olika metoder
+
+2b) Jämför U*G med Y
+
+2c) Variera tidskonstanen för filtret
+
+
+Vink : Utnyttja filen FilterVittbrus.m

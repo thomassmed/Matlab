@@ -1,0 +1,221 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Uppgift Spektrum</title><meta name="generator" content="MATLAB 8.2"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2014-02-25"><meta name="DC.source" content="UppgiftSpektrum.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, tt, code { font-size:12px; }
+pre { margin:0px 0px 20px; }
+pre.error { color:red; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Uppgift Spektrum</h1><!--introduction--><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">a) R&auml;kna ut vad utsignalen borde bli genom att ber&auml;kna G(jw)</a></li><li><a href="#2">b) Simulera utsignalen (kalla den y) mha tf och lsim och j&auml;mf&ouml;r med resultatet i a)</a></li><li><a href="#3">c) Ber&auml;kna fft f&ouml;r u och y och ber&auml;kna Y(jw)/U(jw)</a></li><li><a href="#4">d) Anv&auml;nd kommandot bode p&aring; G</a></li><li><a href="#5">d) Generera tre bodediagram manuellt</a></li><li><a href="#6">F&ouml;renklat bodediagram</a></li><li><a href="#7">Extra uppgift Hur blir det med vitt brus som insignal?</a></li><li><a href="#8">Spectrum ist&auml;llet f&ouml;r fft</a></li><li><a href="#9">Fas</a></li></ul></div><h2>a) R&auml;kna ut vad utsignalen borde bli genom att ber&auml;kna G(jw)<a name="1"></a></h2><pre class="codeinput">T=0.2;
+t=0:0.01:10;t=t';
+u=sin(pi*t);
+plot(t,u)
+hold <span class="string">on</span>
+Gjw=1/(1+T*1j*pi);
+plot(t,abs(Gjw)*sin(pi*t+angle(Gjw)),<span class="string">'r'</span>,<span class="string">'linew'</span>,1.5);
+</pre><img vspace="5" hspace="5" src="UppgiftSpektrum_01.png" alt=""> <h2>b) Simulera utsignalen (kalla den y) mha tf och lsim och j&auml;mf&ouml;r med resultatet i a)<a name="2"></a></h2><pre class="codeinput">G=tf(1,[T 1]);
+y=lsim(G,u,t);
+plot(t,y,<span class="string">'k'</span>);
+</pre><img vspace="5" hspace="5" src="UppgiftSpektrum_02.png" alt=""> <h2>c) Ber&auml;kna fft f&ouml;r u och y och ber&auml;kna Y(jw)/U(jw)<a name="3"></a></h2><pre class="codeinput">U=fft(u);
+Y=fft(y);
+[~,imax]=max(abs(U));
+Y(imax)/U(imax)
+Gjw
+figure
+compass(U(imax));
+hold <span class="string">on</span>
+compass(Y(imax),<span class="string">'r'</span>);
+compass(U(imax)*Gjw,<span class="string">'k'</span>)
+</pre><pre class="codeoutput">
+ans =
+
+   0.7252 - 0.4376i
+
+
+Gjw =
+
+   0.7170 - 0.4505i
+
+</pre><img vspace="5" hspace="5" src="UppgiftSpektrum_03.png" alt=""> <h2>d) Anv&auml;nd kommandot bode p&aring; G<a name="4"></a></h2><pre class="codeinput">figure
+bode(G)
+</pre><img vspace="5" hspace="5" src="UppgiftSpektrum_04.png" alt=""> <h2>d) Generera tre bodediagram manuellt<a name="5"></a></h2><pre class="codeinput">f=linspace(0,50,501);
+w=2*pi*f;
+figure
+loglog(f,abs(1./(1+T*1j*w)),<span class="string">'linew'</span>,1.5)
+hold <span class="string">on</span>
+u1=chirp(t(:),.01,10,20);
+t=t(:);
+y1=lsim(G,u1,t);
+Y1=fft(y1);
+U1=fft(u1);
+loglog(f,abs(Y1(1:501)./U1(1:501)),<span class="string">'r'</span>)
+Gjw=bode(G,w);
+Gjw=squeeze(Gjw);
+loglog(f,Gjw,<span class="string">'k'</span>)
+grid <span class="string">on</span>
+</pre><img vspace="5" hspace="5" src="UppgiftSpektrum_05.png" alt=""> <h2>F&ouml;renklat bodediagram<a name="6"></a></h2><pre class="codeinput">w1=1/T;f1=w1/2/pi;
+i1=find(f&gt;f1,1,<span class="string">'first'</span>);
+loglog(f(i1:end),f(i1)./f(i1:end),<span class="string">'k'</span>,<span class="string">'linew'</span>,2);
+loglog(f(1:i1),ones(i1,1),<span class="string">'k'</span>,<span class="string">'linew'</span>,2);
+ylim([1e-2 1.1])
+legend(<span class="string">'1/(1+j\omegaT)'</span>,<span class="string">'fft(Y)/fft(U)'</span>,<span class="string">'G(j\omega)'</span>,<span class="string">'Simplified'</span>)
+</pre><img vspace="5" hspace="5" src="UppgiftSpektrum_06.png" alt=""> <h2>Extra uppgift Hur blir det med vitt brus som insignal?<a name="7"></a></h2><pre class="codeinput">u2=randn(size(t));
+y2=lsim(G,u2,t);
+U2=fft(u2);
+Y2=fft(y2);
+figure
+loglog(f,abs(1./(1+T*1j*w)),<span class="string">'linew'</span>,1.5)
+hold <span class="string">on</span>
+loglog(f,abs(Y2(1:501)./U2(1:501)),<span class="string">'r'</span>)
+</pre><img vspace="5" hspace="5" src="UppgiftSpektrum_07.png" alt=""> <h2>Spectrum ist&auml;llet f&ouml;r fft<a name="8"></a></h2><pre class="codeinput">Hs=spectrum.cov(30);
+U2=psd(Hs,u2,<span class="string">'Fs'</span>,100);
+Y2=psd(Hs,y2,<span class="string">'Fs'</span>,100);
+ff=U2.Frequencies;
+loglog(ff,sqrt(abs(Y2.Data./U2.Data)),<span class="string">'g'</span>,<span class="string">'linew'</span>,2);
+grid <span class="string">on</span>
+ylim([1e-2 2])
+legend(<span class="string">'1/(1+j\omegaT)'</span>,<span class="string">'fft(Y)/fft(U)'</span>,<span class="string">'sqrt(spec(Y)/spec(U))'</span>,<span class="string">'location'</span>,<span class="string">'SW'</span>)
+</pre><img vspace="5" hspace="5" src="UppgiftSpektrum_08.png" alt=""> <h2>Fas<a name="9"></a></h2><pre class="codeinput">figure
+semilogx(f,angle(1./(1+T*1j*w))*180/pi,<span class="string">'linew'</span>,1.5)
+hold <span class="string">on</span>
+semilogx(f,angle(Y1(1:501)./U1(1:501))*180/pi,<span class="string">'r'</span>)
+semilogx(f,angle(Gjw)*180/pi,<span class="string">'k'</span>);
+ylim([-100 0])
+</pre><img vspace="5" hspace="5" src="UppgiftSpektrum_09.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2013b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Uppgift Spektrum
+%% a) Räkna ut vad utsignalen borde bli genom att beräkna G(jw)
+T=0.2;
+t=0:0.01:10;t=t';
+u=sin(pi*t);
+plot(t,u)
+hold on
+Gjw=1/(1+T*1j*pi);
+plot(t,abs(Gjw)*sin(pi*t+angle(Gjw)),'r','linew',1.5);
+%% b) Simulera utsignalen (kalla den y) mha tf och lsim och jämför med resultatet i a)
+G=tf(1,[T 1]);
+y=lsim(G,u,t);
+plot(t,y,'k');
+%% c) Beräkna fft för u och y och beräkna Y(jw)/U(jw)
+U=fft(u);
+Y=fft(y);
+[~,imax]=max(abs(U));
+Y(imax)/U(imax)
+Gjw
+figure
+compass(U(imax));
+hold on
+compass(Y(imax),'r');
+compass(U(imax)*Gjw,'k')
+%% d) Använd kommandot bode på G
+figure
+bode(G)
+%% d) Generera tre bodediagram manuellt
+f=linspace(0,50,501);
+w=2*pi*f;
+figure
+loglog(f,abs(1./(1+T*1j*w)),'linew',1.5)
+hold on
+u1=chirp(t(:),.01,10,20);
+t=t(:);
+y1=lsim(G,u1,t);
+Y1=fft(y1);
+U1=fft(u1);
+loglog(f,abs(Y1(1:501)./U1(1:501)),'r')
+Gjw=bode(G,w);
+Gjw=squeeze(Gjw);
+loglog(f,Gjw,'k')
+grid on
+%% Förenklat bodediagram
+w1=1/T;f1=w1/2/pi;
+i1=find(f>f1,1,'first');
+loglog(f(i1:end),f(i1)./f(i1:end),'k','linew',2);
+loglog(f(1:i1),ones(i1,1),'k','linew',2);
+ylim([1e-2 1.1])
+legend('1/(1+j\omegaT)','fft(Y)/fft(U)','G(j\omega)','Simplified')
+%% Extra uppgift Hur blir det med vitt brus som insignal?
+u2=randn(size(t));
+y2=lsim(G,u2,t);
+U2=fft(u2);
+Y2=fft(y2);
+figure
+loglog(f,abs(1./(1+T*1j*w)),'linew',1.5)
+hold on
+loglog(f,abs(Y2(1:501)./U2(1:501)),'r')
+%% Spectrum istället för fft
+Hs=spectrum.cov(30);
+U2=psd(Hs,u2,'Fs',100);
+Y2=psd(Hs,y2,'Fs',100);
+ff=U2.Frequencies;
+loglog(ff,sqrt(abs(Y2.Data./U2.Data)),'g','linew',2);
+grid on
+ylim([1e-2 2])
+legend('1/(1+j\omegaT)','fft(Y)/fft(U)','sqrt(spec(Y)/spec(U))','location','SW')
+%% Fas
+figure
+semilogx(f,angle(1./(1+T*1j*w))*180/pi,'linew',1.5)
+hold on
+semilogx(f,angle(Y1(1:501)./U1(1:501))*180/pi,'r')
+semilogx(f,angle(Gjw)*180/pi,'k');
+ylim([-100 0])
+##### SOURCE END #####
+--></body></html>

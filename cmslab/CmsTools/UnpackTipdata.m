@@ -1,0 +1,35 @@
+function [NPP,cycles,tgmw_red,tgmw_raw,meas_red,meas_raw,dif,rmsnod,rmsrad,rmsax,...
+    tiltax,difmax,difmaxstr,difmaxnod,difmin,difminstr,difminnod,difdif,difdifstr,difdifnod,...
+    efph,keff,pow,flo,mflcpr,mflcpra,mflpd,mflpda,cor,nhydproc,nhydtypes]=UnpackTipdata(tipdata)
+
+NPP=tipdata.NPP;
+cycles=tipdata.cycles;
+cor=tipdata.core;
+tgmw_red=tipdata.tgmw_red;
+tgmw_raw=tipdata.tgmw_raw;
+meas_red=tipdata.meas_red;
+meas_raw=tipdata.meas_raw;
+dif=tipdata.dif;
+rmsnod=tipdata.rmsnod;
+rmsrad=tipdata.rmsrad;
+rmsax=tipdata.rmsax;
+tiltax=tipdata.tiltax;
+difmax=tipdata.difmax;
+difmaxstr=tipdata.difmaxstr;
+difmaxnod=tipdata.difmaxnod;
+difmin=tipdata.difmin;
+difminstr=tipdata.difminstr;
+difminnod=tipdata.difminnod;
+difdif=tipdata.difdif;
+difdifstr=tipdata.difdifstr;
+difdifnod=tipdata.difdifnod;
+efph=tipdata.efph;
+keff=tipdata.keff;
+pow=tipdata.pow;
+flo=tipdata.flo;
+mflcpr=tipdata.mflcpr;
+mflcpra=tipdata.mflcpra;
+mflpd=tipdata.mflpd;
+mflpda=tipdata.mflpda;
+nhydproc=tipdata.nhydproc;
+nhydtypes=tipdata.nhydtypes;
