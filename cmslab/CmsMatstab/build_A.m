@@ -39,7 +39,7 @@ AnIm=imag(An);
 An=real(An);
 AntIm=imag(Ant);
 Ant=real(Ant);
-
+%save ANN1 An AnIm AntIm Anf Aqn Aqt Aqf Ant
 
 
 

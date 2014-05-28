@@ -29,8 +29,8 @@ mastfile=msopt.MasterFile;
 NeuModel=msopt.NeuModel;
 NodalCode=msopt.NodalCode;
 
-rol = cor_rol(termo.P,steady.tl);rol=rol(:);
-rog = cor_rog(cor_tsat(termo.P));rog=rog(:);
+rol = cor_rol(termo.P,steady.tl);
+rog = cor_rog(cor_tsat(termo.P));
 
 drda=(rog-rol)/1000;
 
@@ -94,17 +94,19 @@ whvec=bw(:,knum(:,1));whvec=whvec(:);
 
 
 switch upper(NodalCode)
-    case 'POLCA7'
-        rol = matstab2polca(rol);
-        rog = matstab2polca(rog);
+    case 'POLCA'
+        Tfm=reshape(Tfm,kmax,geom.kan);
+        Tfm=sym_full(Tfm,knum);
         [d1,d2,sigr,siga1,siga2,usig1,usig2,ny]=...
-            xsec2mstab7(distfile,mastfile,Pdens,Tfm,knum);
-        [a11,a21,a22,cp]=read_alb7;
+            xsec2mstab7(distfile,1000*Pdens,Tfm,knum,true);
+        [a11,a21,a22,cp]=read_alb7(fue_new);
     case 'POLCA4'
         [d1,d2,sigr,siga1,siga2,usig1,usig2,ny]=...
         xsec2mstab(distfile,Ppower,Pvoid,mastfile,knum);
         [a11,a21,a22,cp]=read_alb;
-    case 'SIM3'
+    case {'SIM3','POLCA7'}
+        rol=rol(:);
+        rog=rog(:);
         ny=Xsec.ny;
         d1=Xsec.d1;
         d2=Xsec.d2;
@@ -175,15 +177,18 @@ end
 %% Disturbe the void, black nodes
 delta=0.0001;
 switch upper(NodalCode)
-    case 'POLCA7'
-        Pdens_bl=Pdens+delta*bb.*(rog-rol);
+    case 'POLCA'
+        rog=sym_full(rog,knum);
+        rol=sym_full(rol,knum);
+        Pdens_bl=Pdens+delta*bb.*(rog-rol)/1000;
         [d1,d2,sigrbl,siga1,siga2bl,usig1,usig2,ny]=...
-            xsec2mstab7(distfile,mastfile,Pdens_bl,Tfm,knum);
+            xsec2mstab7(distfile,1000*Pdens_bl,Tfm,knum,true);
      case 'POLCA4'
         alfa_bl=Pvoid+delta*bb;
         [d1,d2,sigrbl,siga1,siga2bl,usig1,usig2,ny]=...
             xsec2mstab(distfile,Ppower,alfa_bl,mastfile,knum);
-    case 'SIM3'
+    case {'SIM3','POLCA7'}
+        drda=drda(:);
         d1=Xsec.d1+delta*blvec.*Xsec.d1d.*drda;
         d2=Xsec.d2+delta*blvec.*Xsec.d2d.*drda;
         sigrbl=Xsec.sigr+delta*blvec.*Xsec.sigrd.*drda;
@@ -207,15 +212,15 @@ dqdvbl=k1h0*(usig1./ny.*fa1+usig2./ny.*(A2nm0*fa1))/keff;
 
 %% Disturbe the void, white nodes
 switch upper(NodalCode)
-    case 'POLCA7'
-        Pdens_wh=Pdens+delta*bw.*(rog-rol);
+    case 'POLCA'
+        Pdens_wh=Pdens+delta*bw.*(rog-rol)/1000;
         [d1,d2,sigrwh,siga1,siga2wh,usig1,usig2,ny]=...
-            xsec2mstab7(distfile,mastfile,Pdens_wh,Tfm,knum);
+            xsec2mstab7(distfile,1000*Pdens_wh,Tfm,knum,true);
     case 'POLCA4'
         alfa_wh=Pvoid+delta*bw;
         [d1,d2,sigrwh,siga1,siga2wh,usig1,usig2,ny]=...
         xsec2mstab(distfile,Ppower,alfa_wh,mastfile,knum);
-    case 'SIM3'
+    case {'SIM3','POLCA7'}
         d1=Xsec.d1+delta*whvec.*Xsec.d1d.*drda;
         d2=Xsec.d2+delta*whvec.*Xsec.d2d.*drda;
         sigrwh=Xsec.sigr+delta*whvec.*Xsec.sigrd.*drda;
@@ -270,15 +275,15 @@ Aqt=sparse(iAqt,jAqt,xAqt/q3_sc,ntot,ntot*nt+2*kan);
 Dt=5;
 DPdt=0.007;
 switch upper(NodalCode)
-    case 'POLCA7'
+    case 'POLCA'
         Tfmbl=Tfm+Dt*bb;
         [d1,d2,sigrbl,siga1,siga2bl,usig1,usig2,ny]=...
-        xsec2mstab7(distfile,mastfile,Pdens,Tfmbl,knum);
+        xsec2mstab7(distfile,1000*Pdens,Tfmbl,knum,true);
     case 'POLCA4'
         Ppowerbl=DPdt*Dt*bb+Ppower;
         [d1,d2,sigrbl,siga1,siga2bl,usig1,usig2,ny]=...
             xsec2mstab(distfile,Ppowerbl,Pvoid,mastfile,knum);
-    case 'SIM3'
+    case {'SIM3','POLCA7'}
         d1=Xsec.d1+Dt*blvec.*Xsec.d1t;
         d2=Xsec.d2+Dt*blvec.*Xsec.d2t;
         sigrbl=Xsec.sigr+Dt*blvec.*Xsec.sigrt;
@@ -301,15 +306,15 @@ dqdtb=k1h0*(usig1./ny.*fa1+usig2./ny.*(A2nm0*fa1))/keff;
 %% Disturbe the temperature, white nodes
 
 switch upper(NodalCode)
-    case 'POLCA7'
+    case 'POLCA'
         Tfmwh=Tfm+Dt*bw;
         [d1,d2,sigrwh,siga1,siga2wh,usig1,usig2,ny]=...
-            xsec2mstab7(distfile,mastfile,Pdens,Tfmwh,knum);
+            xsec2mstab7(distfile,1000*Pdens,Tfmwh,knum,true);
     case 'POLCA4'
         Ppowerwh=DPdt*Dt*bw+Ppower;
         [d1,d2,sigrwh,siga1,siga2wh,usig1,usig2,ny]=...
             xsec2mstab(distfile,Ppowerwh,Pvoid,mastfile,knum);
-    case 'SIM3'
+    case {'SIM3','POLCA7'}
         d1=Xsec.d1+Dt*whvec.*Xsec.d1t;
         d2=Xsec.d2+Dt*whvec.*Xsec.d2t;
         sigrwh=Xsec.sigr+Dt*whvec.*Xsec.sigrt;

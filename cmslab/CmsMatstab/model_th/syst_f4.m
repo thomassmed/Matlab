@@ -54,9 +54,13 @@ Dh=Dh(:,knum(:,1));
 A=fue_new.afuel;
 A=A(:,knum(:,1));
 pbm=4*A./Dh-phm;
-amdt=fue_new.amdt(knum(:,1));
-bmdt=fue_new.bmdt(knum(:,1));
-
+if ~isempty(fue_new.amdt)
+    amdt=fue_new.amdt(knum(:,1));
+    bmdt=fue_new.bmdt(knum(:,1));
+else
+    amdt=[];
+    bmdt=[];
+end
 
 ntot=kmax*ncc;
 qprimw = (1-delta)*power*qtherm/ntot./(hz/100);

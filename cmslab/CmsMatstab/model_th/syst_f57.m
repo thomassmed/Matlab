@@ -82,10 +82,13 @@ q3l = (delta-deltam)*qtrissf*(hx/100)^2./A;
 vhifuel=fue_new.vhifuel(:,knum(:,1))';
 vhofuel=fue_new.vhofuel(:,knum(:,1))';
 Xcin=fue_new.Xcin(knum(:,1));
-amdt=fue_new.amdt(knum(:,1));
-bmdt=fue_new.bmdt(knum(:,1));
-amdt=[];
-bmdt=[];
+if isempty(fue_new.amdt)
+    amdt=[];
+    bmdt=[];
+else
+    amdt=fue_new.amdt(knum(:,1));
+    bmdt=fue_new.bmdt(knum(:,1));
+end
 
 vhk = set_pkoeff(vhifuel,vhofuel,termo.avhspx,termo.arhspx,termo.zsp,termo.ispac,Wl,Wg,Dh,P,A,hz/100);
 %%
@@ -299,6 +302,7 @@ for i=1:20,
             flowb=flowb+sqrt(2*rol_lp*dp_wr./(Kin_wr(j,:)+eps)).*A_wr(j,:);
         end
         dp_sup=mean(real(y6))-hz/100*kmax*9.81*rol_by;
+        %TODO: fix this properly
         switch upper(msopt.BYP)
             case 'SUP'
                 Wbyp=0;     % TODO: Fix leakage flow

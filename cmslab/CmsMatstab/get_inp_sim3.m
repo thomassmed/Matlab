@@ -128,7 +128,7 @@ vhspx=vhspx(knum1,:);
 rhspx=rhspx(knum1,:);
 
 % Use default values for bypass, not important!
-a_by=0.25*sum(fue_new.afuel);dh_by=4*a_by/(geom.kan*4*geom.hx/100*.95);vhi_by=-1200;vho_by=0;
+a_by=0.25*mean(fue_new.afuel);dh_by=4*a_by/(geom.kan*4*geom.hx/100*.95);vhi_by=-1200;vho_by=0;
 
 if ~isempty(msopt.ParaFile),
     [dat,num]=ramin2mat(msopt.ParaFile);
@@ -920,7 +920,7 @@ geom.vhi_by=vhi_by;
 geom.vho_by=vho_by;
 
 if ~CoreOnly,
-geom.V_sd=V_sd;
+geom.V_sd=V_sd; %TODO: kolla jfr v_sd
 
 geom.a_dc1=a_dc1;
 geom.h_dc1=h_dc1;

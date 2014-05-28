@@ -13,7 +13,8 @@ global msopt stab geom termo
 Midpoint=get_bool(msopt.Midpoint);
 tolnewt=msopt.GlobalFullTol;
 tollam=msopt.GlobalLamTol;
-msopt.UpdateAneuNewLam=0;
+maxiter=msopt.GlobalFullMaxiter;
+msopt.UpdateAneuNewLam=1;
 CoreOnly=get_bool(msopt.CoreOnly);
 kmax=geom.kmax;
 ntot=geom.ntot;
@@ -43,7 +44,6 @@ if manual_mode,
     Ant=real(Ant);
     clear Dlam Lam Ddlam Tol Et_efix
 end
-
 
 [lf,uf]=lu(lam*Bf-Af);
 [l1,u1] = lu(lam*Bt-At);
@@ -104,7 +104,7 @@ wk=[0;1];
 %
 fprintf(1,'\n');
 dlam=0;
-[et_efix,et,ej,en,ef,eq]=find_dlam(lam,dlam,Bt,Btj,At,Atj,Atf,l1,u1,Atq,Bj,Aj,Ajttj,Ajf,Ajt,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Af,Afj,Bf,...
+[et_efix,et,ej,en,ef,eq]=find_dlam(lam,dlam,Bt,Btj,At,Atj,Atf,l1,u1,Atq,Bj,Aj,Ajttj,Ajf,Ajq,Ajt,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Af,Afj,Bf,...
        l,u,lf,uf,et,ej,en,eq,ef,efix,CoreOnly,matr);
 [dr,fd]=p2drfd(lam);tol=abs(et_efix-1);
 if debug_mode,
@@ -126,13 +126,15 @@ dw_de=J\wk;
 %%
 dlam=0.7*(et_efix-1);
 if abs(dlam)>0.2, dlam=0.2*dlam/abs(dlam);end
-for i=1:10,
+for i=1:maxiter,
     if i>1,
+        %
         [An,Ant,Anf,Aqn,Aqt,Aqf]=A_neu(fue_new,Xsec,matr,lam);
         AnIm=imag(An);
         An=real(An);
         AntIm=imag(Ant);
         Ant=real(Ant);
+        %}
         [lf,uf]=lu(lam*Bf-Af);
         [l1,u1] = lu(lam*Bt-At);
         dlam=0;
@@ -142,7 +144,7 @@ for i=1:10,
         et_efix00=et_efix;
         Lam(j,i)=lam+dlam;
          Dlam(j,i)=dlam;
-         [et_efix,et,ej,en,ef,eq]=find_dlam(lam,dlam,Bt,Btj,At,Atj,Atf,l1,u1,Atq,Bj,Aj,Ajttj,Ajf,Ajt,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Af,Afj,Bf,...
+         [et_efix,et,ej,en,ef,eq]=find_dlam(lam,dlam,Bt,Btj,At,Atj,Atf,l1,u1,Atq,Bj,Aj,Ajttj,Ajf,Ajq,Ajt,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Af,Afj,Bf,...
             l,u,lf,uf,et,ej,en,eq,ef,efix,CoreOnly,matr);
         ddlam_real=dsig_de(1)*real(et_efix-1)+dsig_de(2)*imag(et_efix-1);
         ddlam_imag=dw_de(1)*real(et_efix-1)+dw_de(2)*imag(et_efix-1);
@@ -188,7 +190,7 @@ for i=1:10,
             getMidpoint
             [toll,rtrt,rjrj,rqrq,rfrf,rnrn]=res_eig(At,Atj,Atq,Atf,Bt,Btj,...
                 Ajt,Ajq,Aj,Bj,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Afj,Af,Bf,et,ej,en,eq,ef,lam,etn);
-       %     fprintf(1,' %g %g %g %g %g %g \n',toll,rtrt,rjrj,rqrq,rfrf,rnrn);
+            %fprintf(1,' %g %g %g %g %g %g \n',toll,rtrt,rjrj,rqrq,rfrf,rnrn);
         end
         if tol<tollam, break;end
         if j==10,
@@ -206,9 +208,9 @@ for i=1:10,
         end
     end
     lam=lam+dlam;
-    if tol<0.001&&i>1, break;end
+    if tol<0.0001&&i>1, break;end
     if strcmpi(msopt.Algorithm(1),'C'),
-        if tol<0.002,break;end
+        if tol<0.0002,break;end
     end
 end
 else dlam=1;
@@ -228,7 +230,7 @@ fprintf(1,'-------+--------+---------+-----------+-------- \n');
 getMidpoint
 [tol,rtrt,rjrj,rqrq,rfrf,rnrn]=res_eig(At,Atj,Atq,Atf,Bt,Btj,Ajt,Ajq,Aj,Bj,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Afj,Af,Bf,et,ej,en,eq,ef,lam,etn);
 fprintf(1,'  %2i    %8.4f  %8.4f  %10.6f  %10.6f \n',0,dk,fd,tol,abs(dlam));
-maxiter=msopt.GlobalFullMaxiter;
+%fprintf(1,' %g %g %g %g %g %g \n',tol,rtrt,rjrj,rqrq,rfrf,rnrn);
 for n0=1:maxiter,
   lam0=lam;
   [dr0,fd0]=p2drfd(lam0);
@@ -247,7 +249,7 @@ for n0=1:maxiter,
     end
     getMidpoint
     for i3=1:3,
-      hl=Ant*etn+AntIm*(et*1j)+AnIm*(en*1j)+Anf*ef;
+      hl=Ant*etn+AntIm*(etn*1j)+AnIm*(en*1j)+Anf*ef;
       en = pcgsolve(An,-hl,en,1e-5,30,0,l,u);
     end
     for i3=1:3,
@@ -258,6 +260,7 @@ for n0=1:maxiter,
     [tol,rtrt,rjrj,rqrq,rfrf,rnrn]=res_eig(At,Atj,Atq,Atf,Bt,Btj,Ajt,Ajq,Aj,Bj,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Afj,Af,Bf,et,ej,en,eq,ef,lam,etn);
     if abs(tol)<tolnewt&&abs(dk-dr0)<0.005, ibryt=1;break;end
     if n1<3, fprintf(1,'        %8.4f  %8.4f  %10.6f  %10.6f \n',dk,fd,tol,abs(lam-lam0));end
+   % fprintf(1,' %g %g %g %g %g %g \n',tol,rtrt,rjrj,rqrq,rfrf,rnrn);
   end
  
   [tol,rtrt,rjrj,rqrq,rfrf,rnrn]=res_eig(At,Atj,Atq,Atf,Bt,Btj,Ajt,Ajq,Aj,Bj,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Afj,Af,Bf,et,ej,en,eq,ef,lam,etn);
@@ -287,6 +290,9 @@ enorm=et(efix);
 et=et/enorm;ej=ej/enorm;en=en/enorm;eq=eq/enorm;ef=ef/enorm;
 
 stab.lam=lam;
+[dr,f]=p2drfd(lam);
+stab.dr=dr;
+stab.f=f;
 stab.et=et;
 stab.ej=ej;
 stab.en=en;

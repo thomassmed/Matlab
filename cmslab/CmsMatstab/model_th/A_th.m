@@ -47,11 +47,13 @@ for i=1:i_wr,
     Kex_wr(i,:)=fue_new.Kex_wr{i}(knum(:,1));
 end
 Xcin=fue_new.Xcin(knum(:,1));
-amdt=fue_new.amdt(knum(:,1));
-bmdt=fue_new.bmdt(knum(:,1));
-amdt=[];
-bmdt=[];
-
+if isempty(fue_new.amdt)
+    amdt=[];
+    bmdt=[];
+else
+    amdt=fue_new.amdt(knum(:,1));
+    bmdt=fue_new.bmdt(knum(:,1));
+end
 
 tsat=cor_tsat(termo.p);
 cpl=cor_cpl(tsat);

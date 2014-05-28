@@ -45,7 +45,7 @@ den_l_upl=sum(drol_dp.*(1-alfa_u)./cor_rol(p,steady.tl_upl).*geom.a_upl.*geom.h_
 drog_dp=(cor_rog(cor_tsat(p+1000))-cor_rog(cor_tsat(p)))/1000;
 den_g_upl=sum(drog_dp*alfa_u/rog.*geom.a_upl.*geom.h_upl);
 %% Steam dome
-den_sd=drog_dp/rog*sum(geom.V_sd);
+den_sd=drog_dp/rog*sum(geom.v_sd);
 %% Sum it up
 den= den_core + den_dc1 + den_dc2 + den_lp1 + den_lp2 + den_l_upl + den_g_upl + den_sd;
 %% P - system pressure

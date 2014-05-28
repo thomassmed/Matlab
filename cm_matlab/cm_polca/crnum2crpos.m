@@ -1,20 +1,53 @@
-%@(#)   crnum2crpos.m 1.3	 97/10/29     16:41:57
+% Converts control rod number to control rod position
 %
-%function crpos=crnum2crpos(crnum,mminj)
-% Function for converting cr channel number to cr position
-function crpos=crnum2crpos(crnum,mminj)
-iimax=length(mminj);
-iiss=iimax/2;
-map=zeros(iiss,iiss);
-index=1;
-for i=1:2:iimax,
- ii=i+1;
- jsta=fix(max(mminj(i)/2,mminj(ii)/2));
- jsto=iiss-jsta;
- jind(round(i/2),:)=[jsta+1,jsto];
- for j=jsta+1:jsto,
-    mposs(index,:)=[(i+1)/2 j];
-    index=index+1;
- end;
+% crpos=crnum2crpos(crnum,mminj,irmx)
+% crpos=crnum2crpos(mminj,irmx)
+%
+% Input
+%   crnum - Control rod number vector
+%   mminj - Core contour
+%   irmx   - max number of control rods (irmx by irmx)
+% 
+% Input (Alternative)
+%   mminj - Core Contour
+%
+% Output
+%   crpos - Control rod coordinates (i,j)
+% Example
+%   crpos=crnum2crpos(mminj); % Gives all control rod positions in
+%                             % i,j-coordinates
+% 
+% See also cor2cr, crnum2knum, crpos2crnum, crpos2knum, cr2map, filtcr, map2cr,
+%          mminj2crmminj
+function crpos=crnum2crpos(varargin)
+if nargin==1,
+    mminj = varargin{1};
+    irmx=length(mminj)/2;
+    [crmminj,n_cr]=mminj2crmminj(mminj,irmx);
+    crnum=1:n_cr;
+elseif nargin==2,
+    if length(varargin{2})==1,
+        mminj=varargin{1};
+        irmx=varargin{2};
+        [crmminj,n_cr]=mminj2crmminj(mminj,irmx);
+        crnum=1:n_cr;
+    else
+        crnum=varargin{1};
+        mminj=varargin{2};
+        irmx=length(mminj)/2;
+        [crmminj,n_cr]=mminj2crmminj(mminj,irmx);
+    end
+elseif nargin==3,
+    crnum=varargin{1};
+    mminj=varargin{2};
+    if length(varargin{3})==1,
+        irmx=varargin{3};
+        [crmminj,n_cr]=mminj2crmminj(mminj,irmx);
+    else
+        crmminj=varargin{3};
+        irmx=length(crmminj);
+    end
+else
+    error('Number of input arguments have to be 2 or 3');
 end
-crpos=mposs(crnum,:);
+crpos=knum2cpos(crnum,crmminj);

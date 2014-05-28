@@ -56,7 +56,7 @@ case 'POLCA4'
   flowb2=readdist(distfile,'flowb2');
   flowb=flowb1+flowb2;
 case 'POLCA7'
-  [a11,a21,a22,cp]=read_alb7; %POLCA albedos
+  [a11,a21,a22,cp]=read_alb7(fue_new); %POLCA albedos
   chflow=readdist7(distfile,'chflow');
   flowb=readdist7(distfile,'flwwc');  % flwwc corresponds approx. to flowb
   chflow=chflow+flowb; % Use Polca4 definition of chflow. Not anymore
@@ -123,12 +123,14 @@ if ~init_xs,
             XS_FD=0;
         case 'ramcof'
             disfil=msopt.DistFile;
-            f_master=msopt.MasterFile;
             [d1,d2,sigr,siga1,siga2,usig1,usig2,ny,d1d,d2d,sigrd,siga1d,siga2d,usig1d,usig2d,...
-                d1t,d2t,sigrt,siga1t,siga2t,usig1t,usig2t]=...
-                xs_ramcof(disfil,f_master,sym_full(dens*1000),sym_full(tfmm0),knum,kmax,ncc);
+                sigrt,siga1t,siga2t,usig2t]=...
+                xsec2mstab7(disfil,sym_full(dens*1000),sym_full(tfmm0),knum);
+            d1d=d1d*1000;d2d=d2d*1000;sigrd=sigrd*1000;siga1d=siga1d*1000;
+            siga2d=1000*siga2d;usig1d=usig1d*1000;usig2d=usig2d*1000;
+            d1t=0*d1;d2t=0*d2;usig1t=0*usig1;
             XS=[];X=[];
-            XS_FD=1;
+            XS_FD=0;
     end
     if XS_FD,
         delta_dens=.001; %
@@ -238,10 +240,19 @@ for n=1:nitr,
     if bryt,break;end
 end
 
-disp(sprintf('Simulate keff: %15.5f',Oper.keff));
-%fprintf(fid,'Simulate keff: %15.5f\n',Oper.keff);
-
-%fclose(fid);
+if strcmpi(NodalCode,'SIM3')||strcmpi(NodalCode,'SIM5'),
+    disp(sprintf('Simulate keff: %15.5f',Oper.keff));
+else
+    fprintf(1,'          keff      dPcore     dPin       Bypass\n');
+    fprintf(1,'POLCA:   %7.5f',Oper.keff);
+    fprintf(1,' %10i',round([termo.dpcore; termo.dpavin; termo.Wtot*termo.spltot]));
+    fprintf(1,'\n');
+    
+    fprintf(1,'MATSTAB: %7.5f',keff);
+    fprintf(1,' %10i',round([mean(sum(ploss)) mean(dpin) get_sym*Wbyp]));
+    fprintf(1,'\n');
+end
+    
 
 if re_calc==0,
     if Midpoint
@@ -345,7 +356,7 @@ Xsec.usig1t=(usig1t(:)-usig1(:));
 Xsec.usig2t=(usig2t(:)-usig2(:));
 %save X_sec Xsec 
 %}
-save X_sec Xsec geom X Y XS V2D X2D Y2D V3D X3D Y3D Z3D XSEC_DX2
+%save X_sec Xsec geom X Y XS V2D X2D Y2D V3D X3D Y3D Z3D XSEC_DX2
 if fid>0, fclose(fid);end
 if ~exist('X','var'), X=[];end
 

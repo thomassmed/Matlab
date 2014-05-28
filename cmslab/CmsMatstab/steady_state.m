@@ -88,6 +88,7 @@ tl_fw=(cor_hfg(p)-Oper.Qtot/Wl_fw)/cor_cpl(tsat)+tsat;
 phcpump=dP_core-sum(ploss_dc1)-sum(ploss_dc2)-sum(ploss_lp1)-sum(ploss_lp2)-sum(ploss_upl);
 NoPump=get_bool(msopt.NoPump);
 termo.phcpump=phcpump;
+termo.Wbyp=Wbyp;
 
 if CoreOnly,
     nhcpump=[];
@@ -149,6 +150,11 @@ steady.dP_core=dP_core;
 steady.ploss=ploss;
 steady.dpin=dpin;
 steady.dp_wr=dp_wr;
+A=fue_new.afuel;
+A=A(:,geom.knum(:,1));
+steady.jm=eq_jm(Wl,Wg,P,tl,A);
+
+
 if ~CoreOnly
 steady.dp_sup=dp_sup;
 steady.ploss_dc1=ploss_dc1;

@@ -41,10 +41,13 @@ function matstab(s3kfile,varargin)
 
 %-----------------------------------------------------------------
 %MATLAB version check
+%-----------------------------------------------------------------
+%MATLAB version check
 if nargin==0
-    [filename,pathname]=uigetfile({'*.inp','S3K input files (*.inp)';...
+    [filename,pathname]=uigetfile({'*.dat', 'Polca data files (*.dat)';...
+        '*.inp','S3K input files (*.inp)';...
         '*.*', 'All files (*.*)'},...
-        'Pick a S3K input file');
+        'Pick a S3K or POLCA input file');
     if filename==0, return, end
     filename=[pathname,filename];
     s3kfile=file('normalize',filename);
@@ -58,27 +61,20 @@ end
 %diary('mstabprint.txt')
 %%
 tclock=clock;
-%tcpu=cputime;
-%tcpu0=tcpu;
 %%
-%ver = version;
-%if str2num(ver(1))<5,error('You have to run MATLAB version 5, at least!'),end
-
 disp(' ');
-disp('********************** MATSTAB 3 for Simulate-3 **********************');
+disp('***************** MATSTAB 5 for POLCA 7 & Simulate-3 *****************');
 
 %% Initialising the clock
-
 clear global msopt polcadata geom steady termo neu fuel vec stab
 global msopt steady geom  
-
-%-----------------------------------------------------------------
 %% Reading defaults and input
 msopt=init_msopt(s3kfile,varargin{:});
-
-[fue_new,Oper]=get_inp_sim3;
-%  disp(['Input and initialisation: ',num2str(cputime-tcpu),' s']);
-%  tcpu=cputime;
+if strcmp(msopt.NodalCode,'SIM3')
+    [fue_new,Oper]=get_inp_sim3;
+elseif strcmp(msopt.NodalCode,'POLCA7')
+    [fue_new,Oper]=get_inp_p7;
+end
 %% Initialize from previous case if available
 lam=msopt.Lam;init_flag=false;
 if get_bool(msopt.Global)||msopt.Harmonics>0
@@ -90,14 +86,23 @@ Xsec=steady_state(fue_new,Oper);
 %  tcpu=cputime;
 %%
 if get_bool(msopt.Global)||msopt.Harmonics>0||isnumeric(msopt.Freq)
+if ~init_flag
+    if strcmpi(msopt.Lam,'auto'),
+        f=0.23*mean(steady.jm(:))-0.04;
+        lam=f*log(0.8)+2j*pi*f;
+    else
+        lam=str2num(msopt.Lam);
+    end
+end
 %% Building the system matrix
+if get_bool(msopt.Global)||get_bool(msopt.Freq)
 [At,Atj,Atq,Atf,Ajt,Aj,Ajq,Ajf,Ant,AntIm,An,AnIm,Anf, ...
   Aqt,Aqn,Aqf,Aft,Afj,Afq,Af,Bt,Bf,Bj,Btj,matr]=build_A(fue_new,Xsec,lam);
+end
 %  disp(['System matrix: ',num2str(cputime-tcpu),' s']);
 %    tcpu=cputime;
 %% Creation of a starting guess for en;
-if ~init_flag
-    lam=msopt.Lam;
+if ~init_flag,
     en0=dist2en(steady.power);
 end
 %-----------------------------------------------------------------

@@ -20,7 +20,7 @@ hx=geom.hx;
 knum=geom.knum;
 tlp=termo.tlp;
 %%
-Wbyp=termo.Wbyp;
+Wbyp=termo.Wbyp_frac*sum(chflow);
 Wtot_flag=0;
 
 if length(chflow)==1, 

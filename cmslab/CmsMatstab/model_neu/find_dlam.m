@@ -1,4 +1,4 @@
-function [et_efix,et,ej,en,ef,eq]=find_dlam(lam,dlam,Bt,Btj,At,Atj,Atf,l1,u1,Atq,Bj,Aj,Ajttj,Ajf,Ajt,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Af,Afj,Bf,...
+function [et_efix,et,ej,en,ef,eq]=find_dlam(lam,dlam,Bt,Btj,At,Atj,Atf,l1,u1,Atq,Bj,Aj,Ajttj,Ajf,Ajq,Ajt,Ant,AntIm,An,AnIm,Anf,Aqt,Aqn,Aqf,Aft,Afq,Af,Afj,Bf,...
     l,u,lf,uf,et,ej,en,eq,ef,efix,CoreOnly,matr)
 
 global msopt geom
@@ -11,7 +11,7 @@ for ii0=1:1,
         if CoreOnly
             ej=0*ej;
         else
-            dej=(lam*Bj-Aj-Ajttj)\(-Bj*(lam+dlam)*ej+Ajf*ef+Aj*ej+Ajt*et+Ajt*(u1\(l1\rhs1)));
+            dej=(lam*Bj-Aj-Ajttj)\(-Bj*(lam+dlam)*ej+Ajq*eq+Ajf*ef+Aj*ej+Ajt*et+Ajt*(u1\(l1\rhs1)));
             ej=ej+dej;
         end
         et=u1\(l1\(Atf*ef+Atq*eq+Atj*ej-dlam*Bt*et-Btj*ej*(lam+dlam)));
@@ -26,7 +26,7 @@ for ii0=1:1,
             ev=bound2mid(ev);
             etn(matr.ibas_t)=ev(:);
         end
-        hl=Ant*etn+AntIm*(et*1j)+AnIm*(en*1j)+Anf*ef;
+        hl=Ant*etn+AntIm*(etn*1j)+AnIm*(en*1j)+Anf*ef;
         en = pcgsolve(An,-hl,en,1e-5,30,0,l,u);
     end
     for i3=1:2,
@@ -43,7 +43,7 @@ for ii=1:1,
     if CoreOnly
         ej=0*ej;
     else
-        dej=(lam*Bj-Aj-Ajttj)\(-Bj*(lam+dlam)*ej+Ajf*ef+Aj*ej+Ajt*et+Ajt*(u1\(l1\rhs1)));
+        dej=(lam*Bj-Aj-Ajttj)\(-Bj*(lam+dlam)*ej+Ajq*eq+Ajf*ef+Aj*ej+Ajt*et+Ajt*(u1\(l1\rhs1)));
         ej=ej+dej;
     end
     et=u1\(l1\(Atf*ef+Atq*eq+Atj*ej-dlam*Bt*et-Btj*ej*(lam+dlam)));
