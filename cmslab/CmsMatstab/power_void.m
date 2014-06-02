@@ -125,7 +125,7 @@ if ~init_xs,
             disfil=msopt.DistFile;
             [d1,d2,sigr,siga1,siga2,usig1,usig2,ny,d1d,d2d,sigrd,siga1d,siga2d,usig1d,usig2d,...
                 sigrt,siga1t,siga2t,usig2t]=...
-                xsec2mstab7(disfil,sym_full(dens*1000),sym_full(tfmm0),knum);
+                xsec2mstab7(disfil,[],[],knum);
             d1d=d1d*1000;d2d=d2d*1000;sigrd=sigrd*1000;siga1d=siga1d*1000;
             siga2d=1000*siga2d;usig1d=usig1d*1000;usig2d=usig2d*1000;
             d1t=0*d1;d2t=0*d2;usig1t=0*usig1;
@@ -195,7 +195,7 @@ fid=fopen([pathstr,'/',filestr,'.lis'],'w');
 end
 
 %%
-tol=[0.001 0.001 0.001*ones(1,100)];
+tol=[0.001 0.001 0.001*ones(1,100)]/10;
 nitr=2;
 if re_calc==0, nitr=1;end
 ntol=0;
@@ -243,15 +243,38 @@ end
 if strcmpi(NodalCode,'SIM3')||strcmpi(NodalCode,'SIM5'),
     disp(sprintf('Simulate keff: %15.5f',Oper.keff));
 else
-    fprintf(1,'          keff      dPcore     dPin       Bypass\n');
+    fprintf(1,'          keff        dPcore     dPin       TotBypass   ExtBypass  IntBypass\n');
     fprintf(1,'POLCA:   %7.5f',Oper.keff);
-    fprintf(1,' %10i',round([termo.dpcore; termo.dpavin; termo.Wtot*termo.spltot]));
+    WtPol=termo.Wtot;fracs=[termo.spltot termo.spltot-termo.spltwc termo.spltwc];
+    polPF=[termo.dpcore termo.dpavin WtPol*fracs];
+    fprintf(1,' %10i',round(polPF));
     fprintf(1,'\n');
-    
+    iby=sum(flowb)*get_sym;
+    eby=Wbyp*get_sym;
     fprintf(1,'MATSTAB: %7.5f',keff);
-    fprintf(1,' %10i',round([mean(sum(ploss)) mean(dpin) get_sym*Wbyp]));
+    fprintf(1,' %10i',round([mean(sum(ploss)) mean(dpin) eby+iby eby iby]));
     fprintf(1,'\n');
 end
+
+fprintf(1,'%s\n','Power Comparison:');
+fprintf(1,'   %s       %s         %s','MAX','PPF','FRAD');
+fprintf(1,'\n');
+fprintf(1,'%7s%s%10.3f%12.3f',msopt.NodalCode,':',max(Oper.Power(:)),max(mean(Oper.Power)));
+fprintf(1,'\n');
+fprintf(1,'%s%10.3f%12.3f','MATSTAB:',max(power(:)),max(mean(power)));
+fprintf(1,'\n');
+fprintf(1,'%s      %s   %s  %s  %s  ','Diff(%):',' NODrms','RADrms',' NODmax',' NODmin');
+fprintf(1,'%s  %s','  AVEmax','AVEmin');
+fprintf(1,'\n');
+Ppow=sym_full(power);
+dN=Ppow(:)-Oper.Power(:);
+dM=mean(Ppow)-mean(Oper.Power);
+difs=100*[std(dM,1) max(dN) min(dN)  max(dM)  min(dM)];
+fprintf(1,'%s%6s','MATSTAB-',msopt.NodalCode);
+fprintf(1,'%7.3f',std(dN,1)*100);
+fprintf(1,'%9.3f',difs);
+fprintf(1,'\n');
+
     
 
 if re_calc==0,

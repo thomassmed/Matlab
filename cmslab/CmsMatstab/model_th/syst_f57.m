@@ -242,7 +242,7 @@ jJ21=[ibas    ibas+1   ibas+2   ibas+3];
 Wg_c=(eq_dP_core(alfa,tl,Wg.*(Wg>0)+0.1,Wl,flowb,P,A,hz,vhk,Xcin,Dh,tlp,twophasekorr,amdt,bmdt)-ploss)/.1;
 xJ21=[a_c(:)' tl_c(:)' Wg_c(:)' Wl_c(:)'];
 J21=sparse(iJ21,jJ21,real(xJ21),2*ncc+1,ntot*nt);
-%% chflw and Flowb
+%% chflow and flowb
 iJ2{icount2}=1:ncc;
 jJ2{icount2}=1:ncc;
 xJ2{icount2}=chfl_c;
@@ -314,6 +314,7 @@ for i=1:20,
                 Wbyp=termo.Wbyp_S3K*termo.Wtot/get_sym-sum(flowb);
             case 'FRAC'
                 Wbyp=termo.Wbyp_frac*termo.Wtot/get_sym;
+                Wbyp=Wbyp-sum(flowb);
             otherwise
                 if ischar(msopt.BYP),
                     msopt.BYP=str2double(msopt.BYP);

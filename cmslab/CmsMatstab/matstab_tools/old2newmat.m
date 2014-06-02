@@ -3,7 +3,7 @@ function [stabn,stab1]=old2newmat(matfil_new,matfil_old)
 % Translates old numbering to new for a matfile 
 
 %%
-load(matfil_new,'stab','matr','geom','fue_new','steady','msopt');
+load(matfil_new,'stab','matr','geom','fue_new','steady','msopt','termo','neu');
 nAI=matr.nAI;
 ifix=find(abs(stab.et-1)<1e-10);
 if ~isempty(ifix),
@@ -56,8 +56,13 @@ stabn.ef3=sym_full(reshape(ef(lillbasf+2),kmax,ncc),knum);
 stabn.ef4=sym_full(reshape(ef(lillbasf+3),kmax,ncc),knum);
 stabn.ef5=sym_full(reshape(ef(lillbasf+4),kmax,ncc),knum);
 stabn.ef6=sym_full(reshape(ef(lillbasf+5),kmax,ncc),knum);
-stabn.eP=stab.ej(nAI);
 stabn.ej=stab.ej;
+stabn.eSHF=matr.qp_sc*100*geom.hz/100*sum(stabn.eqp(:))/termo.Qnom;
+% APRM, note that q''' is in W/m^3, to get nodal the scaling hx^2*hz*1e-6
+% is used. The 100 upfront and Qnom in the end is to scale it to percent
+stabn.eAPRM=matr.q3_sc*100*geom.hx*geom.hx*geom.hz*1e-6*sum(stabn.eq(:))/termo.Qnom;
+stabn.eQcool=stabn.eSHF+(neu.delta-neu.deltam)*stabn.eAPRM;
+stabn.eP=stab.ej(nAI);
 if length(stab.ej)>nAI,
     stabn.ePut=stab.ej(nAI+2);
     stabn.eNeutfilt=stab.ej(nAI+3);

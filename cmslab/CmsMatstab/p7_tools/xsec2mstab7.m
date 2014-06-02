@@ -6,24 +6,31 @@ function [d1,d2,sigr,siga1,siga2,usig1,usig2,ny,d1d,d2d,sigrd,siga1d,siga2d,...
 usig1d,usig2d,nyd,sigrt,siga1t,siga2t,usig2t]=...
 xsec2mstab7(disfil,Pdens,Tfm,knum,colflag)
 
-global geom msopt
+dens_flag=false;
+if nargin<2, 
+    dens_flag=true; 
+elseif isempty(Pdens)
+    dens_flag=true;
+end
 
-kmax=geom.kmax;
-crcovr=geom.crcovr;
-czmesh=geom.czmesh;
+Tref_flag=false;
+if nargin<3, 
+    Tref_flag=true; 
+elseif isempty(Tfm)
+    Tref_flag=true;
+end
 
 if nargin<5, colflag=false;end
 
-if nargin<3, Tfm=0; end
+[ramcof,mminj,konrod,bb,hy,mz]=readdist7(disfil,'ramcof');
 
-[dist,mminj,konrod,bb,hy,mz,ks,asytyp,asyref,distlist,...
-  staton,masfil,rubrik,detpos,fu,op,au,flopos,soufil]=readdist7(disfil);
-
-
+kmax=mz(11);
+crcovr=bb(16);
+hzm=bb(1)/kmax;
+czmesh=ones(kmax,1)*hzm;
 
 wcr=get_wcr(konrod,mminj,czmesh,crcovr);
 
-ramcof=readdist7(disfil,'ramcof');
 nramon=size(ramcof,1)/kmax;  %No. of RAMONA XS coeff
 basr=0:nramon:(kmax*nramon-1);
 
@@ -31,6 +38,9 @@ basr=0:nramon:(kmax*nramon-1);
 
 
 dens=ramcof(ref(1)+basr,:);
+
+if dens_flag, Pdens=dens; end
+
 if max(max(Pdens))<2,   
   voidref=ramcof(ref(5)+basr,:);
   raal=739.3094; % Density of water at 70.5 Bar
@@ -43,6 +53,8 @@ ddens2=ddens.*ddens;
 wef=2*wcr./(3-wcr);
 pow7=ramcof(basr+ref(4),:);
 tfref=ramcof(ref(2)+basr,:);
+if Tref_flag, Tfm=tfref;end
+
 if length(Tfm)==1, 
   dtf=sqrt(tfref+273.13+Tfm)-sqrt(tfref+273.13);
 else

@@ -476,7 +476,7 @@ Pa2Bar=1e-5;
 [P_c,gammav_c,tl_c]=lin_P(P,gammav,tl,alfa,A*hz/100);
 iAI{iAIcount}=[nAI nAI];
 jAI{iAIcount}=[nAI nAI+5];
-xAI{iAIcount}=[P_c -752/P_sc];
+xAI{iAIcount}=[P_c -15040/P_sc];
 iAIcount=iAIcount+1;
 iBI{iBIcount}=nAI;
 jBI{iBIcount}=nAI;
@@ -527,11 +527,11 @@ iAI{iAIcount}=[nAI+4 nAI+4 nAI+4];
 jAI{iAIcount}=[nAI+2 nAI+3 nAI+4];
 xAI{iAIcount}=[1 1 -1];
 iAIcount=iAIcount+1;
-%% Tryckreglering BAFR to steamflow
+%% Tryckreglering BAFR to steamflow (steam flow in percent)
 Tst=0.3;
 iAI{iAIcount}=[nAI+5 nAI+5 nAI+5];
 jAI{iAIcount}=[nAI nAI+4 nAI+5];
-xAI{iAIcount}=[3.5*Pa2Bar*P_sc 20*exp(-0*lam) -1];
+xAI{iAIcount}=[0.175*Pa2Bar*P_sc 1 -1];
 iAIcount=iAIcount+1;
 iBI{iBIcount}=nAI+5;
 jBI{iBIcount}=nAI+5;

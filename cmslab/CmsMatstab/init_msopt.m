@@ -70,7 +70,46 @@ switch ext
         msopt.input='DistFile';
         msopt.DistFile=compfile;
 end
-%% 
+%% Check if complement file is used in combination with s3k-input file
+if strncmp(msopt.input,'OptionsFile',11)
+    if ~isempty(msopt.s3kfile)
+        msopt.NodalCode='SIM3'; %TODO: check if SIM5 is used
+        blob=read_simfile(msopt.s3kfile);
+        rest=get_card(blob,'RES');
+        if length(rest) ~= 1
+            msopt.xpo = rest{2};
+        end
+        dimcal=get_num_card(blob,'DIM.CAL');
+        vec=[4 3 2 1];
+        if ~isempty(dimcal)
+            msopt.CoreSym=vec(dimcal(2));
+        end
+        restart_file=rest{1};
+        msopt.xpo=rest{2};
+        direc1=fileparts(msopt.s3kfile);
+        if ~is_absolute(restart_file),
+            restart_file=[direc1,filesep,restart_file];
+            restart_file=file('normalize',restart_file);
+        end
+        msopt.RestartFile=restart_file;
+        libf=char(get_card(blob,'LIB'));
+        if ~isempty(libf),
+            if ~is_absolute(libf),
+                libf=[direc1,filesep,libf];
+                libf=file('normalize',libf);
+            end
+            if ~isempty(dir(libf));
+                msopt.LibFile=libf;
+            end
+        end
+    elseif ~isempty(msopt.RestartFile),
+        msopt.NodalCode='SIM3';
+    elseif ~isempty(msopt.DistFile),
+        msopt.NodalCode='POLCA7';
+    end 
+end
+    
+
 if nargin>1,
     msopt=set_msopt(msopt,varargin{:});
 end

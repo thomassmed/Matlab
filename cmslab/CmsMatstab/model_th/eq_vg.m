@@ -1,4 +1,4 @@
-function y = eq_vg(S,jm,alfa);
+function y = eq_vg(S,jm,alfa)
 %
 % y = eq_vg(S,jm,alfa)
 %
@@ -12,7 +12,7 @@ function y = eq_vg(S,jm,alfa);
 
 global termo
 
-c15 = termo.css(:,4);c15=0.1470;
+c15 = termo.css(:,4);
 
 y = (S.*jm + (1-alfa).*c15)./(1+alfa.*(S-1));
 

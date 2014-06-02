@@ -30,8 +30,8 @@ if ischar(matfile)
     core.isymc = fue_new.isymc;
     core.irmx = fue_new.irmx;
     core.lwr = 'BWR'; % TODO: check if always bwr
-    core.if2x2 = fue_new.if2x2;
-    core.ihaveu = fue_new.ihaveu;
+    core.if2x2 = 0;
+%    core.ihaveu = fue_new.ihaveu;
     core.sym = fue_new.sym;
     core.knum = fue_new.knum;
     core.hz = fue_new.hz;

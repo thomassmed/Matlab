@@ -67,6 +67,7 @@ if hy(36) < 1000			% Version 4.5.0.1
   termo.pupple = hy(62);		% Upper plenum outlet pressure (Pa)				%ändrad plats från 67 till 62 iom 4.5
   termo.dpavin = hy(68);		% Avg. core inlet pressure drop (Pa) (incl CSP throttling)	%ändrad plats från 73 till 68 iom 4.5
   termo.spltot = hy(151);		% Total bypass flow as fraction of total core flow (-)		%ändrad plats från 121 till 151 iom 4.5
+  termo.spltwc = hy(154);		% Total bypass flow as fraction of total core flow (-)		%ändrad plats från 122 till 152 iom 4.5 
   % inlagda 2005-12-09, Emma Lundgren
   %---------------------------------------------------------------------------------------------------- 
   
@@ -85,6 +86,7 @@ else
   termo.pupple = hy(67);		% Upper plenum outlet pressure (Pa) 
   termo.dpavin = hy(73);		% Avg. core inlet pressure drop (Pa) (incl CSP throttling)
   termo.spltot = hy(121);		% Total bypass flow as fraction of total core flow (-)
+  termo.spltwc = hy(124);       % Total internal bypass as fraction of total core flow (-)
   % inlagda 2005-12-09, Emma Lundgren
   %---------------------------------------------------------------------------------------------------- 
     

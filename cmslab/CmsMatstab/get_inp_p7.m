@@ -726,4 +726,13 @@ fuel.gca1=-2.073*ett;
 fuel.gca2=0.0062922*ett;
 fuel.rlca=16*ett;
 
+%{
+s3=load('mstab-010909-s3k.mat','fue_new');
+fue_new.Kin_wr{1}=s3.fue_new.Kin_wr{1};
+fue_new.A_wr{1}=s3.fue_new.A_wr{1};
+fue_new.Ph_wr{1}=s3.fue_new.Ph_wr{1};
+fue_new.Dhy_wr{1}=s3.fue_new.Dhy_wr{1};
+fue_new.Kex_wr{1}=s3.fue_new.Kex_wr{1};
+%}
+
 

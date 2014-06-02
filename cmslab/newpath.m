@@ -10,6 +10,11 @@ addpath([cur_dir,'CmsMatstab/model_th']);
 addpath([cur_dir,'CmsMatstab/model_neu']);
 addpath([cur_dir,'CmsMatstab/model_fuel']);
 addpath([cur_dir,'CmsMatstab/matstab_tools']);
+addpath([cur_dir,'CmsMatstab/p7_tools']);
+addpath([cur_dir,'../cm_matlab/cm_polin']);
+addpath([cur_dir,'../cm_matlab/cm_polca']);
+
+
 addpath([cur_dir,'CmsMatstab']);
 
 opt.Interpreter='tex';opt.Default='No';
