@@ -314,7 +314,7 @@ if isdistfile==1
     fue_new.promethium = distdata.pm149;                   % Promethium
     fue_new.samarium = distdata.sm149;                     % Samarium
     fue_new.burnup = distdata.burnup;                      % Burnup
-    fue_new.vhist = [];                                    % Void history 
+    fue_new.vhist = distdata.dnshis;                       % Density history 
     fue_new.crdhist = distdata.crhis;                      % Control rod history
     fue_new.tfuhist = [];                                  % Average fuel temperature history
     
@@ -322,7 +322,8 @@ if isdistfile==1
     fue_new.nload = [];                                    % [700x1 double]
     fue_new.nfta = [];                                     % Assembly type number
     %fue_new.lab = reshape(distdata.asyid,lstrs(2),mz(14))';% Fuel assembly labels
-    fue_new.ser = [];                                      % Fuel assembly serial numbers
+    fue_new.ser = readdist7(distfile,'ASYID');             % Fuel assembly serial numbers
+    fue_new.lab=readdist7(distfile,'ASYTYP');
     fue_new.nfra = distdata.asyrot;                        % Assembly Rotation
     fue_new.nhyd = [];                                     % Mechanical design type
     

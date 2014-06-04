@@ -1,8 +1,9 @@
-function wcr=get_wcr(konrod,mminj,czmesh,crcovr);
+function wcr=get_wcr(konrod,mminj,czmesh,crcovr)
 
+crmax=max(konrod);
 kmax=max(find(czmesh));
 czmesh=czmesh(1:kmax);
-cr_cow=(1-konrod/1000)*crcovr;
+cr_cow=(1-konrod/crmax)*crcovr;
 zsum=cumsum(czmesh);
 yi=interp1([0;zsum],0:kmax,cr_cow);
 ikan=filtcr(konrod,mminj,-1,1e5);

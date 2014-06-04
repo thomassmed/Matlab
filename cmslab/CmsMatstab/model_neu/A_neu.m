@@ -363,6 +363,7 @@ Anf=nodiablAftfm+nodiawhAftfm+spdiags(diablAftf_neig+diawhAftf_neig,0,ntot,ntot)
 %Aftf=spdiags(diablAftf_neig+diawhAftf_neig,0,ntot,ntot);
 Anf=Anf/Dt/4;
 
+
 [iAnf,jAnf,xAnf]=find(real(Anf));
 iAnf=[iAnf;iAnf;iAnf;iAnf];
 jAnf=ibas_f(jAnf)';

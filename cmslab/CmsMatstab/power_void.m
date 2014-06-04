@@ -108,10 +108,11 @@ if ~init_xs,
             [d1,d2,sigr,siga1,siga2,usig1,usig2,kap_ny,V2D,X2D,Y2D,V3D,X3D,Y3D,Z3D,X,Y,XS,XSEC_DX2]=...
                 xs_cms(fue_new,msopt.LibFile,dens,tfmm+273.13,knum,df_flag);
             ny=3.2041e-11./kap_ny;
+            Dt=10;
             [d1d,d2d,sigrd,siga1d,siga2d,usig1d,usig2d]=...
                 xs_cms(fue_new,dens+0.001,tfmm+273.13,V2D,X2D,Y2D,V3D,X3D,Y3D,Z3D,X,Y,XS,XSEC_DX2,knum);
             [d1t,d2t,sigrt,siga1t,siga2t,usig1t,usig2t]=...
-                xs_cms(fue_new,dens,tfmm+273.13+1,V2D,X2D,Y2D,V3D,X3D,Y3D,Z3D,X,Y,XS,XSEC_DX2,knum);
+                xs_cms(fue_new,dens,tfmm+273.13+Dt,V2D,X2D,Y2D,V3D,X3D,Y3D,Z3D,X,Y,XS,XSEC_DX2,knum);
             XS_FD=1;
         case {'fastxs','fastxs_lin'}
             [xs,xsd,xst,XS,xsdd]=xs_pin_lib(msopt.LibFile,fue_new,dens(:),tfmm(:)+273.13,geom.knum(:,1));
@@ -123,12 +124,13 @@ if ~init_xs,
             XS_FD=0;
         case 'ramcof'
             disfil=msopt.DistFile;
-            [d1,d2,sigr,siga1,siga2,usig1,usig2,ny,d1d,d2d,sigrd,siga1d,siga2d,usig1d,usig2d,...
+            [d1,d2,sigr,siga1,siga2,usig1,usig2,ny,d1d,d2d,sigrd,siga1d,siga2d,usig1d,usig2d,nyd,...
                 sigrt,siga1t,siga2t,usig2t]=...
                 xsec2mstab7(disfil,[],[],knum);
             d1d=d1d*1000;d2d=d2d*1000;sigrd=sigrd*1000;siga1d=siga1d*1000;
-            siga2d=1000*siga2d;usig1d=usig1d*1000;usig2d=usig2d*1000;
+            siga2d=1000*siga2d;usig1d=usig1d*1000;usig2d=usig2d*1000;nyd=nyd*1000;
             d1t=0*d1;d2t=0*d2;usig1t=0*usig1;
+            %ladda_xs;
             XS=[];X=[];
             XS_FD=0;
     end
@@ -141,13 +143,13 @@ if ~init_xs,
         siga2d=(siga2d-siga2)/delta_dens;
         usig1d=(usig1d-usig1)/delta_dens;
         usig2d=(usig2d-usig2)/delta_dens;
-        d1t=(d1t-d1);
-        d2t=(d2t-d2);
-        sigrt=(sigrt-sigr);
-        siga1t=(siga1t-siga1);
-        siga2t=(siga2t-siga2);
-        usig1t=(usig1t-usig1);
-        usig2t=(usig2t-usig2);
+        d1t=(d1t-d1)/Dt;
+        d2t=(d2t-d2)/Dt;
+        sigrt=(sigrt-sigr)/Dt;
+        siga1t=(siga1t-siga1)/Dt;
+        siga2t=(siga2t-siga2)/Dt;
+        usig1t=(usig1t-usig1)/Dt;
+        usig2t=(usig2t-usig2)/Dt;
     end
     if ~init_flag,
         fa1=8.5e11*power./(usig1./ny+usig2./ny.*sigr./siga2);
@@ -239,22 +241,23 @@ for n=1:nitr,
     end
     if bryt,break;end
 end
-
+fprintf(1,'          keff        dPcore     dPin       TotBypass   ExtBypass  IntBypass\n');
 if strcmpi(NodalCode,'SIM3')||strcmpi(NodalCode,'SIM5'),
-    disp(sprintf('Simulate keff: %15.5f',Oper.keff));
-else
-    fprintf(1,'          keff        dPcore     dPin       TotBypass   ExtBypass  IntBypass\n');
+    fprintf(1,'Simulate: %7.5f',Oper.keff);
+    fprintf(1,'\n');
+elseif strncmp(NodalCode,'POLCA',5),
     fprintf(1,'POLCA:   %7.5f',Oper.keff);
     WtPol=termo.Wtot;fracs=[termo.spltot termo.spltot-termo.spltwc termo.spltwc];
     polPF=[termo.dpcore termo.dpavin WtPol*fracs];
     fprintf(1,' %10i',round(polPF));
     fprintf(1,'\n');
-    iby=sum(flowb)*get_sym;
-    eby=Wbyp*get_sym;
-    fprintf(1,'MATSTAB: %7.5f',keff);
-    fprintf(1,' %10i',round([mean(sum(ploss)) mean(dpin) eby+iby eby iby]));
-    fprintf(1,'\n');
 end
+iby=sum(flowb)*get_sym;
+eby=Wbyp*get_sym;
+fprintf(1,'MATSTAB: %7.5f',keff);
+fprintf(1,' %10i',round([mean(sum(ploss)) mean(dpin) eby+iby eby iby]));
+fprintf(1,'\n');
+
 
 fprintf(1,'%s\n','Power Comparison:');
 fprintf(1,'   %s       %s         %s','MAX','PPF','FRAD');

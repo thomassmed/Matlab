@@ -34,6 +34,7 @@ et=zeros(let,1);
 
 debug_mode=0;
 manual_mode=0;
+%load('mstab-010909-0628','At');
 %% Preliminary solution
 if manual_mode,
     lam=-.3+3.2j;
@@ -299,7 +300,7 @@ stab.en=en;
 stab.eq=eq;
 stab.ef=ef;
 
-save('-append',msopt.MstabFile,'stab','matr','geom','Aj','Ajt','Bj','Atj','Ajq','Af','Afq');
+save('-append',msopt.MstabFile,'stab','matr','geom','Aj','Ajt','Bj','Atj','Ajq','Af','Afq','Atq','At','Atf');
 
     function getMidpoint
         etn=et;
