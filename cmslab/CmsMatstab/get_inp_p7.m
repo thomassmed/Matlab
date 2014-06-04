@@ -122,27 +122,21 @@ geom.ncc=ncc;
 termo.ihydr=ihydr;
 
 global srcdata;
+%
 if exist(msopt.SourceFile,'file')
     srcdata=readsrcdata(fixsrcfile(msopt.SourceFile));
-else
-    [filename,pathname]=uigetfile({'*.txt','Pick a polca sourcefile (*.txt)';...
-        '*.*', 'All files (*.*)'});
-    if filename==0, return, end
-    filename=[pathname,filename];
-    msopt.SourceFile=file('normalize',filename);
-    srcdata=readsrcdata(fixsrcfile(msopt.SourceFile));
-    %error('Could not find POLCA source file')
-end
-if isempty(msopt.MasterFile) | ~exist(msopt.MasterFile,'file')
   [aby,dhby,vhiby,vhoby,vhspx,rhspx,ispac,zsp,afuel, ...
-  dhfuel,phfuel,pmfuel,vhifuel,vhofuel,Xcin]=get_thdata7_src;
-else
+      dhfuel,phfuel,pmfuel,vhifuel,vhofuel,Xcin]=get_thdata7_src;
+  if staton(1)~='l'
+      [vhspx,rhspx,zsp,ispac]=get_spacer7(buntyp);
+  end
+else % Assuming MasterFile exists
   [aby,dhby,vhiby,vhoby,vhspx,rhspx,ispac,zsp,afuel, ...
   dhfuel,phfuel,pmfuel,vhifuel,vhofuel,Xcin]=get_thdata7;
+  spacer_p7=ramin2text(msopt.ParaFile);
+  [vhspx,rhspx,zsp,ispac]=get_spacer7_mast(spacer_p7,msopt.MasterFile,buntyp);
 end
-if staton(1)~='l'
-  [vhspx,rhspx,zsp,ispac]=get_spacer7(buntyp);
-end
+
 
 fue_new.afuel=afuel;        % Convert to m^2
 fue_new.dhfuel=dhfuel;      % Convert to m
@@ -702,9 +696,9 @@ neu.k1h0=3.2041e-11*1e6*(1-H0); %1e6 is to take into account cm^3 => m^3
 neu.neig=neighbour(neig,kmax);
 neu.B1=3*A1/(3*A1+(1-A1)*(rver+2));
 neu.C1=(1-A1)/(4*(3*A1+(1-A1)*(rver+2)));
-neu.src_albedo_abot = srcline2num(srcdata.ALBEDO,'ABOT');
-neu.src_albedo_atop = srcline2num(srcdata.ALBEDO,'ATOP');
-neu.src_albedo_asid = srcline2num(srcdata.ALBEDO,'ASID');
+%neu.src_albedo_abot = srcline2num(srcdata.ALBEDO,'ABOT');
+%neu.src_albedo_atop = srcline2num(srcdata.ALBEDO,'ATOP');
+%neu.src_albedo_asid = srcline2num(srcdata.ALBEDO,'ASID');
 
 
 % Data of the fuel

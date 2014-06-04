@@ -34,7 +34,6 @@ et=zeros(let,1);
 
 debug_mode=0;
 manual_mode=0;
-%load('mstab-010909-0628','At');
 %% Preliminary solution
 if manual_mode,
     lam=-.3+3.2j;

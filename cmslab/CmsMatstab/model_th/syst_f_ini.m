@@ -32,6 +32,13 @@ if nargin<4,
         chflow=chflow-flowb;
     end
 end
+if isempty(flowb),
+    flowb=0.025*chflow; 
+    if Wtot_flag,
+        chflow=chflow-flowb;
+    end
+end
+
 if nargin<5, ini_void=0; else ini_void=1; end
 if nargin<6,
     ini_tl=0; jiter=5;

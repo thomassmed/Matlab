@@ -52,13 +52,6 @@ if nargin==0
     filename=[pathname,filename];
     s3kfile=file('normalize',filename);
 end
-
-
-% set-up print file
-if ~isempty(dir('mstabprint.txt'))
-  delete('mstabprint.txt')
-end
-%diary('mstabprint.txt')
 %%
 tclock=clock;
 %%

@@ -42,7 +42,7 @@ if any(ifm==0)
   error(['Error, some fueltypes are missing in the polca master file ', mastfile]);
 end
 
-knum=geom.knum(:,1);
+knum=(1:geom.tot_kan)';
 
 ifm=ifm(knum);
 orityp=orityp(knum);
@@ -208,9 +208,9 @@ dhby=4*aby/(peribp+sum(sum(wcperi)));
 
 
 % transpose all output variables
-acj=acj';
-dhcj=dhcj';
-phcj=phcj';
-pwcj=pwcj';
-vhicj=vhicj';
-vhocj=vhocj';
+% acj=acj';
+% dhcj=dhcj';
+% phcj=phcj';
+% pwcj=pwcj';
+% vhicj=vhicj';
+% vhocj=vhocj';

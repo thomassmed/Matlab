@@ -112,7 +112,7 @@ if ~init_flag
             Wg=[];
             Wl=[];
             tw=[];
-            flowb=[];
+           % flowb=[];
     end
 end
 varargout{1}=init_flag;

@@ -59,12 +59,12 @@ case 'POLCA7'
   [a11,a21,a22,cp]=read_alb7(fue_new); %POLCA albedos
   chflow=readdist7(distfile,'chflow');
   flowb=readdist7(distfile,'flwwc');  % flwwc corresponds approx. to flowb
-  chflow=chflow+flowb; % Use Polca4 definition of chflow. Not anymore
+  %chflow=chflow+flowb; % Use Polca4 definition of chflow. Not anymore
 case 'SIM3'
   [a11,a21,a22,cp]=read_alb7(fue_new); 
 end
 init_flag=0;init_xs=0;
-if exist(msopt.MstabFile,'file'),
+if 0%exist(msopt.MstabFile,'file'),
     [init_flag,pow,alfa,tl,Wg,Wl,tw,flowb,fa1,fa2,Xsec,XS,X]=init_from_mat(msopt,'ss',knum);
     if init_flag,
         power=pow;
@@ -86,7 +86,21 @@ if exist(msopt.MstabFile,'file'),
 end
 if ~init_flag,
 %% init, flatstart
-[alfa,tl,Wg,Wl,chflow,flowb,Wbyp]=syst_f_ini(fue_new,power,termo.Wtot);
+if  exist('chflow','var'),
+     if length(chflow)>length(knum(:,1));
+         chflow=chflow(knum(:,1));
+     end
+else
+    chflow=termo.Wtot;
+end
+if  exist('flowb','var'),
+    if length(flowb)>length(knum(:,1));
+        flowb=flowb(knum(:,1));
+    end
+else
+    flowb=[];
+end
+[alfa,tl,Wg,Wl,chflow,flowb,Wbyp]=syst_f_ini(fue_new,power,chflow,flowb);
 %%
 [conv,alfa,tl,Wg,Wl,tw]=syst_f4(fue_new,power,flowb,alfa,tl,Wg,Wl,1000);
 [conv,alfa,tl,Wg,Wl,tw]=syst_f4(fue_new,power,flowb,alfa,tl,Wg,Wl,0.00001);
@@ -130,7 +144,6 @@ if ~init_xs,
             d1d=d1d*1000;d2d=d2d*1000;sigrd=sigrd*1000;siga1d=siga1d*1000;
             siga2d=1000*siga2d;usig1d=usig1d*1000;usig2d=usig2d*1000;nyd=nyd*1000;
             d1t=0*d1;d2t=0*d2;usig1t=0*usig1;
-            %ladda_xs;
             XS=[];X=[];
             XS_FD=0;
     end
