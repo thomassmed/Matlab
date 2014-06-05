@@ -107,7 +107,7 @@ v_lp1=a_lp1.*h_lp1;
 %% lower plenum 2
 i=find(num==240000);                         % lower plenum 2
 nsec(4)=dat(i,1);
-ett=ones(nsec(3),1);
+ett=ones(nsec(4),1);
 a_lp2=dat(i,2)*ett;
 height(4)=dat(i,3);
 h_lp2=height(4)/nsec(4)*ett;
