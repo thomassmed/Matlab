@@ -1,0 +1,64 @@
+Uppgifter
+Koppla in mot 'studsviksversionen' (delvis klart)
+
+Bränslemodell: implementera modellen i Matstab 2.4 i Matstab5
+Måste göras. Just nu används den gamla modellen med schablondata för allt bränsle.
+Är ganska lätt att validera, eftersom det inte finns någon direkt koppling mellan noderna.
+Ny A_tfuel 
+
+Neu3 - Implementera Neu3
+Finns för stationärlösningen. 
+Svår, men borde inte vara så mycket jobb volymmässigt.
+Ny A_neu
+
+Implementera ny och ordentlig modell för intern bypass. Kan nog vara denna som ger störst resultatpåverkan.
+
+Regulatorer - Tryckreglering finns, men den är hårdkodad för F2. Indata-hantering samt en beräkning av 
+påverkan på tryck från ångflöde (ångflöde skalas i %)
+A_th, A_neu
+
+Frekvenssvar - fungerar delvis, men måste färdigställas. Eventuellt kommer det krävas en reducerad härdmodell för att
+garantera konvergens långt ifrån resonansfrekvensen. Frekvenssvar tillsammans med regulatorerna ger ett underlag för 
+validering mot F2-provprogram. 
+
+Indata-hantering QA:
+	- spara all indata på .mat-fil
+          Skriv funktion som regenererar indata från mat-fil, allt utom det som finns 
+          på dist/res-fil skall skrivas ut som ASCII, eventuellt som körbar indata-fil
+          Man kan även tänka sig en audit-utskrift som listar varifrån data kommer.
+        - Skapa tydlig prioritering. Borde i princip vara:
+          1 Commanline
+          2 Matstab komplementfil
+          3 Parameter.inp
+          4 Source
+          5 dist/res
+          Nu kan ju hävda att 1-2 bara går mot msopt, medan 3-5 berör andra indata, 
+          men vi kan ju diskutera om det måste vara så.
+          Hursomhelst är logiken med prioriteringen att användaren skall kunna skriva över det som är 'default'
+          Ska man tillåta indata-kort i komplementfilen?
+          Jag tror det. En begränsning dock för att det ska vara rimligt lätt att parsa: man får ange början och 
+          slut på 'indatastil' (RAMONA,POLCA,CMS)
+          Däremot tillåter vi bara att man styr msopt från commandline.
+          Självklart behöver vi en include-fuction i komplementfilen. Logiken för relativa och absoluta filnamn hanteras med Bobos 'file'.
+
+Källkodshantering, versionshantering. github (vilket kan kombineras med turtoise).
+F.n. finns https://github.com/thomassmed/Matlab
+Detta bör flyttas till en vattenfall (eller annat bra namn) som vi även betalar för.
+
+Bygg ett GUI i vilket man kan ändra optioner, samt spara undan på komplementfil (Matstab indatafil). 
+
+Test-svit för 'mekaniska saker' (cmsplot, mm). Inte samma sak som valideringssvit.
+
+Översättning till tidsdomän med vettig skalning
+
+
+
+Fila på algoritmerna. Någon av ungdomarna skulle behöva sätta sig in i själva hjärtat. Vem?
+Min gissning är att det kommer att visa sig. Den som är intresserad och börjar gräva i detta ligger nog bra till.
+Jag kan ha en genomgång av lösningsmetoderna, en slags fördjupad matstab-kurs.
+Den jag hittills har hållit är som en liten glossig reklambroschyr där allt är extremt förenklat.
+Lösningsmetoderna är konceptuellt straight-forward. Det som kan vara grötigt är resultatet av mina försök att finoptimera.
+Den tidsvinsten kanske inte är värt besväret och den extra komplikationen?
+
+Utvidgad valideringsdatabas, där frekvenssvar på försök på F2 effekthöjning ingår.
+
