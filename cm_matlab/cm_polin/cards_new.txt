@@ -1,8 +1,10 @@
 ACCPAR: :                                                          
 ALBEDO: :ABOT,ATOP,ASID,ACORUT,ACORIN,A11OCT,A21OCT,BORCOE,DNSCOE
 ALHMAX: :SEGTYP,BURNUP,FLOW,POWER,TABLE                          
-ALHMOD:+:                                                           
-AOFUNC: :                                                         
+ALHMOD:+:    
+ALHLIM: :SEGTYP,NODBUR,LIMIT  
+AOFUNC: :
+AORIFI: :                                                       
 AOTRGT: :                                                            
 ASMBLY: :ASYTYP,GEOTYP,OPFFAC,TPFMUL,TPSMUL,THROT,INLET,OUTLET,BPHOLE,BOX,FRFAC,CRUD,CRUD2,GAMMA,BYPASS,QASSY,PINTYP,GAPTYP,PLENUM,SEGMEN,FLAREA,HYDDIA,NFPIN1,NFPIN2,NNFPIN,DFPIN1,DFPIN2,DNFPIN,WATCHA,ABLIFT,SRLIFT
 ASYDEF: :
@@ -21,10 +23,12 @@ CDTMOD: :
 CELLDA: :  
 CONCOE: :  
 CONITE: :  
-CONROD:+: 
+CONROD:+:
+CPRLIM: :ASYTYP,SET,USE,STATES,CYCBUR,CYBUBP,FLOW,RFLOW,FLOWBP,RFLOWBP,LIMIT
 CPRMIN: :ASYTYP,FLOW,POWER,CYCBUR,TABLE   
 CPRMI2: :ASYTYP,FLOW,CYCBUR,NPUMPS,TABLE  
-CPRMOD:+:                                    
+CPRMOD:+:
+CRCBUR: :                                    
 CRCOMP: :                                     
 CRDKDZ: :                                     
 CREXT : :                                      
@@ -57,7 +61,7 @@ GENPOW: :
 HFEED : :                                      
 HFEEDQ: :                                     
 HLOWP : :                                      
-HYDCOF: :SCBLEV,VOIMUL,VOISCP,VOIA69,HTRDIT                                     
+HYDCOF: :SCBLEV,VOIMUL,VOISCP,VOIA69,HTRDIT,PRSMUL                                     
 HYDRO : :VOIDOP,REACTO,INLET,LOWP,UPPLE,SEPA,SEPA2,UPSIMP,DOWNC1,DOWNC2,MCPUMP,BYPASS,SCBOIL
 IDENT : :                                                                            
 INIT  : :                                                                             
@@ -67,7 +71,8 @@ ITERA : :
 KEBIAS: :                                                                           
 KQBIAS: :                                                                           
 KTRGT : :                                                                            
-LATTIC: :GEOTYP,PPITCH,GAPS,PINXCO,PINYCO,PINXNA,PINYNA                         
+LATTIC: :GEOTYP,PPITCH,GAPS,PINXCO,PINYCO,PINXNA,PINYNA
+LHLIM1: :SEGTYP,NODBUR,PINTYP,PINBUR,LIMIT                         
 LHMAX1: :SEGTYP,BURNUP,FLOW,POWER,TABLE                                         
 LHMAX2: :SEGTYP,BURNUP,FLOW,POWER,TABLE                                         
 LHMAX3: :SEGTYP,BURNUP,FLOW,POWER,TABLE                                         
@@ -78,7 +83,8 @@ MANGRP: :
 MASFIL: :                                                                           
 MODGAM: :DETAVG,FILM,TILT,TIPVOI,RFACT                                          
 MODNEU: :DETAVG,FILM,TILT,TIPVOI,RFACT                                          
-MODOPT: :                                                                           
+MODOPT: :  
+OPSTAT: :                                                                         
 OPTION: :                                                                           
 ORIFIC:+:                                                                          
 OVRLAP: :                                                                           
@@ -103,7 +109,8 @@ REFTYP: :RBOT,RTOP,RSID,ROCT
 RODWRT: :                                            
 SAVE  : :                                              
 SDMASY: :                                            
-SDMPAR: :                                            
+SDMPAR: :  
+SETLIM: :                                          
 SHFMAX: :SEGTYP,BURNUP,TABLE                     
 SIZE  : :REATYP,DIMENS,HEIGHT,CRCOFF,MINJ,MAXJ   
 SOUFIL: :                                            
@@ -123,10 +130,11 @@ TITLE : :
 TLOWP : :                                             
 TSCAN : :                                             
 TSPAN : :                                             
-VENDOR: :                                            
+VENDOR: : 
+WEITOL: :                                           
 WLEVEL: :                                            
 XCOORD: :                                            
-XCU   : :                                               
+XCU   : :POWER,FLOW,TABLE                                             
 XETRAN: :                                            
 XYORD : :                                             
 XYSEP : :                                             

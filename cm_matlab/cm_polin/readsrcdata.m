@@ -3,7 +3,8 @@ function [srcvalues]=readsrcdata(srcdata)
 %[cardsingrp,cards,cards2d]=getcards('ASMBLY');
 
 cardspath=which('readsrcdata');
-carddata=cards2mat([cardspath(1:length(cardspath)-13) 'cards_new.txt']);
+cardsfile=[cardspath(1:length(cardspath)-13) 'cards_new.txt'];
+carddata=cards2mat(cardsfile);
 cards=char(carddata{:,1});
 cards2d=cards(find(cell2mat(carddata(:,2))==1),:);
 
@@ -18,8 +19,7 @@ srcvalues=[];
 maincard=[];
 
 % Needed for special threatment of card ASYTYP 
-asytypcards=['ASMBLY';'CPRMIN';'PCILIM'];
-
+asytypcards=['ASMBLY';'CPRMIN';'PCILIM';'CPRLIM'];
 ii=1;
 while ii<size(po,1)
 
@@ -113,9 +113,15 @@ while ii<size(po,1)
 				srcvalues.(maincard)(ngrp).(card)=compline;
 			end
 		else
-			% If no more subcards in group, reset maincard, reread new maincard in next iteration
-			maincard=[];
-			ii=ii-1;
+			% If no more subcards in group, reset maincard, reread new
+			% maincard in next iteration
+            if isempty(strmatch(upper(card),carddata(:,1))),
+                str=sprintf('%s%s%s%s\n','Card Missing: ',card,' not found in ',cardsfile);
+                str=[str,sprintf('%s%s\n','Possibly a subcard to ',maincard)];
+                warning(str);
+            end
+            maincard=[];
+            ii=ii-1;
 		end
 	end
 	
