@@ -83,8 +83,10 @@ if ~init_flag
     if strcmpi(msopt.Lam,'auto'),
         f=0.23*mean(steady.jm(:))-0.04;
         lam=f*log(0.8)+2j*pi*f;
-    else
+    elseif ischar(msopt.Lam)
         lam=str2num(msopt.Lam);
+    else
+        lam=msopt.Lam;
     end
 end
 %% Building the system matrix

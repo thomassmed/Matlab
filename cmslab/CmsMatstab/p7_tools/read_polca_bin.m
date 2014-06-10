@@ -324,7 +324,9 @@ if isdistfile==1
     %fue_new.lab = reshape(distdata.asyid,lstrs(2),mz(14))';% Fuel assembly labels
     fue_new.ser = readdist7(distfile,'ASYID');             % Fuel assembly serial numbers
     fue_new.lab=readdist7(distfile,'ASYTYP');
-    fue_new.nfra = distdata.asyrot;                        % Assembly Rotation
+    if isfield(distdata,'asyrot'),
+        fue_new.nfra = distdata.asyrot;                    % Assembly Rotation
+    end
     fue_new.nhyd = [];                                     % Mechanical design type
     
     fue_new.asmnam = asyref;                               % [9x20 char]

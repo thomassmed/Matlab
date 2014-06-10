@@ -268,7 +268,7 @@ end
 iby=sum(flowb)*get_sym;
 eby=Wbyp*get_sym;
 fprintf(1,'MATSTAB: %7.5f',keff);
-fprintf(1,' %10i',round([mean(sum(ploss)) mean(dpin) eby+iby eby iby]));
+fprintf(1,' %10i',round([mean(sum(ploss)) mean(ploss(1,:)) eby+iby eby iby]));
 fprintf(1,'\n');
 
 
