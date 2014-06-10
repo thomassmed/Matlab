@@ -4,7 +4,7 @@ ALHMAX: :SEGTYP,BURNUP,FLOW,POWER,TABLE
 ALHMOD:+:                                                           
 AOFUNC: :                                                         
 AOTRGT: :                                                            
-ASMBLY: :ASYTYP,GEOTYP,OPFFAC,TPFMUL,TPSMUL,THROT,INLET,OUTLET,BPHOLE,BOX,FRFAC,CRUD,CRUD2,GAMMA,BYPASS,QASSY,PINTYP,GAPTYP,PLENUM,SEGMEN,FLAREA,HYDDIA,NFPIN1,NFPIN2,NNFPIN,DFPIN1,DFPIN2,DNFPIN,WATCHA
+ASMBLY: :ASYTYP,GEOTYP,OPFFAC,TPFMUL,TPSMUL,THROT,INLET,OUTLET,BPHOLE,BOX,FRFAC,CRUD,CRUD2,GAMMA,BYPASS,QASSY,PINTYP,GAPTYP,PLENUM,SEGMEN,FLAREA,HYDDIA,NFPIN1,NFPIN2,NNFPIN,DFPIN1,DFPIN2,DNFPIN,WATCHA,ABLIFT,SRLIFT
 ASYDEF: :
 ASYROT:+:
 ASYTYP: :
@@ -58,7 +58,7 @@ HFEED : :
 HFEEDQ: :                                     
 HLOWP : :                                      
 HYDCOF: :SCBLEV,VOIMUL,VOISCP,VOIA69,HTRDIT                                     
-HYDRO : :VOIDOP,REACTO,INLET,LOWP,UPPLE,SEPA,SEPA2,UPSIMP,DOWNC1,DOWNC2,MCPUMP,BYPASS 
+HYDRO : :VOIDOP,REACTO,INLET,LOWP,UPPLE,SEPA,SEPA2,UPSIMP,DOWNC1,DOWNC2,MCPUMP,BYPASS,SCBOIL
 IDENT : :                                                                            
 INIT  : :                                                                             
 INSLIM: :                                                                           
