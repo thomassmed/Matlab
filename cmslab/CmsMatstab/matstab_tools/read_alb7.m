@@ -1,4 +1,4 @@
-function [a11,a21,a22,cp]=read_alb7(fue_new)
+function [a11,a21,a22,cp]=read_alb7
 %[a11,a21,a22,cp]=read_alb7(fue_new)
 %
 % a11, a21 ,a22 are NTOT-by-6 matrices with albedos
@@ -16,7 +16,7 @@ function [a11,a21,a22,cp]=read_alb7(fue_new)
 
 global  geom
 
-mminj=fue_new.mminj;
+mminj=geom.mminj;
 knum=geom.knum;
 kan=geom.kan;
 kmax=geom.kmax;

@@ -99,7 +99,7 @@ switch upper(NodalCode)
         Tfm=sym_full(Tfm,knum);
         [d1,d2,sigr,siga1,siga2,usig1,usig2,ny]=...
             xsec2mstab7(distfile,1000*Pdens,Tfm,knum,true);
-        [a11,a21,a22,cp]=read_alb7(fue_new);
+        [a11,a21,a22,cp]=read_alb7;
     case 'POLCA4'
         [d1,d2,sigr,siga1,siga2,usig1,usig2,ny]=...
         xsec2mstab(distfile,Ppower,Pvoid,mastfile,knum);
@@ -115,7 +115,7 @@ switch upper(NodalCode)
         siga2=Xsec.siga2;
         usig1=Xsec.usig1;
         usig2=Xsec.usig2;
-        [a11,a21,a22,cp]=read_alb7(fue_new);
+        [a11,a21,a22,cp]=read_alb7;
 end
 
 switch upper(NeuModel)

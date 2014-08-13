@@ -119,6 +119,10 @@ if strcmpi(msopt.BYP,'S3K')
 end
 if isnan(termo.Wbyp_frac), termo.Wbyp_frac=0.1;end
 termo.Wbyp=termo.Wbyp_frac*termo.Wtot;
+termo.spltot=termo.Wbyp_frac;
+termo.spltwc=0;
+termo.dpcore=0;
+termo.dpavin=0; % Placeholders to avoid crash
 neu.keffpolca=Oper.keff;            % keff simulate
 
 nsec = zeros(6,1);
@@ -528,6 +532,7 @@ switch pump_model_source
             pump(16:25)=[ijpump,dat(ij0,1:7),dat(ij1,1:2)];
             pump(25)=(termo.Wtot/termo.Wnom*100-16.25)/0.0225;  %KKL correlation between driving flow and core flow
         end
+        termo.pump_larec=0;
 
         i=find(num==547211);
         lp = dat(i,1)+1;
@@ -916,13 +921,19 @@ rver=(geom.hx/geom.hz)^2;
 % Geometrical data
 
 geom.height=height;
-
-geom.a_by=a_by;
-geom.dh_by=dh_by;
-geom.vhi_by=vhi_by;
-geom.vho_by=vho_by;
+geom.A=fue_new.afuel(:,knum(:,1));
 
 if ~CoreOnly,
+%If height(2) doesn't match the overall loop
+%one has to take account for that and make corrections
+dc2corr = (height(6)+height(5)+height(4)-height(1))/height(2);
+if dc2corr>=1, 
+  height(2)=height(2)*dc2corr;
+  dc2corr = 1;
+elseif dc2corr<0,
+  error('Lower plenum 2 has unreasonable height')
+end
+
 geom.V_sd=V_sd; %TODO: kolla jfr v_sd
 
 geom.a_dc1=a_dc1;
@@ -964,11 +975,17 @@ geom.nsep=nsep;
 geom.asep=asep;
 geom.hsep=hsep;
 
+geom.a_by=a_by;
+geom.dh_by=dh_by;
+geom.vhi_by=vhi_by;
+geom.vho_by=vho_by;
+
 % Thermohydraulical data
 termo.pump=pump;
 termo.pk1=pk1;
 termo.pk2=pk2;
 termo.rleff0=rleff0;
+termo.dc2corr=dc2corr;
 end
 termo.twophasekorr='mnelson';
 termo.slipkorr='bmalnes';
@@ -980,7 +997,39 @@ termo.avhspx=avhspx;
 termo.arhspx=arhspx;
 termo.zsp=zspx;
 termo.ispac=ispac;
-
+termo.Xcin=fue_new.Xcin(knum(:,1));
+if isempty(fue_new.amdt)
+    termo.amdt=[];
+    termo.bmdt=[];
+else
+    termo.amdt=fue_new.amdt(:,knum(:,1));
+    termo.bmdt=fue_new.bmdt(:,knum(:,1));
+end
+termo.phm=fue_new.phfuel(:,knum(:,1));
+termo.Dh=fue_new.dhfuel(:,knum(:,1));
+termo.pbm=4*geom.A./termo.Dh-termo.phm;
+i_wr=length(fue_new.A_wr);
+if i_wr==0,
+    A_wr=[];Ph_wr=[];Dhy_wr=[];Kin_wr=[];Kex_wr=[];
+end
+for i=1:i_wr,
+    A_wr(i,:)=fue_new.A_wr{i}(knum(:,1));
+    Ph_wr(i,:)=fue_new.Ph_wr{i}(knum(:,1));
+    Dhy_wr(i,:)=fue_new.Dhy_wr{i}(knum(:,1));
+    Kin_wr(i,:)=fue_new.Kin_wr{i}(knum(:,1));
+    Kex_wr(i,:)=fue_new.Kex_wr{i}(knum(:,1));
+end
+termo.A_wr=A_wr;
+termo.Ph_wr=Ph_wr;
+termo.Dhy_wr=Dhy_wr;
+termo.Kin_wr=Kin_wr;
+termo.Kex_wr=Kex_wr;
+termo.vhifuel=fue_new.vhifuel(:,knum(:,1))';
+termo.vhofuel=fue_new.vhofuel(:,knum(:,1))';
+termo.casup=fue_new.casup;
+termo.cbsup=fue_new.cbsup;
+termo.ccsup=fue_new.ccsup;
+termo.rhoref_bypass=fue_new.rhoref_bypass;
 
 % Data of the neutronics
 

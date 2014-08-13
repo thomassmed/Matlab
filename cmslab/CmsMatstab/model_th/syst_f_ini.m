@@ -1,4 +1,4 @@
-function [alfa,tl,Wg,Wl,chflow,flowb,Wbyp]=syst_f_ini(fue_new,power,chflow,flowb)
+function [alfa,tl,Wg,Wl,chflow,flowb,Wbyp]=syst_f_ini(power,chflow,flowb)
 % [alfa,tl,Wg,Wl,chflow,flowb]=syst_f_ini(fue_new,power,chflow,flowb,alfa,tl)
 %
 % Gives the initial guess on thermal-hydraulic solution
@@ -67,14 +67,9 @@ cpl=cor_cpl(tsat);
 P=p*ones(size(power));
 
 %%
-Phm=fue_new.phfuel;
-Phm=Phm(:,knum(:,1));
-DH=fue_new.dhfuel;
-DH=DH(:,knum(:,1));
-AA=fue_new.afuel;
-AA=AA(:,knum(:,1));
+AA=geom.A;
 VV=AA*hz/100;
-Pbm=4*AA./DH-Phm;
+
 
 ntot=kmax*ncc;
 qprimw = (1-delta)*power*qtherm/ntot/(hz/100);

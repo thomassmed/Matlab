@@ -16,6 +16,7 @@ rol = cor_rol(P,tl);
 
 jm=eq_jm(Wl,Wg,P,tl,A);
 
-S=eq_slip(alfa,P,'bmalnes');
+%S=eq_slip(alfa,P,'bmalnes');
+S=1.2;
 
 y = A.*(1-alfa).*rol.*(jm-c15.*alfa)./(1 + alfa.*(S-1));

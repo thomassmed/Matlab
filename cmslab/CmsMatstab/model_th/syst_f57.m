@@ -1,4 +1,4 @@
-function [err,power,alfa,tl,Wg,Wl,flowb,Wbyp,tw,tcm,tfm,tfmm,Iboil,keff,fa1,fa2,ploss,dp_wr,dpin,dp_sup,Sn]=syst_f57(fue_new,power,flowb,alfa,dens0,tl,Wg,Wl,Wbyp,tfmm0,tol,fa1,fa2,keff,...
+function [err,power,alfa,tl,Wg,Wl,flowb,Wbyp,tw,tcm,tfm,tfmm,Iboil,keff,fa1,fa2,ploss,dp_wr,dpin,dp_sup,Sn]=syst_f57(power,flowb,alfa,dens0,tl,Wg,Wl,Wbyp,tfmm0,tol,fa1,fa2,keff,...
     d10,d20,sigr0,siga10,siga20,usig10,usig20,ny,d1d,d2d,sigrd,siga1d,siga2d,usig1d,usig2d,...
     d1t,d2t,sigrt,siga1t,siga2t,usig1t,usig2t,neig,a11,a21,a22,cp,n_iter,nn_iter,DF1,DF2,Sn,C1nm,C2nm,fid,NeuModel)
 %
@@ -53,24 +53,19 @@ rol=cor_rol(p,tl);
 %Algebraic variables
 P=p*ones(size(power));
 %%
-phm=fue_new.phfuel;
-phm=phm(:,knum(:,1));
-Dh=fue_new.dhfuel;
-Dh=Dh(:,knum(:,1));
-A=fue_new.afuel;
-A=A(:,knum(:,1));
-pbm=4*A./Dh-phm;
-
-
-
-i_wr=length(fue_new.A_wr);
-for i=1:i_wr,
-    A_wr(i,:)=fue_new.A_wr{i}(knum(:,1));
-    Ph_wr(i,:)=fue_new.Ph_wr{i}(knum(:,1));
-    Dhy_wr(i,:)=fue_new.Dhy_wr{i}(knum(:,1));
-    Kin_wr(i,:)=fue_new.Kin_wr{i}(knum(:,1));
-    Kex_wr(i,:)=fue_new.Kex_wr{i}(knum(:,1));
-end
+amdt=termo.amdt;
+bmdt=termo.bmdt;
+phm=termo.phm;
+Dh=termo.Dh;
+pbm=termo.pbm;
+A=geom.A;
+A_wr=termo.A_wr;
+Ph_wr=termo.Ph_wr;
+Dhy_wr=termo.Dhy_wr;
+Kin_wr=termo.Kin_wr;
+Kex_wr=termo.Kex_wr;
+i_wr=size(A_wr,1);
+Xcin=termo.Xcin;
 
 ntot=kmax*ncc;
 qprimw = (1-delta)*power*qtherm/ntot./(hz/100);
@@ -79,16 +74,10 @@ q3l = (delta-deltam)*qtrissf*(hx/100)^2./A;
 
 %tlb=zeros(kmax,1);
 %tlb(1)=tlp;tlb(2)=tlb(1);
-vhifuel=fue_new.vhifuel(:,knum(:,1))';
-vhofuel=fue_new.vhofuel(:,knum(:,1))';
-Xcin=fue_new.Xcin(knum(:,1));
-if isempty(fue_new.amdt)
-    amdt=[];
-    bmdt=[];
-else
-    amdt=fue_new.amdt(knum(:,1));
-    bmdt=fue_new.bmdt(knum(:,1));
-end
+vhifuel=termo.vhifuel;
+vhofuel=termo.vhofuel;
+amdt=termo.amdt;
+bmdt=termo.bmdt;
 
 vhk = set_pkoeff(vhifuel,vhofuel,termo.avhspx,termo.arhspx,termo.zsp,termo.ispac,Wl,Wg,Dh,P,A,hz/100);
 %%
@@ -306,8 +295,8 @@ for i=1:20,
         switch upper(msopt.BYP)
             case 'SUP'
                 Wbyp=0;     % TODO: Fix leakage flow
-                for j=1:length(fue_new.casup),
-                    Wbyp=Wbyp+(fue_new.casup(j)*sqrt(dp_sup)+fue_new.cbsup(j)*dp_sup+fue_new.ccsup(j)*dp_sup*dp_sup)*sqrt(rol_lp/fue_new.rhoref_bypass(1));
+                for j=1:length(termo.casup),
+                    Wbyp=Wbyp+(termo.casup(j)*sqrt(dp_sup)+termo.cbsup(j)*dp_sup+termo.ccsup(j)*dp_sup*dp_sup)*sqrt(rol_lp/termo.rhoref_bypass(1));
                 end
                 Wbyp=Wbyp/get_sym;
             case 'S3K'

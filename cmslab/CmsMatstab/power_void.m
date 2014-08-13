@@ -10,8 +10,8 @@ distfile=msopt.DistFile;
 NodalCode=msopt.NodalCode;
 NeuModel=msopt.NeuModel;
 
-hz=fue_new.hz;
-hx=fue_new.hx;
+hz=geom.hz;
+hx=geom.hx;
 
 ncc=geom.ncc;
 kan=geom.kan;
@@ -56,12 +56,12 @@ case 'POLCA4'
   flowb2=readdist(distfile,'flowb2');
   flowb=flowb1+flowb2;
 case 'POLCA7'
-  [a11,a21,a22,cp]=read_alb7(fue_new); %POLCA albedos
+  [a11,a21,a22,cp]=read_alb7; %POLCA albedos
   chflow=readdist7(distfile,'chflow');
   flowb=readdist7(distfile,'flwwc');  % flwwc corresponds approx. to flowb
   %chflow=chflow+flowb; % Use Polca4 definition of chflow. Not anymore
 case 'SIM3'
-  [a11,a21,a22,cp]=read_alb7(fue_new); 
+  [a11,a21,a22,cp]=read_alb7; 
 end
 init_flag=0;init_xs=0;
 if 0%exist(msopt.MstabFile,'file'),
@@ -100,10 +100,10 @@ if  exist('flowb','var'),
 else
     flowb=[];
 end
-[alfa,tl,Wg,Wl,chflow,flowb,Wbyp]=syst_f_ini(fue_new,power,chflow,flowb);
+[alfa,tl,Wg,Wl,chflow,flowb,Wbyp]=syst_f_ini(power,chflow,flowb);
 %%
-[conv,alfa,tl,Wg,Wl,tw]=syst_f4(fue_new,power,flowb,alfa,tl,Wg,Wl,1000);
-[conv,alfa,tl,Wg,Wl,tw]=syst_f4(fue_new,power,flowb,alfa,tl,Wg,Wl,0.00001);
+[conv,alfa,tl,Wg,Wl,tw]=syst_f4(power,flowb,alfa,tl,Wg,Wl,1000);
+[conv,alfa,tl,Wg,Wl,tw]=syst_f4(power,flowb,alfa,tl,Wg,Wl,0.00001);
 %%
 end
 %%
@@ -138,9 +138,11 @@ if ~init_xs,
             XS_FD=0;
         case 'ramcof'
             disfil=msopt.DistFile;
+            Pdens=sym_full(dens);
+            Tfm=sym_full(tfmm0);
             [d1,d2,sigr,siga1,siga2,usig1,usig2,ny,d1d,d2d,sigrd,siga1d,siga2d,usig1d,usig2d,nyd,...
                 sigrt,siga1t,siga2t,usig2t]=...
-                xsec2mstab7(disfil,[],[],knum);
+                xsec2mstab7(disfil,1000*Pdens,Tfm,knum);
             d1d=d1d*1000;d2d=d2d*1000;sigrd=sigrd*1000;siga1d=siga1d*1000;
             siga2d=1000*siga2d;usig1d=usig1d*1000;usig2d=usig2d*1000;nyd=nyd*1000;
             d1t=0*d1;d2t=0*d2;usig1t=0*usig1;
@@ -218,7 +220,7 @@ bryt=0;
 for n=1:nitr,
     for nn=1:1,
         ntol=ntol+1;
-    [err,power,alfa,tl,Wg,Wl,flowb,Wbyp,tw,tcm,tfm,tfmm,Iboil,keff,fa1,fa2,ploss,dp_wr,dpin,dp_sup,Sn]=syst_f57(fue_new,power,flowb,alfa,dens0,tl,Wg,Wl,Wbyp,...
+    [err,power,alfa,tl,Wg,Wl,flowb,Wbyp,tw,tcm,tfm,tfmm,Iboil,keff,fa1,fa2,ploss,dp_wr,dpin,dp_sup,Sn]=syst_f57(power,flowb,alfa,dens0,tl,Wg,Wl,Wbyp,...
       tfmm0,tol(ntol),fa1,fa2,keff,d1,d2,sigr,siga1,siga2,usig1,usig2,ny,d1d,d2d,sigrd,siga1d,siga2d,usig1d,usig2d,d1t,d2t,...
        sigrt,siga1t,siga2t,usig1t,usig2t,neig,a11,a21,a22,cp,n,nn,DF1,DF2,Sn,C1nm,C2nm,fid,NeuModel);
          if err(7)<0.0005 && err(8)<0.1, if re_calc==0, bryt=1;end;break;end

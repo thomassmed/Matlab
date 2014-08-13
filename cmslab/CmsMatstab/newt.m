@@ -14,7 +14,7 @@ Midpoint=get_bool(msopt.Midpoint);
 tolnewt=msopt.GlobalFullTol;
 tollam=msopt.GlobalLamTol;
 maxiter=msopt.GlobalFullMaxiter;
-msopt.UpdateAneuNewLam=1;
+msopt.UpdateAneuNewLam=get_bool(msopt.UpdateAneuNewLam);
 CoreOnly=get_bool(msopt.CoreOnly);
 kmax=geom.kmax;
 ntot=geom.ntot;
@@ -128,12 +128,13 @@ dlam=0.7*(et_efix-1);
 if abs(dlam)>0.2, dlam=0.2*dlam/abs(dlam);end
 for i=1:maxiter,
     if i>1,
-        %
-        [An,Ant,Anf,Aqn,Aqt,Aqf]=A_neu(fue_new,Xsec,matr,lam);
-        AnIm=imag(An);
-        An=real(An);
-        AntIm=imag(Ant);
-        Ant=real(Ant);
+        if msopt.UpdateAneuNewLam,
+            [An,Ant,Anf,Aqn,Aqt,Aqf]=A_neu(fue_new,Xsec,matr,lam);
+            AnIm=imag(An);
+            An=real(An);
+            AntIm=imag(Ant);
+            Ant=real(Ant);
+        end
         %}
         [lf,uf]=lu(lam*Bf-Af);
         [l1,u1] = lu(lam*Bt-At);
@@ -236,7 +237,7 @@ for n0=1:maxiter,
   [dr0,fd0]=p2drfd(lam0);
   for n1=1:3,
     for n2=1:5,
-      rhs1=-Bt*et*lam+At*et+Atj*ej+Atf*ef+Atq*eq;
+      rhs1=-Bt*et*lam+At*et+Atj*ej+Atf*ef+Atq*eq-Btj*ej*lam;
       if CoreOnly,
           ej=0*ej;dej=0*ej;
       else
@@ -253,7 +254,7 @@ for n0=1:maxiter,
       en = pcgsolve(An,-hl,en,1e-5,30,0,l,u);
     end
     for i3=1:3,
-      eq=Aqn*en+Aqt*et+Aqf*ef;
+      eq=Aqn*en+Aqt*etn+Aqf*ef;
       ef = (lam*Bf-Af)\(Aft*et+Afq*eq+Afj*ej);
     end
     [dk,fd]=p2drfd(lam); %TODO Investigate the Leibstadt case
@@ -273,14 +274,12 @@ for n0=1:maxiter,
 
   Ajttj=Ajt*(u1\(l1\Atj));
 
-  if get_bool(msopt.UpdateAneuNewLam),
-  
+  if msopt.UpdateAneuNewLam
         [An,Ant,Anf,Aqn,Aqt,Aqf]=A_neu(fue_new,Xsec,matr,lam);
         AnIm=imag(An);
         An=real(An);
         AntIm=imag(Ant);
         Ant=real(Ant);
-        [l1,u1] = lu(lam*Bt-At);
    end
 end
 end
@@ -299,7 +298,7 @@ stab.en=en;
 stab.eq=eq;
 stab.ef=ef;
 
-save('-append',msopt.MstabFile,'stab','matr','geom','Aj','Ajt','Bj','Atj','Ajq','Af','Afq','Atq','At','Atf');
+save('-append',msopt.MstabFile,'stab','matr','geom','Aj','Ajt','Bj','Btj','Atj','Ajq','Af','Afq','Atq','At','Atf');
 
     function getMidpoint
         etn=et;

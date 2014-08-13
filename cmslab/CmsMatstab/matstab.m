@@ -94,6 +94,7 @@ if get_bool(msopt.Global)||get_bool(msopt.Freq)
 [At,Atj,Atq,Atf,Ajt,Aj,Ajq,Ajf,Ant,AntIm,An,AnIm,Anf, ...
   Aqt,Aqn,Aqf,Aft,Afj,Afq,Af,Bt,Bf,Bj,Btj,matr]=build_A(fue_new,Xsec,lam);
 end
+load mstab-010909-0628.mat  At Aqt Ant An Bt
 %  disp(['System matrix: ',num2str(cputime-tcpu),' s']);
 %    tcpu=cputime;
 %% Creation of a starting guess for en;
@@ -122,7 +123,7 @@ end
   
   if strcmp(msopt.LeftEig,'on')
   
-    lefteig(At,Atj,Atq,Atf,Ajt,Aj,Ajf,Ant,AntIm,An,AnIm, ...
+    lefteig(At,Atj,Atq,Atf,Ajt,Aj,Ajq,Ajf,Ant,AntIm,An,AnIm, ...
             Aqt,Aqn,Aft,Afj,Afq,Af,Bt,Bf,Bj,lAn,uAn);
   end
   

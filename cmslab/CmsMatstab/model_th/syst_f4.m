@@ -1,4 +1,4 @@
-function [conv,alfa,tl,Wg,Wl,tw,ploss,dporif,prestr,pfric,pelev,pexp,Iboil]=syst_f4(fue_new,power,flowb,alfa,tl,Wg,Wl,tol)
+function [conv,alfa,tl,Wg,Wl,tw,ploss,dporif,prestr,pfric,pelev,pexp,Iboil]=syst_f4(power,flowb,alfa,tl,Wg,Wl,tol)
 %
 %
 % 
@@ -47,20 +47,12 @@ rol=cor_rol(p,tl);
 %Algebraic variables
 P=p*ones(size(power));
 %%
-phm=fue_new.phfuel;
-phm=phm(:,knum(:,1));
-Dh=fue_new.dhfuel;
-Dh=Dh(:,knum(:,1));
-A=fue_new.afuel;
-A=A(:,knum(:,1));
-pbm=4*A./Dh-phm;
-if ~isempty(fue_new.amdt)
-    amdt=fue_new.amdt(knum(:,1));
-    bmdt=fue_new.bmdt(knum(:,1));
-else
-    amdt=[];
-    bmdt=[];
-end
+amdt=termo.amdt;
+bmdt=termo.bmdt;
+phm=termo.phm;
+Dh=termo.Dh;
+pbm=termo.pbm;
+A=geom.A;
 
 ntot=kmax*ncc;
 qprimw = (1-delta)*power*qtherm/ntot./(hz/100);
@@ -69,9 +61,9 @@ q3l = (delta-deltam)*qtrissf*(hx/100)^2./A;
 
 %tlb=zeros(kmax,1);
 %tlb(1)=tlp;tlb(2)=tlb(1);
-vhifuel=fue_new.vhifuel(:,knum(:,1))';
-vhofuel=fue_new.vhofuel(:,knum(:,1))';
-Xcin=fue_new.Xcin(knum(:,1));
+vhifuel=termo.vhifuel;
+vhofuel=termo.vhofuel;
+Xcin=termo.Xcin;
 vhk = set_pkoeff(vhifuel,vhofuel,termo.avhspx,termo.arhspx,termo.zsp,termo.ispac,Wl,Wg,Dh,P,A,hz/100);
 %%
 nt=4;

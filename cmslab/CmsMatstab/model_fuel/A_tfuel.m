@@ -1,6 +1,6 @@
-function [Af,Bf,Afq,Afj,Aft] =A_tfuel(fue_new,matr)
+function [Af,Bf,Afq,Afj,Aft] =A_tfuel(matr)
 
-% [iA,jA,xA,iB,jB,xB] = A_tfuel(fue_new,matr);
+% [iA,jA,xA,iB,jB,xB] = A_tfuel(matr);
 %
 % INDATA : tfm		- Br„nsletemperatur
 %	   qtrissf	- Nodeffekt/m3
@@ -46,9 +46,8 @@ kan=geom.kan;
 kmax=geom.kmax;
 ntot=geom.ntot;
 hz=geom.hz;
-hx=geom.hx;
-A=fue_new.afuel(:,geom.knum(:,1));
-Dh=fue_new.dhfuel(:,geom.knum(:,1));
+A=geom.A;
+Dh=termo.Dh;
 hx=geom.hx;
 
 Iboil=steady.Iboil;

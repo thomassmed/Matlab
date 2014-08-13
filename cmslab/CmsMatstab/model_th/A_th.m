@@ -1,7 +1,62 @@
-function [At,Bt,AI,BI,AIq,AIt,AtI,Atq,Atf,BtI]=A_th(fue_new,matr,lam)
-
+function [At,Bt,AI,BI,AIq,AIt,AtI,Atq,Atf,BtI]=A_th(matr)
+%% Total of (7*kmax+2)*ncc equations    Eq no   Index
+% alfa:  kmax*ncc unknowns              1       ibas
+% tl:    kmax*ncc unknowns              2       ibas+1
+% Wg     kmax*ncc unknowns              3       ibas+2
+% Wl     kmax*ncc unknowns              4       ibas+3
+% Gamv   kmax*ncc unknowns              5       ibas+4
+% qprimw kmax*ncc unknowns              6       ibas+5
+% jm     kmax*ncc unknowns              7       ibas+6
+% (tw     kmax*ncc unknowns              8       ibas+7)
+% tw has been moved to the fuel equations
+% Channel wise equations
+%       Wl(1,:)                                 7*ntot+1:ncc                                   
+%       I (Impulse momentum)                    7*ntot+ncc+1:2*ncc       
+%
+% Equations to be solved
+% Mass balance                      Eq At.1 Differential
+% Energy equation                   Eq At.2 Differential
+% Slip correlation/ Flow dependence Eq At.3 Algebraic
+% Volume expansion                  Eq At.4 Algebraic
+% Evaporation rate                  Eq At.5 Algebraic
+% Heat flux                         Eq At.6 Algebraic
+% jm definition                     Eq At.7 Algebraic
+% 
+% Clearly, Eqs At.3,At.5,At.6 and At.7 could easily be reduced with some
+% benefit in numerical efficiency, since they are local to the node. 
+% They are kept explicit for the sole reason of simplified debugging 
+% and comparison with previous versions of Matstab and other codes.
+%
+%  rog V dalfa/dt = -Wg(k) + Wg(k-1) + V Gamv                   At.1
+%  V*d(raa_um)/dt=[hg Wg(k-1)+hl Wl(k-1)] - [hg Wg(k)+hl Wl(k)]+
+%                                   [qpw+A (1-alfa) q3l] hz/100 At.2
+%  Wl = A.*(1-alfa).*rol.*(jm-c15.*alfa)./(1 + alfa.*(S-1)) Eq. At.3
+%  0 = A*jm(k-1) - A*jm(k) + (1/rog-1/rol) Gamv *V              At.4
+%  0 = -Gamv + eq_gamv(alfa,tl,qprimw,tw)                       At.5
+%  0 = -qprimw + eq_qprimw(tl,Wl,tw,P)                          At.6
+%  jm = (Wl./rol + Wg./rog)./A;                                 At.7
+%
+%           Wldc   alfa,tl,Wg,Wl(riser)     N,P(pump)   Pressure;
+%      nAI= 1     +     4*nriser          +   2         +  1;
+% Numbering AI:
+%              1    2     3    4    5     6
+%       nsec=[ndc1 ndc2 nlp1 nlp2 kmax nriser]
+%       Wl before core      1
+%       Set j_upl_bas=1+(0:4:(nriser*4-1))
+%       alfa                j_upl_bas+1
+%       tl                  j_upl_bas+2
+%       Wg                  j_upl_bas+3
+%       Wl                  j_upl_bas+4
+%       NP(pump)(Wdr for Jet)   1+4*nriser+1 = nAI-2
+%       dP(pump)                1+4*nriser+2 = nAI-1
+%       P (system pressure)     1+4*nriser+3 = nAI
+%       Idel (Pressure Controller, Integration Feedback part)       nAI+1
+%       Put (Pressure Controller, Feedback part)                    nAI+2
+%       Neutfilt (Pressure Controller Feed Forward part)            nAI+3
+%       BAFR (Ordered steam from Reactor)                           nAI+4
+%       mst  (Steam flow from reactor)                              nAI+5
 global termo geom neu steady msopt
-%%
+%% Input preparation
 twophasekorr=termo.twophasekorr;
 CoreOnly=get_bool(msopt.CoreOnly);
 alfa=steady.alfa;
@@ -12,12 +67,14 @@ Wg=steady.Wg;
 Wl=steady.Wl;
 p=termo.p;
 P=steady.P;
+if length(P)==1,
+    P=p*ones(size(Wl));
+end
 power=steady.power;
 tlb=termo.tlp;
 tlp=tlb;
 Iboil=steady.Iboil;
 flowb=steady.flowb;
-
 
 ncc=geom.ncc;kan=ncc;
 knum=geom.knum;
@@ -37,38 +94,28 @@ delta=neu.delta;
 deltam=neu.deltam;
 cmpfrc=neu.cmpfrc;
 qtherm=termo.Qtot/get_sym;
-
-i_wr=length(fue_new.A_wr);
-for i=1:i_wr,
-    A_wr(i,:)=fue_new.A_wr{i}(knum(:,1));
-    Ph_wr(i,:)=fue_new.Ph_wr{i}(knum(:,1));
-    Dhy_wr(i,:)=fue_new.Dhy_wr{i}(knum(:,1));
-    Kin_wr(i,:)=fue_new.Kin_wr{i}(knum(:,1));
-    Kex_wr(i,:)=fue_new.Kex_wr{i}(knum(:,1));
-end
-Xcin=fue_new.Xcin(knum(:,1));
-if isempty(fue_new.amdt)
-    amdt=[];
-    bmdt=[];
-else
-    amdt=fue_new.amdt(knum(:,1));
-    bmdt=fue_new.bmdt(knum(:,1));
-end
-
 tsat=cor_tsat(termo.p);
+amdt=termo.amdt;
+bmdt=termo.bmdt;
+phm=termo.phm;
+Dh=termo.Dh;
+pbm=termo.pbm;
+A=geom.A;
+A_wr=termo.A_wr;
+Ph_wr=termo.Ph_wr;
+Dhy_wr=termo.Dhy_wr;
+Kin_wr=termo.Kin_wr;
+Kex_wr=termo.Kex_wr;
+i_wr=size(A_wr,1);
+Xcin=termo.Xcin;
+
 cpl=cor_cpl(tsat);
 rog=cor_rog(tsat);
 tlm=mean(mean(tl));
 hfg=cor_hg(p,tlm,tsat);
 rol=cor_rol(p,tl);
 
-phm=fue_new.phfuel;
-phm=phm(:,knum(:,1));
-Dh=fue_new.dhfuel;
-Dh=Dh(:,knum(:,1));
-A=fue_new.afuel;
-A=A(:,knum(:,1));
-pbm=4*A./Dh-phm;
+
 tsat=cor_tsat(p);
 rol_lp=cor_rol(p,tlp);
 %%
@@ -95,42 +142,7 @@ V=A*hz/100;
 Vk=V(k,:);
 Vk=Vk(:)';
 ibas_f=1:nf:nf*kd;
-%  Wl,tl(dc&lp)   alfa,tl,Wg,Wl(riser)   N,P(pump)   Pressure;
-%nAI= 2*ndclp     +     4*nriser          +   2         +  1;
-% Numbering AI:
-%              1    2     3    4    5     6
-%       nsec=[ndc1 ndc2 nlp1 nlp2 kmax nriser]
-%       tl before core      1:2:(2*(ndc1+ndc2+nlp1+nlp2))
-%       Wl before core      1:2:(2*(ndc1+ndc2+nlp1+nlp2))
-%       Set j_upl_bas=2*(ndc1+ndc2+nlp1+nlp2)+(0:4:(nriser*4-1))
-%       alfa                j_upl_bas+1
-%       tl                  j_upl_bas+2
-%       Wg                  j_upl_bas+3
-%       Wl                  j_upl_bas+4
-%       NP(pump)(Wdr for Jet)   2*(ndc1+ndc2+nlp1+nlp2)+4*nriser+1 = nAI-2
-%       dP(pump)                2*(ndc1+ndc2+nlp1+nlp2)+4*nriser+2 = nAI-1
-%       P (system pressure)     2*(ndc1+ndc2+nlp1+nlp2)+4*nriser+3 = nAI
-%       Idel (Pressure Controller, Integration Feedback part)       nAI+1
-%       Put (Pressure Controller, Feedback part)                    nAI+2
-%       Neutfilt (Pressure Controller Feed Forward part)            nAI+3
-%       BAFR (Ordered steam from Reactor)                           nAI+4
-%       mst  (Steam flow from reactor)                              nAI+5
-%% Prepare for partial derivatives of qprimw wrt P Wl tw tl
-P=p*ones(size(Wl));
-%% Total of (7*kmax+2)*ncc equations    Eq no   Index
-% alfa:  kmax*ncc unknowns              1       ibas
-% tl:    kmax*ncc unknowns              2       ibas+1
-% Wg     kmax*ncc unknowns              3       ibas+2
-% Wl     kmax*ncc unknowns              4       ibas+3
-% Gamv   kmax*ncc unknowns              5       ibas+4
-% qprimw kmax*ncc unknowns              6       ibas+5
-% jm     kmax*ncc unknowns              7       ibas+6
-% tw     kmax*ncc unknowns              8       ibas+7
-% Channel wise equations
-%       Wl(1,:)                                 8*ntot+1:ncc                                   
-%       I (Impulse momentum)                    8*ntot+ncc+1:2*ncc       
-%
-% Equations to be solved 
+
 %% raa V dalfa/dt = -Wg(k) + Wg(k-1) + V Gamv   Eq. At.1
 clear xAI jAI iAI iAtI jAtI xAtI iAIt jAIt xAIt iBhyd jBhyd xBhyd iAhyd jAhyd xAhyd iBI jBI xBI
 gammav=eq_gamv(eq_gamw(qprimw,p,tl,tw,A),eq_gamph(alfa,p,tl));
@@ -153,8 +165,8 @@ xAhyd{icount}=[-ett.*x   ett_o.*x1        Vk.*x];
 icount=icount+1;
 iBhyd{iBcount}=ibas;jBhyd{iBcount}=ibas;xBhyd{iBcount}=rog*Vk;
 iBcount=iBcount+1;
-%% Energy equation: V*d(raa_um)/dt=[hg Wg(k-1) + hl Wl(k-1)] - [hg Wg(k) + hl Wl(k)] + [qpw + A (1-alfa) q3l] hz/100
-% Eq At.2
+%% Energy equation: Eq At.2
+% V*d(raa_um)/dt=[hg Wg(k-1) + hl Wl(k-1)] - [hg Wg(k) + hl Wl(k)] + [qpw + A (1-alfa) q3l] hz/100
 [drda,drdp,drdt]=fin_diff(@eq_romum,alfa,p,tl,tsat);
 drda=drda(:)';
 drdt=drdt(:)';
@@ -270,11 +282,11 @@ xAhyd{icount}=(1-Dflowb_DWl1)./rol_lp;  % With jm, it should have been A(1,:), b
 icount=icount+1;
 %% Connection to Lower Plenum Wl_lp = sum(Wl_in) + bypass 
 % TODO: fix bypass
-iAI{iAIcount}=2*ndclp;
-jAI{iAIcount}=2*ndclp;
+iAI{iAIcount}=1;
+jAI{iAIcount}=1;
 xAI{iAIcount}=-1;  
 iAIcount=iAIcount+1;
-iAIt{iAItcount}=2*ndclp*ones(1,ncc);
+iAIt{iAItcount}=ones(1,ncc);
 jAIt{iAItcount}=ntot*nt+(1:ncc);
 xAIt{iAItcount}=get_sym*ones(1,ncc);  
 iAItcount=iAItcount+1;
@@ -293,10 +305,6 @@ iAtf{iAtfcount}=ibas+5;
 jAtf{iAtfcount}=ibas_f+5;
 xAtf{iAtfcount}=-tw_c(:)'.*dtwdtc(:)'./dtwdtw(:)'/qp_sc;
 iAtfcount=iAtfcount+1;
-% iAtf{iAtfcount}=ibas+5;
-% jAtf{iAtfcount}=ibas_f+6;
-% xAtf{iAtfcount}=tw_c(:)'/qp_sc;
-% iAtfcount=iAtfcount+1;
 %% jm definition jm = (Wl./rol + Wg./rog)./A;   Eq. At.7
 [djmdWl,djmdWg,djmdP,djmdt]=fin_diff(@eq_jm,Wl,Wg,p,tl,A);
 iAhyd{icount}=[ibas+6  ibas+6 ibas+6  ibas+6];
@@ -309,10 +317,8 @@ jAtI{iAtIcount}=nAI*ett;
 xAtI{iAtIcount}=djmdP(:)'*P_sc;  
 iAtIcount=iAtIcount+1;
 %% Impulse momentum balance dI/dt = ploss
-vhifuel=fue_new.vhifuel(:,knum(:,1))';
-vhofuel=fue_new.vhofuel(:,knum(:,1))';
 
-vhk = set_pkoeff(vhifuel,vhofuel,termo.avhspx,termo.arhspx,termo.zsp,termo.ispac,Wl,Wg,Dh,P,A,hz/100);
+vhk = set_pkoeff(termo.vhifuel,termo.vhofuel,termo.avhspx,termo.arhspx,termo.zsp,termo.ispac,Wl,Wg,Dh,P,A,hz/100);
 vhk(1,:)=vhk(1,:)+Xcin;
 
 Wl1=Wl;Wl1(1,:)=Wl(1,:)+flowb;
@@ -345,49 +351,8 @@ jAtI{iAtIcount}=nAI*ones(1,ncc);
 xAtI{iAtIcount}=sum(P_c)*P_sc/I_sc;
 iAtIcount=iAtIcount+1;
 if ~CoreOnly
-%% dc1
-P_dc1=p*ones(size(steady.Wl_dc1));noll=0*P_dc1;
-[dum,t_c,dum,Wl_c]=ploss_section(noll,steady.tl_dc1,noll,steady.Wl_dc1,P_dc1,geom.vh_dc1,...
-    geom.dh_dc1,geom.h_dc1,geom.a_dc1);
-[i_a,j_a,x_a]=get_index4AI(ncc,t_c,Wl_c);
-i_a=i_a+ncc+ntot*nt;
-iAtI{iAtIcount}=i_a;
-jAtI{iAtIcount}=j_a;
-xAtI{iAtIcount}=x_a/I_sc;
-iAtIcount=iAtIcount+1;
-%% dc2
-P_dc2=p*ones(size(steady.Wl_dc2));noll=0*P_dc2;
-[dum,t_c,dum,Wl_c]=ploss_section(noll,steady.tl_dc2,noll,steady.Wl_dc2,P_dc2,geom.vh_dc2,...
-    geom.dh_dc2,geom.h_dc2,geom.a_dc2);
-[i_a,j_a,x_a]=get_index4AI(ncc,t_c,Wl_c);
-i_a=i_a+ncc+ntot*nt;
-j_a=j_a+2*nsec(1);
-iAtI{iAtIcount}=i_a;
-jAtI{iAtIcount}=j_a;
-xAtI{iAtIcount}=x_a/I_sc;
-iAtIcount=iAtIcount+1;
-%% lp1
-P_lp1=p*ones(size(steady.Wl_lp1));noll=0*P_lp1;
-[dum,t_c,dum,Wl_c]=ploss_section(noll,steady.tl_lp1,noll,steady.Wl_lp1,P_lp1,geom.vh_lp1,...
-    geom.dh_lp1,geom.h_lp1,geom.a_lp1);
-[i_a,j_a,x_a]=get_index4AI(ncc,t_c,Wl_c);
-i_a=i_a+ncc+ntot*nt;
-j_a=j_a+2*sum(nsec(1:2));
-iAtI{iAtIcount}=i_a;
-jAtI{iAtIcount}=j_a;
-xAtI{iAtIcount}=x_a/I_sc;
-iAtIcount=iAtIcount+1;
-%% lp2
-P_lp2=p*ones(size(steady.Wl_lp2));noll=0*P_lp2;
-[dum,t_c,dum,Wl_c]=ploss_section(noll,steady.tl_lp2,noll,steady.Wl_lp2,P_lp2,geom.vh_lp2,...
-    geom.dh_lp2,geom.h_lp2,geom.a_lp2);
-[i_a,j_a,x_a]=get_index4AI(ncc,t_c,Wl_c);
-i_a=i_a+ncc+ntot*nt;
-j_a=j_a+2*sum(nsec(1:3));
-iAtI{iAtIcount}=i_a;
-jAtI{iAtIcount}=j_a;
-xAtI{iAtIcount}=x_a/I_sc;
-iAtIcount=iAtIcount+1;
+% We can put dependence on Wldc back if we like, no great impact though
+% 
 %% Riser pressure drop
 alfa_u=steady.alfa_upl;
 tl_u=steady.tl_upl;
@@ -400,7 +365,8 @@ l_upl=length(alfa_u);
 [a_c,t_c,Wg_c,Wl_c]=ploss_section(alfa_u,tl_u,Wg_u,Wl_u,P_u,geom.vh_upl,geom.dh_upl,geom.h_upl,geom.a_upl);
 [i_a,j_a,x_a]=get_index4AI(ncc,a_c,t_c,Wg_c,Wl_c);
 i_a=i_a+ncc+ntot*nt;
-j_a=j_a+2*ndclp;
+%j_a=j_a+2*ndclp;
+j_a=j_a+1;
 iAtI{iAtIcount}=i_a;
 jAtI{iAtIcount}=j_a;
 xAtI{iAtIcount}=x_a/I_sc;
@@ -454,18 +420,18 @@ else
         [Wl_c,P_c,tl_c,n_c]=lin_DnDt(steady.Wl_lp1(1),p,steady.tl_lp1(1),termo.nhcpump);
         iAI{iAIcount}=(nAI-2)*ones(1,3);
         %                              1st node of lp1
-        jAI{iAIcount}=[nAI-2 nAI       2*(sum(nsec(1:2))+1)];
+        jAI{iAIcount}=[nAI-2 nAI       1];
         xAI{iAIcount}=[n_c   P_c*P_sc  Wl_c];
         iAIcount=iAIcount+1;
         % Pump pressure increase equation
         [Wl_c,n_c]=fin_diff(@eq_dP_pump,steady.Wl_lp1(1),termo.nhcpump);
         iAI{iAIcount}=(nAI-1)*ones(1,3);
-        jAI{iAIcount}=[nAI-2  nAI-1  2*(sum(nsec(1:2))+1)];
+        jAI{iAIcount}=[nAI-2  nAI-1  1];
         xAI{iAIcount}=[ n_c   -1  Wl_c];
         iAIcount=iAIcount+1;
         if termo.pump_larec,
             iBI{iBIcount}=nAI-1;
-            jBI{iBIcount}=2*(sum(nsec(1:2))+1);
+            jBI{iBIcount}=1;
             xBI{iBIcount}=termo.pump_larec;
             iBIcount=iBIcount+1;
         end
@@ -476,7 +442,8 @@ Pa2Bar=1e-5;
 [P_c,gammav_c,tl_c]=lin_P(P,gammav,tl,alfa,A*hz/100);
 iAI{iAIcount}=[nAI nAI];
 jAI{iAIcount}=[nAI nAI+5];
-xAI{iAIcount}=[P_c -15040*0/P_sc];
+xAI{iAIcount}=[P_c -15040*0/P_sc]; % Multiply 2nd by zero to remove pressure controller
+%xAI{iAIcount}=[P_c -15040/P_sc]; % Uncomment to include pressure controller
 iAIcount=iAIcount+1;
 iBI{iBIcount}=nAI;
 jBI{iBIcount}=nAI;
@@ -537,7 +504,6 @@ iBI{iBIcount}=nAI+5;
 jBI{iBIcount}=nAI+5;
 xBI{iBIcount}=Tst;
 iBIcount=iBIcount+1;
-
 else
     AIq=sparse(nAI,ntot);
 end
@@ -550,18 +516,6 @@ for i=1:ncc,
     i_I(istart:istop)=i*ones(1,kmax);
 end
 i_I=i_I+ntot*nt;
-%{
-% Delete this if it works
-i_i=(1:ncc);
-i_Wlin=(1:ncc);
-i_basout=ibas(kmax:kmax:kd);
-% Let Wlin be accounted for in AI:
-i_IWl1=i_I;
-i_IWl1(1:kmax:kd)=[];
-ibas_Wl1=ibas;ibas_Wl1(1:kmax:kd)=[];
-Wl_c=Wl_c(:)';
-Wlin_c=Wl_c(1:kmax:kd);Wl_c(1:kmax:kd)=[];
-%}
 iAhyd{icount}=[i_I        i_I         i_I         i_I];
 jAhyd{icount}=[ibas       ibas+1      ibas+2      ibas+3];
 xAhyd{icount}=[a_c(:)'    tl_c(:)'    Wg_c(:)'    Wl_c(:)'];
@@ -571,12 +525,6 @@ iAhyd{icount}=nt*ntot+(1:ncc);
 jAhyd{icount}=nt*ntot+ncc+(1:ncc);
 xAhyd{icount}=-ones(1,ncc)*I_sc;
 icount=icount+1;
-%{
-iAI{iAIcount}=1:ncc;
-jAI{iAIcount}=1:ncc;
-xAI{iAIcount}=Wlin_c;
-iAIcount=iAIcount+1;
-%}
 iAtI{iAtIcount}=(1:ncc)+ntot*nt;
 jAtI{iAtIcount}=nAI*ones(1,ncc);
 xAtI{iAtIcount}=sum(P_c)*P_sc;
@@ -584,43 +532,13 @@ iAtIcount=iAtIcount+1;
 if ~CoreOnly
 %% Flow distribution impact from ex-core
 % dc1
-noll=0*P_dc1;
-[dum,tl_c,dum,Wl_c]=fin_diff(@eq_Gm,noll,steady.tl_dc1,noll,steady.Wl_dc1,P_dc1,geom.a_dc1,geom.h_dc1);
-[i_a,j_a,x_a]=get_index4AI(ncc,tl_c,Wl_c);
-i_a=i_a+ntot*nt;
+Wl_c=sum(geom.h_dc1)/mean(geom.a_dc1)+sum(geom.h_dc2)/mean(geom.a_dc2)+...
+    sum(geom.h_lp1)/mean(geom.a_lp1)+sum(geom.h_lp2)/mean(geom.a_lp2);
+ett=ones(1,ncc);
+i_a=ntot*nt+(1:ncc);
 iAtI{iAtIcount}=i_a;
-jAtI{iAtIcount}=j_a;
-xAtI{iAtIcount}=x_a;
-iAtIcount=iAtIcount+1;
-% dc2
-noll=0*P_dc2;
-[dum,tl_c,dum,Wl_c]=fin_diff(@eq_Gm,noll,steady.tl_dc2,noll,steady.Wl_dc2,P_dc2,geom.a_dc2,geom.h_dc2);
-[i_a,j_a,x_a]=get_index4AI(ncc,tl_c,Wl_c);
-i_a=i_a+ntot*nt;
-j_a=j_a+2*nsec(1);
-iAtI{iAtIcount}=i_a;
-jAtI{iAtIcount}=j_a;
-xAtI{iAtIcount}=x_a;
-iAtIcount=iAtIcount+1;
-% lp1
-noll=0*P_lp1;
-[dum,tl_c,dum,Wl_c]=fin_diff(@eq_Gm,noll,steady.tl_lp1,noll,steady.Wl_lp1,P_lp1,geom.a_lp1,geom.h_lp1);
-[i_a,j_a,x_a]=get_index4AI(ncc,tl_c,Wl_c);
-i_a=i_a+ntot*nt;
-j_a=j_a+2*sum(nsec(1:2));
-iAtI{iAtIcount}=i_a;
-jAtI{iAtIcount}=j_a;
-xAtI{iAtIcount}=x_a;
-iAtIcount=iAtIcount+1;
-% lp2
-noll=0*P_lp2;
-[dum,tl_c,dum,Wl_c]=fin_diff(@eq_Gm,noll,steady.tl_lp2,noll,steady.Wl_lp2,P_lp2,geom.a_lp2,geom.h_lp2);
-[i_a,j_a,x_a]=get_index4AI(ncc,tl_c,Wl_c);
-i_a=i_a+ntot*nt;
-j_a=j_a+2*sum(nsec(1:3));
-iAtI{iAtIcount}=i_a;
-jAtI{iAtIcount}=j_a;
-xAtI{iAtIcount}=x_a;
+jAtI{iAtIcount}=ett;
+xAtI{iAtIcount}=Wl_c*ett;
 iAtIcount=iAtIcount+1;
 %% riser
 lrsr=eq_lrsr(alfa_u,tl_u,Wl_u,Wg_u,P_u,A_u,geom.h_upl);
@@ -634,7 +552,8 @@ Wl_c(l_upl)=Wl_c(l_upl)+sum(GmHz_u*Wl_l);
 P_c(l_upl)=P_c(l_upl)+sum(GmHz_u*P_l);
 [i_a,j_a,x_a]=get_index4AI(ncc,a_c,tl_c,Wg_c,Wl_c);
 i_a=i_a+ntot*nt;
-j_a=j_a+2*sum(nsec(1:4));
+%j_a=j_a+2*sum(nsec(1:4));
+j_a=j_a+1;
 iAtI{iAtIcount}=i_a;
 jAtI{iAtIcount}=j_a;
 xAtI{iAtIcount}=x_a;
@@ -644,28 +563,12 @@ iAtI{iAtIcount}=nt*ntot+(1:ncc);
 jAtI{iAtIcount}=nAI*ones(1,ncc);
 xAtI{iAtIcount}=sum(P_c)*ones(1,ncc)*P_sc;
 iAtIcount=iAtIcount+1;
-%% Equations in dc and lp, Quick and dirty for now, Wl(k-1) = Wl(k)
-bas_dclp=(0:2:(ndclp-2)*2);
-ett_dclp=ones(size(bas_dclp));
-iAI{iAIcount}=[bas_dclp+2   bas_dclp+2];
-jAI{iAIcount}=[bas_dclp+2   bas_dclp+2+2];
-xAI{iAIcount}=[ett_dclp      -ett_dclp];
-iAIcount=iAIcount+1;
-% For tl in dc and lp, just put them to zero for now
-% expand bas_dclp to include the last node of lp2
-bas_dclp1=(0:2:(ndclp-1)*2);
-ett_dclp1=ones(size(bas_dclp1));
-%                tl
-iAI{iAIcount}=bas_dclp1+1;
-jAI{iAIcount}=bas_dclp1+1;
-xAI{iAIcount}=ett_dclp1;
-iAIcount=iAIcount+1;
-%% Equations in riser     Phasic mass malance Aj.1
-bas_u=(0:4:(l_upl-1)*4)+2*ndclp;
+%% Equations in riser     Phasic mass balance Aj.1
+bas_u=(0:4:(l_upl-1)*4)+1;
 ett_u=ones(1,l_upl);
 bas_u_neig=bas_u;
 bas_u_neig(1)=[]; % Neighbour to first node in riser is core
-%%{
+%{
 [a_c,P_c2,tl_c2]=fin_diff(@eq_gamph,alfa_u,p,tl_u);
 a_c=a_c.*V_u;
 tl_c2=tl_c2.*V_u;
@@ -685,7 +588,7 @@ xAI{iAIcount}=[ones(1,l_upl-1) -ones(1,l_upl)];
 iAIcount=iAIcount+1;
 % First node in riser connects with core
 %                Wg(k-1)
-iAIt{iAItcount}=(2*ndclp+1)*ones(1,ncc);
+iAIt{iAItcount}=2*ones(1,ncc);
 jAIt{iAItcount}=ibas(kmax:kmax:kd)+2;
 xAIt{iAItcount}=ones(1,ncc)*get_sym;
 iAItcount=iAItcount+1;
@@ -714,7 +617,7 @@ iAIcount=iAIcount+1;
 
 % First node in riser connects with core
 dy2dWln=cpl*(tl(kmax,:)-tsat)+p./rol(kmax,:);
-ris_nod1=2*ndclp*ones(1,ncc);
+ris_nod1=ones(1,ncc);
 nod_out=ibas(kmax:kmax:kd);
 %                tl(k-1)              Wg(k-1)              Wl(k-1)
 iAIt{iAItcount}=[ris_nod1+2      ris_nod1+2               ris_nod1+2];
@@ -741,12 +644,12 @@ jAI{iAIcount}=[bas_u+2       bas_u+3       bas_u+4   nAI            bas_u_neig+2
 xAI{iAIcount}=[tl_c'         Wg_c'         Wl_c'     P_c(1)*P_sc    -tl_c_n'        -Wg_c_n'       -Wl_c_n'];  
 iAIcount=iAIcount+1;
 
-iAIt{iAItcount}=(2*ndclp+4)*ones(1,ncc);
+iAIt{iAItcount}=5*ones(1,ncc); % 4th equation in first node in Riser
 jAIt{iAItcount}=ibas(kmax:kmax:kd)+6;
 xAIt{iAItcount}=-A(kmax,:)*get_sym;
 iAItcount=iAItcount+1;
 %% Let the phase communication be active in the first node in riser
-%%{
+%{
 [a_c,P_c,tl_c]=fin_diff(@eq_gamph,alfa_u,p,tl_u);
 xr=1/rog-1./cor_rol(p,tl_u);
 a_c=a_c.*V_u.*xr;
@@ -793,23 +696,27 @@ jAIt=cat(2,jAIt{:})';
 xAIt=cat(2,xAIt{:})';
 AIt=sparse(iAIt,jAIt,xAIt,nAI+5,nt*kd+2*ncc);
 BtI=sparse(iBtI,jBtI,xBtI,nt*kd+2*ncc,nAI+5);
-BtI=0*BtI;
 else
    AI=[];BI=[];AIt=[];AtI=[];BtI=[];
 end
 % Numbering AI:
 %              1    2     3    4    5     6
 %       nsec=[ndc1 ndc2 nlp1 nlp2 kmax nriser]
-%       tl before core      1:2:(2*(ndc1+ndc2+nlp1+nlp2))
-%       Wl before core      1:2:(2*(ndc1+ndc2+nlp1+nlp2))
-%       Set j_upl_bas=2*(ndc1+ndc2+nlp1+nlp2)+(0:4:(nriser*4-1))
-%       alfa                j_upl_bas+1
-%       tl                  j_upl_bas+2
-%       Wg                  j_upl_bas+3
-%       Wl                  j_upl_bas+4
-%       NP(pump)(Wdr for Jet)   2*(ndc1+ndc2+nlp1+nlp2)+4*nriser+1 = nAI-2
-%       dP(pump)                2*(ndc1+ndc2+nlp1+nlp2)+4*nriser+2 = nAI-1
-%       P (system pressure)     2*(ndc1+ndc2+nlp1+nlp2)+4*nriser+3 = nAI
+%       Wl before core      1
+%       Set j_upl_bas=1+(0:4:(nriser*4-1))
+%       alfa                j_upl_bas+1, i.e 2,6,10,14(,18)
+%       tl                  j_upl_bas+2  i.e 3,7,11,15(,19)
+%       Wg                  j_upl_bas+3  i.e 4,8,12,16(,20)
+%       Wl                  j_upl_bas+4  i.e 5,9,13,17(,21)
+%       NP(pump)(Wdr for Jet)   1+4*nriser+1 = nAI-2
+%       dP(pump)                1+4*nriser+2 = nAI-1
+%       P (system pressure)     1+4*nriser+3 = nAI
+%       Idel (Pressure Controller, Integration Feedback part)       nAI+1
+%       Put (Pressure Controller, Feedback part)                    nAI+2
+%       Neutfilt (Pressure Controller Feed Forward part)            nAI+3
+%       BAFR (Ordered steam from Reactor)                           nAI+4
+%       mst  (Steam flow from reactor)                              nAI+5
+%
 %%
 matr.nAI=nAI;
 steady.tw_dyn=tw;

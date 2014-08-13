@@ -1,4 +1,4 @@
-function lefteig(At,Atj,Atq,Atf,Ajt,Aj,Ajf,Ant,AntIm,An,AnIm, ...
+function lefteig(At,Atj,Atq,Atf,Ajt,Aj,Ajq,Ajf,Ant,AntIm,An,AnIm, ...
                  Aqt,Aqn,Aft,Afj,Afq,Af,Bt,Bf,Bj,l,u)
 
 
@@ -12,7 +12,7 @@ function lefteig(At,Atj,Atq,Atf,Ajt,Aj,Ajf,Ant,AntIm,An,AnIm, ...
 % | lambda*Bt'*vt |     | At'  Ajt' ANT' Aqt' Aft'|  | vt |   (T/H and fuel)
 % | lambda*Bj'*vj |     | Atj' Aj'   0    0   Afj'|  | vj |   (Flow flux]
 % |     0         |  =  |  0   0    AN'  Aqn'  0  |  | vn |   (Neutron flux.)
-% |     0         |  =  | Atq' 0     0   -I   Afq'|  | vq |   (Fission Power)
+% |     0         |  =  | Atq' Ajq'  0   -I   Afq'|  | vq |   (Fission Power)
 % | lambda*Bf'*vf |     | Atf' Ajf'  0    0   Af' |  | vf |   (Power in fuel)
 %
 % Philipp Haenggi
@@ -81,7 +81,7 @@ vtNTq=vtq+vtNT;
 vj=Alba\((Afjtf+Atj')*vtNTq);
 vt=vtj*vj+vtNTq;
 vf =uaf\(laf\(Atf'*vt+Ajf'*vj));
-vq=Atq'*vt+Afqtf*vt+Afqjf*vj;
+vq=Atq'*vt+Afqtf*vt+Afqjf*vj+Ajq'*vj;
 vn=pcgsolve(An',-Aqn'*vq-AnIm.'*(1j*vn),vn,1e-3,30,0,u',l');    
 rest = Ajt'*vj + Ant'*vn + AntIm.' *(1j*vn)+ Aqt'*vq + Aft'*vf + At'*vt - lam*Bt'*vt;
 resj = Atj'*vt + Aj'*vj +Afj'*vf- lam*Bj'*vj;

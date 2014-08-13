@@ -37,7 +37,7 @@ noll=zeros(geom.nsec(2),1);ett=ones(geom.nsec(2),1);
 Wl_dc2=termo.Wtot;
 Wl_dc2=Wl_dc2*ett;
 tl_dc2=termo.tlp;
-ploss_dc2 = eq_pelev(termo.p*ett,noll,tl_dc2,geom.h_dc2)...
+ploss_dc2 = eq_pelev(termo.p*ett,noll,tl_dc2,geom.h_dc2)*termo.dc2corr...
     - eq_pfric(noll,Wl_dc2,termo.p*ett,tl_dc2,geom.a_dc2,geom.dh_dc2,geom.h_dc2,termo.twophasekorr)...
     - eq_prestr(Wl_dc2,noll,termo.p*ett,tl_dc2,geom.a_dc2,geom.vh_dc2); 
 tl_dc2=termo.tlp*ett;
@@ -68,13 +68,13 @@ alfa_upl=mean(alfa(geom.kmax,:));alfa_upl=alfa_upl*ett;
 y=eq_alfa_core(alfa_upl,tl_upl,Wg_upl,Wl_upl,termo.p,geom.a_upl);
 y_a=eq_alfa_core(alfa_upl+0.01,tl_upl,Wg_upl,Wl_upl,termo.p,geom.a_upl);
 dyda=(y_a-y)/.01;alfa_upl=alfa_upl-y./dyda;
+slip_upl=eq_slip(alfa_upl,termo.p,'bmalnes');
 slip_upl=1.2;
 for i=1:5,
-    y=eq_alfa_core(alfa_upl,tl_upl,Wg_upl,Wl_upl,termo.p,geom.a_upl);
+    y=eq_alfa_core(alfa_upl,tl_upl,Wg_upl,Wl_upl,termo.p,geom.a_upl,slip_upl);
     alfa_upl=alfa_upl-y./dyda;
     if norm(y)<1e-4, break; end
 end
-slip_upl=eq_slip(alfa_upl,termo.p,'bmalnes');
 ploss_upl = -eq_pelev(termo.p*ett,alfa_upl,tl_upl,geom.h_upl)...
     - eq_pfric(Wg_upl,Wl_upl,termo.p*ett,tl_upl,geom.a_upl,geom.dh_upl,geom.h_upl,termo.twophasekorr)...
     - eq_prestr(Wl_upl,Wg_upl,termo.p*ett,tl_upl,geom.a_upl,geom.vh_upl); 
@@ -109,7 +109,7 @@ else
 end
 %%
 termo.nhcpump=nhcpump;
-% Bypass flow dynamic koefficient
+% Bypass flow dynamic coefficient
 Abyp=1.5;
 Dhbyp=0.0225;
 HzCore=geom.kmax*geom.hz/100;

@@ -72,7 +72,7 @@ end
 
 en0=en;
 qtherm=termo.Qtot/get_sym;
-[a11,a21,a22,cp]=read_alb7(fue_new);
+[a11,a21,a22,cp]=read_alb7;
 
 [X1nm,Y1nm,X2nm,Y2nm]=eq_xy(neig,hx,hz,Xsec.d1,Xsec.d2,Xsec.usig1,Xsec.usig2,Xsec.siga1,...
 Xsec.sigr,Xsec.siga2,a11,a21,a22,fa1,fa2,keff,cp);

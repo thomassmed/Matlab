@@ -606,11 +606,11 @@ rver=(hx/hz)^2;
 geom.hz=hz;
 geom.kmax=kmax;
 geom.czmesh=hz/100*ones(kmax,1);
-geom.mminj=fue_new.mminj;
+geom.mminj=mminj;
 %geom.tot_kan=
 %geom.kan=ncc;
 geom.height=height;
-
+geom.A=fue_new.afuel(:,knum(:,1));
 geom.a_by=a_by;
 geom.dh_by=dh_by;
 geom.vhi_by=vhi_by;
@@ -676,9 +676,43 @@ termo.arhspx=arhspx;
 termo.zsp=zsp;
 termo.ispac=ispac;
 termo.Wbyp_frac=termo.spltot;
+i_wr=length(fue_new.A_wr);
+if i_wr==0,
+    A_wr=[];Ph_wr=[];Dhy_wr=[];Kin_wr=[];Kex_wr=[];
+end
+for i=1:i_wr,
+    A_wr(i,:)=fue_new.A_wr{i}(knum(:,1));
+    Ph_wr(i,:)=fue_new.Ph_wr{i}(knum(:,1));
+    Dhy_wr(i,:)=fue_new.Dhy_wr{i}(knum(:,1));
+    Kin_wr(i,:)=fue_new.Kin_wr{i}(knum(:,1));
+    Kex_wr(i,:)=fue_new.Kex_wr{i}(knum(:,1));
+end
+termo.A_wr=A_wr;
+termo.Ph_wr=Ph_wr;
+termo.Dhy_wr=Dhy_wr;
+termo.Kin_wr=Kin_wr;
+termo.Kex_wr=Kex_wr;
+termo.vhifuel=fue_new.vhifuel(:,knum(:,1))';
+termo.vhofuel=fue_new.vhofuel(:,knum(:,1))';
+termo.casup=fue_new.casup;
+termo.cbsup=fue_new.cbsup;
+termo.ccsup=fue_new.ccsup;
+termo.rhoref_bypass=cor_rol(termo.p,termo.tlp);
 
+if isempty(fue_new.amdt)
+    amdt=[];
+    bmdt=[];
+else
+    amdt=fue_new.amdt(knum(:,1));
+    bmdt=fue_new.bmdt(knum(:,1));
+end
+termo.Xcin=fue_new.Xcin(knum(:,1));
+termo.amdt=amdt;
+termo.bmdt=bmdt;
+termo.phm=fue_new.phfuel(:,knum(:,1));
+termo.Dh=fue_new.dhfuel(:,knum(:,1));
+termo.pbm=4*geom.A./termo.Dh-termo.phm;
 % Data of the neutronics
-
 neu.b=b;
 neu.betacorr=betacorr;
 neu.al=al;

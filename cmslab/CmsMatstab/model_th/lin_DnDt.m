@@ -64,6 +64,11 @@ end
 M1 = (Mel - Mf1 - (eq_Mpump(Wl,P,tl,ndist,pump,pk,ptype)))/pump(2);
 n_c = M1/(ndist-nhcpump); % Probably )/2/pi vdb;
 
+% Korrigerat enligt kommentar ovan. Se FT-RAPPORT 98/231
+Wl_c = Wl_c /2/pi;
+P_c  = P_c /2/pi;
+tl_c = tl_c/2/pi;
+n_c  = n_c /2/pi;
 
 
 
