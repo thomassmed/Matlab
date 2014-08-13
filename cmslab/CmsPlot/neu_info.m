@@ -145,7 +145,8 @@ while button==1
       crdhi=mean(crdhist(:,knm));
       serl=ser{knm,rw};
       labl=lab{knm,rw};
-      fprintf('%3i %8s %8s %6i  %6.3f %7.3f %s%2i%s%2i%s%6i%10.4g',nfta(knm),serl,labl,bur,vhi,crdhi,'  (',ny,',',nx,')',knm0,co);
+      if isempty(nfta), nftapri=0; else nftapri=nfta(knm);end
+      fprintf('%3i %8s %8s %6i  %6.3f %7.3f %s%2i%s%2i%s%6i%10.4g',nftapri,serl,labl,bur,vhi,crdhi,'  (',ny,',',nx,')',knm0,co);
       if cmsplot_prop.if2x2==2,
           ny2=ceil(ny/2);nx2=ceil(nx/2);
           knm2=cpos2knum(ny2,nx2,mminj1x1);
